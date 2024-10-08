@@ -10,7 +10,8 @@ config_version=5
 
 [application]
 
-config/name="tetris_tut"
+config/name="Tetris Terrain"
+run/main_scene="res://scenes/hud.tscn"
 config/features=PackedStringArray("4.1", "Forward Plus")
 config/icon="res://icon.svg"
 

@@ -72,20 +72,68 @@ var game_running : bool
 
 #tilemap variables
 var tile_id : int = 0
+# The current color / type of the given piece.
 var piece_atlas : Vector2i
 var next_piece_atlas : Vector2i
 
 #layer variables
 var board_layer : int = 0
 var active_layer : int = 1
+var grid = []
 
+# Pattern placeholder
+var pattern := [Vector2i(0, 0), Vector2i(1, 0), Vector2i(0, 1), Vector2i(1, 1)]
+
+func find_pattern_in_grid(pattern):
+	var has_match
+	var matching_locations = []
+	for p in pattern:
+		matching_locations.append(Vector2i(-1, -1))
+	for row in ROWS:
+		for col in COLS:
+			has_match = true
+			for i in len(pattern):
+				var p = pattern[i]
+				var rc = row + p[1]
+				var cc = col + p[0]
+				if (rc > ROWS):
+					has_match = false
+					continue
+				if (cc > COLS):
+					has_match = false
+					continue
+				if (get_cell_atlas_coords(board_layer, Vector2i(cc, rc))[0] != 1):
+					has_match = false
+				else:
+					matching_locations[i] = Vector2i(cc, rc)
+				
+			if has_match:
+				print(matching_locations)
+				return [true, matching_locations]
+			#		
+	return [has_match, matching_locations]
+
+func initialize_grid():
+	for j in ROWS:
+		grid.append([])
+		for i in COLS:
+			grid[j].append(0) # Set a starter value for each position
+
+func display_grid():
+	for j in grid:
+		print(j)
+
+		
 # Called when the node enters the scene tree for the first time.
 func _ready():
+	
 	new_game()
+	print("Starting")
 	$HUD.get_node("StartButton").pressed.connect(new_game)
 
 func new_game():
 	#reset variables
+	initialize_grid()
 	score = 0
 	speed = 1.0
 	game_running = true
@@ -96,9 +144,13 @@ func new_game():
 	clear_board()
 	clear_panel()
 	piece_type = pick_piece()
-	piece_atlas = Vector2i(shapes_full.find(piece_type), 0)
+	#piece_atlas = Vector2i(shapes_full.find(piece_type), 0)
+	# Hack to simplify
+	piece_atlas = Vector2i(randi_range(0, 1), 0)
+	
 	next_piece_type = pick_piece()
-	next_piece_atlas = Vector2i(shapes_full.find(next_piece_type), 0)
+	#next_piece_atlas = Vector2i(shapes_full.find(next_piece_type), 0)
+	next_piece_atlas = Vector2i(randi_range(0, 1), 0)
 	create_piece()
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -164,11 +216,21 @@ func move_piece(dir):
 	else:
 		if dir == Vector2i.DOWN:
 			land_piece()
-			check_rows()
+			#display_grid()
+			var maybe_matched_pattern = find_pattern_in_grid(pattern)
+			var has_match = maybe_matched_pattern[0] 
+			var matched_pattern = maybe_matched_pattern[1]
+			if has_match:
+				shift_rows_from_pattern(matched_pattern)
+			
+			#check_rows()
 			piece_type = next_piece_type
-			piece_atlas = next_piece_atlas
+			#piece_atlas = next_piece_atlas
+			piece_atlas = Vector2i(randi_range(0, 1), 0)
+			# Purple is 1
 			next_piece_type = pick_piece()
-			next_piece_atlas = Vector2i(shapes_full.find(next_piece_type), 0)
+			#next_piece_atlas = Vector2i(shapes_full.find(next_piece_type), 0)
+			next_piece_atlas = Vector2i(randi_range(0, 1), 0)
 			clear_panel()
 			create_piece()
 			check_game_over()
@@ -192,11 +254,18 @@ func can_rotate():
 func is_free(pos):
 	return get_cell_source_id(board_layer, pos) == -1
 
+
+func set_grid(loc: Vector2i, val: int):
+	# Indices swapped and shifted by one
+	grid[loc[1] - 1][loc[0] - 1] = val
+
+
 func land_piece():
 	#remove each segment from the active layer and move to board layer
 	for i in active_piece:
 		erase_cell(active_layer, cur_pos + i)
 		set_cell(board_layer, cur_pos + i, tile_id, piece_atlas)
+#		print("CHECKING VAL ", get_cell_atlas_coords(board_layer, cur_pos + i))
 
 func clear_panel():
 	for i in range(14, 19):
@@ -218,6 +287,36 @@ func check_rows():
 			speed += ACCEL
 		else:
 			row -= 1
+
+func shift_rows_from_pattern(matching_location):
+	var atlas
+	# For each column identify all the rows to check.
+	var rc_map = {}
+	for p in matching_location:
+		if p[0] not in rc_map:
+			rc_map[p[0]] = [p[1]]
+		else:
+			rc_map[p[0]].append(p[1])
+	for col in rc_map:
+		var rows = rc_map[col]
+		var n_shifts = len(rows)
+		shift_column(col, rows.max(), n_shifts)
+			
+func shift_column(col, row, n_shifts):
+	var atlas
+	var atlases = []
+	for i in range(row, 1 + n_shifts, -1):
+		atlas = get_cell_atlas_coords(board_layer, Vector2i(col, i - n_shifts))
+		atlases.append(atlas)
+	var to_traverse = range(row, 1 + n_shifts, -1)
+	for tt in to_traverse:
+		var ind = to_traverse.find(tt)
+		var i = to_traverse[ind]
+		var atlas2 = atlases[ind]
+		if atlas2 == Vector2i(-1, -1):
+			erase_cell(board_layer, Vector2i(col, i))
+		else:
+			set_cell(board_layer, Vector2i(col, i), tile_id, atlas2)
 
 func shift_rows(row):
 	var atlas
