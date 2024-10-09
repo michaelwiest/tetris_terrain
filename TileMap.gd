@@ -84,6 +84,16 @@ var grid = []
 # Pattern placeholder
 var pattern := [Vector2i(0, 0), Vector2i(1, 0), Vector2i(0, 1), Vector2i(1, 1)]
 
+@onready var line: Recipe = $Line
+
+@onready var square: Recipe = $Square
+var recipes: Array = []
+@onready var timer: Timer = $Timer
+
+# Move block clearing into a routine on the recipe itself.
+# Animation to show the matched pattern
+
+
 func find_pattern_in_grid(pattern):
 	var has_match
 	var matching_locations = []
@@ -108,8 +118,40 @@ func find_pattern_in_grid(pattern):
 					matching_locations[i] = Vector2i(cc, rc)
 				
 			if has_match:
-				print(matching_locations)
 				return [true, matching_locations]
+			#		
+	return [has_match, matching_locations]
+
+
+func find_recipe_in_grid(recipe: Recipe):
+	var has_match
+	var matching_locations = []
+	var patterns = recipe.patterns
+	for p in patterns[0]:
+		matching_locations.append(Vector2i(-1, -1))
+	for row in ROWS:
+		for col in COLS:
+			for j in len(patterns):
+				has_match = true
+				for i in len(patterns[j]):
+					var p = patterns[j][i]
+					var atlas_to_match = recipe.target_atlas_locations[i]
+					
+					var rc = row + p[1]
+					var cc = col + p[0]
+					if (rc > ROWS):
+						has_match = false
+						continue
+					if (cc > COLS):
+						has_match = false
+						continue
+					if (get_cell_atlas_coords(board_layer, Vector2i(cc, rc)) != atlas_to_match):
+						has_match = false
+					else:
+						matching_locations[i] = Vector2i(cc, rc)
+					
+				if has_match:
+					return [true, matching_locations]
 			#		
 	return [has_match, matching_locations]
 
@@ -126,12 +168,21 @@ func display_grid():
 		
 # Called when the node enters the scene tree for the first time.
 func _ready():
+	square.set_patterns([o_0])
+	line.set_patterns([i_0, i_90])
+	square.set_target_atlas_locations([Vector2i(1, 0), Vector2i(1, 0),Vector2i(1, 0),Vector2i(1, 0),])
+	line.set_target_atlas_locations([Vector2i(2, 0), Vector2i(2, 0),Vector2i(2, 0),Vector2i(2, 0),])
+	
+	
+	recipes.append(square)
+	recipes.append(line)
 	
 	new_game()
 	print("Starting")
 	$HUD.get_node("StartButton").pressed.connect(new_game)
 
 func new_game():
+
 	#reset variables
 	initialize_grid()
 	score = 0
@@ -146,11 +197,11 @@ func new_game():
 	piece_type = pick_piece()
 	#piece_atlas = Vector2i(shapes_full.find(piece_type), 0)
 	# Hack to simplify
-	piece_atlas = Vector2i(randi_range(0, 1), 0)
+	piece_atlas = Vector2i(randi_range(2, 2), 0)
 	
 	next_piece_type = pick_piece()
 	#next_piece_atlas = Vector2i(shapes_full.find(next_piece_type), 0)
-	next_piece_atlas = Vector2i(randi_range(0, 1), 0)
+	next_piece_atlas = Vector2i(randi_range(2, 2), 0)
 	create_piece()
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -216,21 +267,28 @@ func move_piece(dir):
 	else:
 		if dir == Vector2i.DOWN:
 			land_piece()
-			#display_grid()
-			var maybe_matched_pattern = find_pattern_in_grid(pattern)
-			var has_match = maybe_matched_pattern[0] 
-			var matched_pattern = maybe_matched_pattern[1]
-			if has_match:
-				shift_rows_from_pattern(matched_pattern)
+			for r in recipes:
+				var maybe_matched_recipe = find_recipe_in_grid(r)
+				var has_match = maybe_matched_recipe[0]
 			
-			#check_rows()
+				if has_match:
+					# Attempted animation.
+#					for i in len(maybe_matched_recipe[1]):
+#						var tile = maybe_matched_recipe[1][i]
+#						set_cell(2, Vector2i(tile[0], tile[1]), tile_id, Vector2i(4, 0))
+						
+					shift_rows_from_pattern(maybe_matched_recipe[1])
+					score += REWARD
+					$HUD.get_node("ScoreLabel").text = "SCORE: " + str(score)
+					speed += ACCEL
+			
 			piece_type = next_piece_type
 			#piece_atlas = next_piece_atlas
-			piece_atlas = Vector2i(randi_range(0, 1), 0)
+			piece_atlas = Vector2i(randi_range(2, 2), 0)
 			# Purple is 1
 			next_piece_type = pick_piece()
 			#next_piece_atlas = Vector2i(shapes_full.find(next_piece_type), 0)
-			next_piece_atlas = Vector2i(randi_range(0, 1), 0)
+			next_piece_atlas = Vector2i(randi_range(2, 2), 0)
 			clear_panel()
 			create_piece()
 			check_game_over()
@@ -265,7 +323,6 @@ func land_piece():
 	for i in active_piece:
 		erase_cell(active_layer, cur_pos + i)
 		set_cell(board_layer, cur_pos + i, tile_id, piece_atlas)
-#		print("CHECKING VAL ", get_cell_atlas_coords(board_layer, cur_pos + i))
 
 func clear_panel():
 	for i in range(14, 19):

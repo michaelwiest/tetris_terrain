@@ -1,8 +1,9 @@
-[gd_scene load_steps=6 format=3 uid="uid://v07im6ckn0y5"]
+[gd_scene load_steps=7 format=3 uid="uid://v07im6ckn0y5"]
 
 [ext_resource type="Texture2D" uid="uid://bwxneirljy70c" path="res://assets/tetrominoes.png" id="1_7at63"]
 [ext_resource type="Script" path="res://TileMap.gd" id="2_y6mwb"]
 [ext_resource type="PackedScene" uid="uid://psjnbhu2tahx" path="res://scenes/hud.tscn" id="3_vxlsc"]
+[ext_resource type="Script" path="res://scripts/Recipe.gd" id="4_b11hc"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_a08xs"]
 texture = ExtResource("1_7at63")
@@ -33,6 +34,22 @@ layer_1/y_sort_enabled = false
 layer_1/y_sort_origin = 0
 layer_1/z_index = 0
 layer_1/tile_data = PackedInt32Array()
+layer_2/name = "highlight"
+layer_2/enabled = true
+layer_2/modulate = Color(1, 1, 1, 1)
+layer_2/y_sort_enabled = false
+layer_2/y_sort_origin = 0
+layer_2/z_index = 1
+layer_2/tile_data = PackedInt32Array()
 script = ExtResource("2_y6mwb")
 
 [node name="HUD" parent="." instance=ExtResource("3_vxlsc")]
+
+[node name="Line" type="Node2D" parent="."]
+script = ExtResource("4_b11hc")
+patterns = [Vector2i(0, 0), Vector2i(0, 0), Vector2i(0, 0), Vector2i(0, 0)]
+metadata/patterns = [Vector2i(0, 0)]
+
+[node name="Square" type="Node2D" parent="."]
+script = ExtResource("4_b11hc")
+metadata/patterns = [Vector2i(0, 0)]
