@@ -49,15 +49,16 @@ var shapes_full := shapes.duplicate()
 #grid variables
 const COLS : int = 10
 const ROWS : int = 20
+const GLOBAL_COL_OFFSET = 8
 
 #movement variables
 const directions := [Vector2i.LEFT, Vector2i.RIGHT, Vector2i.DOWN]
 var steps : Array
 const steps_req : int = 50
-const start_pos := Vector2i(5, 1)
+const start_pos := Vector2i(5 + GLOBAL_COL_OFFSET, 1)
 var cur_pos : Vector2i
 var speed : float
-const ACCEL : float = 0.25
+const ACCEL : float = 0.12
 
 #game piece variables
 var piece_type
@@ -81,89 +82,25 @@ var board_layer : int = 0
 var active_layer : int = 1
 var grid = []
 
-# Pattern placeholder
-var pattern := [Vector2i(0, 0), Vector2i(1, 0), Vector2i(0, 1), Vector2i(1, 1)]
-
 @onready var line: Recipe = $Line
 
 @onready var square: Recipe = $Square
 var recipes: Array = []
-@onready var timer: Timer = $Timer
+var pattern_to_clear: Array = []
+
 
 # Move block clearing into a routine on the recipe itself.
 # Animation to show the matched pattern
 
+enum State {MOVING, CHECKING, ANIMATING, PREP, CLEANUP}
 
-func find_pattern_in_grid(pattern):
-	var has_match
-	var matching_locations = []
-	for p in pattern:
-		matching_locations.append(Vector2i(-1, -1))
-	for row in ROWS:
-		for col in COLS:
-			has_match = true
-			for i in len(pattern):
-				var p = pattern[i]
-				var rc = row + p[1]
-				var cc = col + p[0]
-				if (rc > ROWS):
-					has_match = false
-					continue
-				if (cc > COLS):
-					has_match = false
-					continue
-				if (get_cell_atlas_coords(board_layer, Vector2i(cc, rc))[0] != 1):
-					has_match = false
-				else:
-					matching_locations[i] = Vector2i(cc, rc)
-				
-			if has_match:
-				return [true, matching_locations]
-			#		
-	return [has_match, matching_locations]
+var current_state = State.MOVING
 
-
-func find_recipe_in_grid(recipe: Recipe):
-	var has_match
-	var matching_locations = []
-	var patterns = recipe.patterns
-	for p in patterns[0]:
-		matching_locations.append(Vector2i(-1, -1))
-	for row in ROWS:
-		for col in COLS:
-			for j in len(patterns):
-				has_match = true
-				for i in len(patterns[j]):
-					var p = patterns[j][i]
-					var atlas_to_match = recipe.target_atlas_locations[i]
-					
-					var rc = row + p[1]
-					var cc = col + p[0]
-					if (rc > ROWS):
-						has_match = false
-						continue
-					if (cc > COLS):
-						has_match = false
-						continue
-					if (get_cell_atlas_coords(board_layer, Vector2i(cc, rc)) != atlas_to_match):
-						has_match = false
-					else:
-						matching_locations[i] = Vector2i(cc, rc)
-					
-				if has_match:
-					return [true, matching_locations]
-			#		
-	return [has_match, matching_locations]
-
-func initialize_grid():
-	for j in ROWS:
-		grid.append([])
-		for i in COLS:
-			grid[j].append(0) # Set a starter value for each position
-
-func display_grid():
-	for j in grid:
-		print(j)
+func convert_positions_to_local(positions):
+	var to_return = []
+	for pos in positions:
+		to_return.append(map_to_local(pos))
+	return to_return
 
 		
 # Called when the node enters the scene tree for the first time.
@@ -176,15 +113,10 @@ func _ready():
 	
 	recipes.append(square)
 	recipes.append(line)
-	
 	new_game()
-	print("Starting")
 	$HUD.get_node("StartButton").pressed.connect(new_game)
 
 func new_game():
-
-	#reset variables
-	initialize_grid()
 	score = 0
 	speed = 1.0
 	game_running = true
@@ -195,13 +127,12 @@ func new_game():
 	clear_board()
 	clear_panel()
 	piece_type = pick_piece()
-	#piece_atlas = Vector2i(shapes_full.find(piece_type), 0)
 	# Hack to simplify
-	piece_atlas = Vector2i(randi_range(2, 2), 0)
+	piece_atlas = pick_piece_atlas()
 	
 	next_piece_type = pick_piece()
 	#next_piece_atlas = Vector2i(shapes_full.find(next_piece_type), 0)
-	next_piece_atlas = Vector2i(randi_range(2, 2), 0)
+	next_piece_atlas = pick_piece_atlas()
 	create_piece()
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -218,11 +149,25 @@ func _process(delta):
 		
 		#apply downward movement every frame
 		steps[2] += speed
-		#move the piece
-		for i in range(steps.size()):
-			if steps[i] > steps_req:
-				move_piece(directions[i])
-				steps[i] = 0
+		match current_state:
+			State.MOVING:
+				for i in range(steps.size()):
+					if steps[i] > steps_req:
+						move_piece(directions[i])
+						steps[i] = 0
+			State.ANIMATING:
+				var any_animating: bool = false
+				for r in recipes:
+					any_animating = r.is_animating() or any_animating
+				if not any_animating:
+					current_state = State.CLEANUP
+			State.CHECKING:
+				check_board()
+			State.CLEANUP:
+				cleanup()
+			State.PREP:
+				prep()
+				
 
 func pick_piece():
 	var piece
@@ -242,15 +187,20 @@ func create_piece():
 	active_piece = piece_type[rotation_index]
 	draw_piece(active_piece, cur_pos, piece_atlas)
 	#show next piece
-	draw_piece(next_piece_type[0], Vector2i(15, 6), next_piece_atlas)
+	draw_piece(next_piece_type[0], Vector2i(15 + GLOBAL_COL_OFFSET, 6), next_piece_atlas)
 
 func clear_piece():
 	for i in active_piece:
 		erase_cell(active_layer, cur_pos + i)
 
 func draw_piece(piece, pos, atlas):
-	for i in piece:
-		set_cell(active_layer, pos + i, tile_id, atlas)
+	for i in range(len(piece)):
+		var piece_i = piece[i]
+		var atlas_i = Vector2i(2, 0)
+		if i % 2 == 0:
+			atlas_i = Vector2i(1, 0)
+		
+		set_cell(active_layer, pos + piece_i, tile_id, atlas)
 
 func rotate_piece():
 	if can_rotate():
@@ -258,6 +208,42 @@ func rotate_piece():
 		rotation_index = (rotation_index + 1) % 4
 		active_piece = piece_type[rotation_index]
 		draw_piece(active_piece, cur_pos, piece_atlas)
+
+func pick_piece_atlas():
+	return Vector2i(randi_range(1, 2), 0)
+
+
+func prep():
+	piece_type = next_piece_type
+	piece_atlas = pick_piece_atlas()
+	# Purple is 1
+	next_piece_type = pick_piece()
+	next_piece_atlas = pick_piece_atlas()
+	clear_panel()
+	create_piece()
+	check_game_over()
+	current_state = State.MOVING
+
+func check_board():
+	for r in recipes:
+		var maybe_matched_recipe = r.find_patterns_in_tilemap(self, board_layer, 0, GLOBAL_COL_OFFSET)
+		var has_match = maybe_matched_recipe[0]
+		if has_match:
+			r.animate(convert_positions_to_local(maybe_matched_recipe[1]))
+			pattern_to_clear = maybe_matched_recipe[1]
+			current_state = State.ANIMATING
+			break
+		else:
+			current_state = State.PREP
+
+func cleanup():
+	shift_rows_from_pattern(pattern_to_clear)
+	current_state = State.CHECKING
+	
+	score += REWARD
+	$HUD.get_node("ScoreLabel").text = "SCORE: " + str(score)
+	speed += ACCEL
+	
 
 func move_piece(dir):
 	if can_move(dir):
@@ -267,31 +253,7 @@ func move_piece(dir):
 	else:
 		if dir == Vector2i.DOWN:
 			land_piece()
-			for r in recipes:
-				var maybe_matched_recipe = find_recipe_in_grid(r)
-				var has_match = maybe_matched_recipe[0]
-			
-				if has_match:
-					# Attempted animation.
-#					for i in len(maybe_matched_recipe[1]):
-#						var tile = maybe_matched_recipe[1][i]
-#						set_cell(2, Vector2i(tile[0], tile[1]), tile_id, Vector2i(4, 0))
-						
-					shift_rows_from_pattern(maybe_matched_recipe[1])
-					score += REWARD
-					$HUD.get_node("ScoreLabel").text = "SCORE: " + str(score)
-					speed += ACCEL
-			
-			piece_type = next_piece_type
-			#piece_atlas = next_piece_atlas
-			piece_atlas = Vector2i(randi_range(2, 2), 0)
-			# Purple is 1
-			next_piece_type = pick_piece()
-			#next_piece_atlas = Vector2i(shapes_full.find(next_piece_type), 0)
-			next_piece_atlas = Vector2i(randi_range(2, 2), 0)
-			clear_panel()
-			create_piece()
-			check_game_over()
+			current_state = State.CHECKING
 
 func can_move(dir):
 	#check if there is space to move
@@ -325,25 +287,9 @@ func land_piece():
 		set_cell(board_layer, cur_pos + i, tile_id, piece_atlas)
 
 func clear_panel():
-	for i in range(14, 19):
-		for j in range(5, 9):
+	for i in range(14, 19 + GLOBAL_COL_OFFSET):
+		for j in range(5, 9 + GLOBAL_COL_OFFSET):
 			erase_cell(active_layer, Vector2i(i, j))
-
-func check_rows():
-	var row : int = ROWS
-	while row > 0:
-		var count = 0
-		for i in range(COLS):
-			if not is_free(Vector2i(i + 1, row)):
-				count += 1
-		#if row is full then erase it
-		if count == COLS:
-			shift_rows(row)
-			score += REWARD
-			$HUD.get_node("ScoreLabel").text = "SCORE: " + str(score)
-			speed += ACCEL
-		else:
-			row -= 1
 
 func shift_rows_from_pattern(matching_location):
 	var atlas
@@ -387,7 +333,7 @@ func shift_rows(row):
 
 func clear_board():
 	for i in range(ROWS):
-		for j in range(COLS):
+		for j in range(GLOBAL_COL_OFFSET, COLS + GLOBAL_COL_OFFSET):
 			erase_cell(board_layer, Vector2i(j + 1, i + 1))
 
 func check_game_over():

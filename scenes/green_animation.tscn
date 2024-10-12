@@ -1,0 +1,43 @@
+[gd_scene load_steps=5 format=3 uid="uid://d1ibdw02sw8w"]
+
+[ext_resource type="Texture2D" uid="uid://bwxneirljy70c" path="res://assets/tetrominoes.png" id="1_0prwp"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_wi55r"]
+atlas = ExtResource("1_0prwp")
+region = Rect2(128, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_twswc"]
+atlas = ExtResource("1_0prwp")
+region = Rect2(224, 0, 32, 32)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_d3fmj"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_wi55r")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_twswc")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_wi55r")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_twswc")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_wi55r")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_twswc")
+}],
+"loop": false,
+"name": &"Green Flash",
+"speed": 8.0
+}]
+
+[node name="animation" type="AnimatedSprite2D"]
+sprite_frames = SubResource("SpriteFrames_d3fmj")
+animation = &"Green Flash"
+frame = 5
+frame_progress = 1.0
