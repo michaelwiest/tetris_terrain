@@ -83,14 +83,15 @@ var active_layer : int = 1
 var grid = []
 
 @onready var line: Recipe = $Line
-
 @onready var square: Recipe = $Square
+@onready var tee: Recipe = $Tee
 var recipes: Array = []
 var pattern_to_clear: Array = []
 
-
-# Move block clearing into a routine on the recipe itself.
-# Animation to show the matched pattern
+# Drop cleared part of piece
+# Get multi-colored patternss. Slash general pattern to scene.
+# Display available recipes.
+# 
 
 enum State {MOVING, CHECKING, ANIMATING, PREP, CLEANUP}
 
@@ -107,12 +108,15 @@ func convert_positions_to_local(positions):
 func _ready():
 	square.set_patterns([o_0])
 	line.set_patterns([i_0, i_90])
+	tee.set_patterns([t_0, t_90, t_180])
+	tee.set_target_atlas_locations([Vector2i(0, 0), Vector2i(0, 0),Vector2i(0, 0),Vector2i(0, 0),])
 	square.set_target_atlas_locations([Vector2i(1, 0), Vector2i(1, 0),Vector2i(1, 0),Vector2i(1, 0),])
 	line.set_target_atlas_locations([Vector2i(2, 0), Vector2i(2, 0),Vector2i(2, 0),Vector2i(2, 0),])
 	
 	
 	recipes.append(square)
 	recipes.append(line)
+	recipes.append(tee)
 	new_game()
 	$HUD.get_node("StartButton").pressed.connect(new_game)
 
@@ -210,7 +214,7 @@ func rotate_piece():
 		draw_piece(active_piece, cur_pos, piece_atlas)
 
 func pick_piece_atlas():
-	return Vector2i(randi_range(1, 2), 0)
+	return Vector2i(randi_range(0, 2), 0)
 
 
 func prep():

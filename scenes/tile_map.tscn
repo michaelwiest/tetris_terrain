@@ -1,13 +1,13 @@
 [gd_scene load_steps=7 format=3 uid="uid://v07im6ckn0y5"]
 
-[ext_resource type="Texture2D" uid="uid://bwxneirljy70c" path="res://assets/tetrominoes.png" id="1_7at63"]
+[ext_resource type="Texture2D" uid="uid://22c2gue343i1" path="res://assets/tetrominoes2.png" id="1_q48xm"]
 [ext_resource type="Script" path="res://TileMap.gd" id="2_y6mwb"]
 [ext_resource type="PackedScene" uid="uid://psjnbhu2tahx" path="res://scenes/hud.tscn" id="3_vxlsc"]
 [ext_resource type="PackedScene" uid="uid://bm63pn6lopyqj" path="res://scenes/Recipe.tscn" id="4_1dfvb"]
 
-[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_a08xs"]
-texture = ExtResource("1_7at63")
-texture_region_size = Vector2i(32, 32)
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_wgf51"]
+texture = ExtResource("1_q48xm")
+texture_region_size = Vector2i(64, 64)
 0:0/0 = 0
 1:0/0 = 0
 2:0/0 = 0
@@ -17,14 +17,14 @@ texture_region_size = Vector2i(32, 32)
 6:0/0 = 0
 7:0/0 = 0
 
-[sub_resource type="TileSet" id="TileSet_l1uyk"]
-tile_size = Vector2i(32, 32)
-sources/0 = SubResource("TileSetAtlasSource_a08xs")
+[sub_resource type="TileSet" id="TileSet_td31o"]
+tile_size = Vector2i(64, 64)
+sources/0 = SubResource("TileSetAtlasSource_wgf51")
 
 [node name="TileMap" type="TileMap"]
 position = Vector2(2, 0)
-tile_set = SubResource("TileSet_l1uyk")
-cell_quadrant_size = 32
+tile_set = SubResource("TileSet_td31o")
+cell_quadrant_size = 64
 format = 2
 layer_0/name = "board"
 layer_0/tile_data = PackedInt32Array(8, 458752, 0, 1245192, 458752, 0, 1310728, 458752, 0, 1376264, 458752, 0, 9, 458752, 0, 1048585, 65536, 0, 1114121, 65536, 0, 1179657, 65536, 0, 1245193, 0, 0, 1310729, 196608, 0, 1376265, 458752, 0, 10, 458752, 0, 1245194, 0, 0, 1310730, 196608, 0, 1376266, 458752, 0, 11, 458752, 0, 1245195, 0, 0, 1310731, 196608, 0, 1376267, 458752, 0, 65544, 458752, 0, 131080, 458752, 0, 196616, 458752, 0, 262152, 458752, 0, 327688, 458752, 0, 393224, 458752, 0, 458760, 458752, 0, 524296, 458752, 0, 589832, 458752, 0, 655368, 458752, 0, 720904, 458752, 0, 786440, 458752, 0, 851976, 458752, 0, 917512, 458752, 0, 983048, 458752, 0, 1048584, 458752, 0, 1114120, 458752, 0, 1179656, 458752, 0, 983049, 65536, 0, 983050, 65536, 0, 1048586, 65536, 0, 1114122, 65536, 0, 1179658, 65536, 0, 12, 458752, 0, 1310732, 196608, 0, 1376268, 458752, 0, 13, 458752, 0, 1310733, 196608, 0, 1376269, 458752, 0, 14, 458752, 0, 1376270, 458752, 0, 15, 458752, 0, 1310735, 196608, 0, 1376271, 458752, 0, 16, 458752, 0, 1245200, 0, 0, 1310736, 196608, 0, 1376272, 458752, 0, 17, 458752, 0, 1048593, 65536, 0, 1114129, 65536, 0, 1179665, 65536, 0, 1245201, 0, 0, 1310737, 196608, 0, 1376273, 458752, 0, 18, 458752, 0, 1245202, 0, 0, 1310738, 196608, 0, 1376274, 458752, 0, 19, 458752, 0, 65555, 458752, 0, 131091, 458752, 0, 196627, 458752, 0, 262163, 458752, 0, 327699, 458752, 0, 393235, 458752, 0, 458771, 458752, 0, 524307, 458752, 0, 589843, 458752, 0, 655379, 458752, 0, 720915, 458752, 0, 786451, 458752, 0, 851987, 458752, 0, 917523, 458752, 0, 983059, 458752, 0, 1048595, 458752, 0, 1114131, 458752, 0, 1179667, 458752, 0, 1245203, 458752, 0, 1310739, 458752, 0, 1376275, 458752, 0)
@@ -46,6 +46,16 @@ script = ExtResource("2_y6mwb")
 
 [node name="HUD" parent="." instance=ExtResource("3_vxlsc")]
 
+[node name="GameOverLabel" parent="HUD" index="3"]
+offset_left = 768.0
+offset_top = 432.0
+offset_right = 1007.0
+offset_bottom = 490.0
+
 [node name="Line" parent="." instance=ExtResource("4_1dfvb")]
 
 [node name="Square" parent="." instance=ExtResource("4_1dfvb")]
+
+[node name="Tee" parent="." instance=ExtResource("4_1dfvb")]
+
+[editable path="HUD"]

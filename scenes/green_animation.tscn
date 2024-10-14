@@ -1,43 +1,43 @@
-[gd_scene load_steps=5 format=3 uid="uid://d1ibdw02sw8w"]
+[gd_scene load_steps=6 format=3 uid="uid://d1ibdw02sw8w"]
 
-[ext_resource type="Texture2D" uid="uid://bwxneirljy70c" path="res://assets/tetrominoes.png" id="1_0prwp"]
+[ext_resource type="Texture2D" uid="uid://22c2gue343i1" path="res://assets/tetrominoes2.png" id="1_2elyq"]
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_wi55r"]
-atlas = ExtResource("1_0prwp")
-region = Rect2(128, 0, 32, 32)
+[sub_resource type="AtlasTexture" id="AtlasTexture_hk2bg"]
+atlas = ExtResource("1_2elyq")
+region = Rect2(384, 0, 64, 64)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_twswc"]
-atlas = ExtResource("1_0prwp")
-region = Rect2(224, 0, 32, 32)
+[sub_resource type="AtlasTexture" id="AtlasTexture_ryy0g"]
+atlas = ExtResource("1_2elyq")
+region = Rect2(640, 0, 64, 64)
 
-[sub_resource type="SpriteFrames" id="SpriteFrames_d3fmj"]
+[sub_resource type="AtlasTexture" id="AtlasTexture_wbxy1"]
+atlas = ExtResource("1_2elyq")
+region = Rect2(512, 0, 64, 64)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_ghmyr"]
 animations = [{
 "frames": [{
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_wi55r")
+"texture": SubResource("AtlasTexture_hk2bg")
 }, {
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_twswc")
+"texture": SubResource("AtlasTexture_ryy0g")
 }, {
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_wi55r")
+"texture": SubResource("AtlasTexture_wbxy1")
 }, {
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_twswc")
+"texture": SubResource("AtlasTexture_ryy0g")
 }, {
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_wi55r")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_twswc")
+"texture": SubResource("AtlasTexture_hk2bg")
 }],
 "loop": false,
-"name": &"Green Flash",
+"name": &"default",
 "speed": 8.0
 }]
 
 [node name="animation" type="AnimatedSprite2D"]
-sprite_frames = SubResource("SpriteFrames_d3fmj")
-animation = &"Green Flash"
-frame = 5
+sprite_frames = SubResource("SpriteFrames_ghmyr")
+frame = 4
 frame_progress = 1.0

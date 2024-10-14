@@ -11,11 +11,11 @@ config_version=5
 [application]
 
 config/name="Tetris Terrain"
-run/main_scene="res://scenes/hud.tscn"
+run/main_scene="res://scenes/tile_map.tscn"
 config/features=PackedStringArray("4.1", "Forward Plus")
 config/icon="res://icon.svg"
 
 [display]
 
-window/size/viewport_width=900
-window/size/viewport_height=704
+window/size/viewport_width=1800
+window/size/viewport_height=1408

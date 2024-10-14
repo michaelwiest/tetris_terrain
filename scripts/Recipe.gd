@@ -23,7 +23,6 @@ func set_patterns(p):
 		push_warning("Overwriting pattern to match.")
 	patterns = []
 	for pi in p:
-		print(typeof(pi))
 		patterns.append(pi)
 
 func set_target_atlas_locations(l):
@@ -38,7 +37,6 @@ func print_patterns():
 	print(patterns)
 
 func set_animation_finished():
-	print("DONE ANIMATING")
 	_is_animating = false
 	for anim in animation_objects:
 		anim.queue_free()
