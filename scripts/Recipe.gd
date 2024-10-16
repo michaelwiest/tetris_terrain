@@ -7,7 +7,7 @@ class_name Recipe
 var animation = preload("res://scenes/green_animation.tscn")
 var _is_animating: bool = false
 var animation_objects: Array = []
-
+@onready var clear_sound = $SfxrStreamPlayer
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -46,6 +46,7 @@ func is_animating():
 	return _is_animating
 
 func animate(locs):
+	clear_sound.play()
 	for i in range(len(locs)):
 		var loc = locs[i]
 		var anim = animation.instantiate()

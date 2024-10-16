@@ -85,6 +85,7 @@ var grid = []
 @onready var line: Recipe = $Line
 @onready var square: Recipe = $Square
 @onready var tee: Recipe = $Tee
+@onready var move_sound = $SfxrStreamPlayer
 var recipes: Array = []
 var pattern_to_clear: Array = []
 
@@ -254,6 +255,8 @@ func move_piece(dir):
 		clear_piece()
 		cur_pos += dir
 		draw_piece(active_piece, cur_pos, piece_atlas)
+		if dir == Vector2i.DOWN:
+			move_sound.play()
 	else:
 		if dir == Vector2i.DOWN:
 			land_piece()

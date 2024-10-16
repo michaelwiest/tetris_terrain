@@ -19,3 +19,7 @@ config/icon="res://icon.svg"
 
 window/size/viewport_width=1800
 window/size/viewport_height=1408
+
+[editor_plugins]
+
+enabled=PackedStringArray("res://addons/godot_sfxr/plugin.cfg")

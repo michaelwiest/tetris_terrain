@@ -1,7 +1,8 @@
-[gd_scene load_steps=7 format=3 uid="uid://v07im6ckn0y5"]
+[gd_scene load_steps=9 format=3 uid="uid://v07im6ckn0y5"]
 
 [ext_resource type="Texture2D" uid="uid://22c2gue343i1" path="res://assets/tetrominoes2.png" id="1_q48xm"]
 [ext_resource type="Script" path="res://TileMap.gd" id="2_y6mwb"]
+[ext_resource type="Script" path="res://addons/godot_sfxr/SfxrStreamPlayer.gd" id="3_tj5sr"]
 [ext_resource type="PackedScene" uid="uid://psjnbhu2tahx" path="res://scenes/hud.tscn" id="3_vxlsc"]
 [ext_resource type="PackedScene" uid="uid://bm63pn6lopyqj" path="res://scenes/Recipe.tscn" id="4_1dfvb"]
 
@@ -20,6 +21,9 @@ texture_region_size = Vector2i(64, 64)
 [sub_resource type="TileSet" id="TileSet_td31o"]
 tile_size = Vector2i(64, 64)
 sources/0 = SubResource("TileSetAtlasSource_wgf51")
+
+[sub_resource type="AudioStreamWAV" id="AudioStreamWAV_kb2eu"]
+data = PackedByteArray(72, 70, 69, 67, 65, 64, 62, 60, 59, 57, 55, 54, 52, 51, 49, 48, 46, 44, 43, 41, 40, 38, 37, 36, 34, 33, 31, 30, 28, 27, 26, 24, 23, 22, 20, 19, 18, 16, 15, 14, 12, 11, 10, 9, 7, 6, 5, 4, 3, 1, 255, 254, 253, 252, 251, 250, 248, 247, 246, 245, 244, 243, 242, 241, 240, 239, 238, 237, 236, 235, 234, 233, 232, 231, 230, 229, 228, 227, 226, 225, 224, 223, 222, 221, 220, 220, 219, 218, 217, 216, 215, 214, 214, 213, 212, 211, 210, 209, 209, 208, 207, 206, 205, 205, 204, 203, 202, 202, 201, 200, 200, 199, 198, 197, 197, 196, 195, 195, 194, 193, 193, 192, 191, 209, 80, 78, 76, 74, 72, 71, 69, 67, 66, 64, 62, 61, 59, 57, 56, 54, 52, 51, 49, 48, 46, 45, 43, 42, 40, 39, 37, 36, 34, 33, 31, 30, 29, 27, 26, 24, 23, 22, 20, 19, 18, 16, 15, 14, 13, 11, 10, 9, 8, 6, 5, 4, 3, 2, 255, 254, 253, 252, 251, 250, 249, 247, 246, 245, 244, 243, 242, 241, 240, 239, 238, 237, 236, 235, 234, 233, 232, 231, 230, 229, 228, 227, 226, 225, 224, 223, 222, 221, 221, 220, 219, 218, 217, 216, 215, 214, 214, 213, 212, 211, 210, 210, 209, 208, 207, 206, 206, 205, 204, 203, 203, 202, 201, 200, 200, 199, 198, 197, 197, 196, 195, 195, 194, 211, 82, 80, 79, 77, 75, 73, 72, 70, 68, 66, 65, 63, 61, 60, 58, 56, 55, 53, 52, 50, 48, 47, 45, 44, 42, 41, 39, 38, 36, 35, 34, 32, 31, 29, 28, 26, 25, 24, 22, 21, 20, 18, 17, 16, 15, 13, 12, 11, 9, 8, 7, 6, 5, 3, 2, 1, 255, 254, 253, 251, 250, 249, 248, 247, 246, 245, 244, 243, 241, 240, 239, 238, 237, 236, 235, 234, 233, 232, 231, 230, 229, 228, 227, 226, 226, 225, 224, 223, 222, 221, 220, 219, 218, 217, 217, 216, 215, 214, 213, 212, 212, 211, 210, 209, 208, 208, 207, 206, 205, 204, 204, 203, 202, 201, 201, 200, 199, 199, 198, 197, 196, 196, 195, 212, 83, 81, 80, 78, 76, 74, 73, 71, 69, 67, 66, 64, 62, 61, 59, 57, 56, 54, 53, 51, 49, 48, 46, 45, 43, 42, 40, 39, 37, 36, 34, 33, 31, 30, 29, 27, 26, 25, 23, 22, 20, 19, 18, 17, 15, 14, 13, 11, 10, 9, 8, 6, 5, 4, 3, 2, 255, 254, 253, 252, 251, 250, 249, 247, 246, 245, 244, 243, 242, 241, 240, 239, 238, 237, 236, 235, 234, 233, 232, 231, 230, 229, 228, 227, 226, 225, 224, 223, 222, 221, 221, 220, 219, 218, 217, 216, 215, 215, 214, 213, 212, 211, 210, 210, 209, 208, 207, 206, 206, 205, 204, 203, 203, 202, 201, 200, 200, 199, 198, 197, 197, 196, 195, 213, 84, 82, 80, 78, 76, 75, 73, 71, 69, 68, 66, 64, 63, 61, 59, 58, 56, 54, 53, 51, 50, 48, 47, 45, 44, 42, 40, 39, 38, 36, 35, 33, 32, 30, 29, 28, 26, 25, 23, 22, 21, 19, 18, 17, 15, 14, 13, 12, 10, 9, 8, 7, 5, 4, 3, 2, 1, 255, 253, 252, 251, 250, 249, 248, 247, 246, 244, 243, 242, 241, 240, 239, 238, 237, 236, 235, 234, 233, 232, 231, 230, 229, 228, 227, 226, 225, 224, 223, 223, 222, 221, 220, 219, 218, 217, 216, 216, 215, 214, 213, 212, 211, 211, 210, 209, 208, 207, 207, 206, 205, 204, 203, 203, 202, 201, 201, 200, 199, 198, 198, 197, 196, 196, 213, 84, 82, 80, 78, 77, 75, 73, 71, 70, 68, 66, 64, 63, 61, 59, 58, 56, 55, 53, 51, 50, 48, 47, 45, 44, 42, 41, 39, 38, 36, 35, 33, 32, 30, 29, 28, 26, 25, 24, 22, 21, 20, 18, 17, 16, 14, 13, 12, 10, 9, 8, 1)
 
 [node name="TileMap" type="TileMap"]
 position = Vector2(2, 0)
@@ -43,6 +47,38 @@ layer_2/y_sort_origin = 0
 layer_2/z_index = 1
 layer_2/tile_data = PackedInt32Array()
 script = ExtResource("2_y6mwb")
+
+[node name="SfxrStreamPlayer" type="AudioStreamPlayer" parent="."]
+stream = SubResource("AudioStreamWAV_kb2eu")
+volume_db = -0.08
+pitch_scale = 0.29
+autoplay = true
+script = ExtResource("3_tj5sr")
+wave/type = 1
+sample_params/sound_vol = 0.25
+sample_params/sample_rate = 44100.0
+envelope/attack_time = 0.0
+envelope/sustain_time = 0.081822
+envelope/punch_time = 0.0
+envelope/decay_time = 0.00372789
+frequency/start_frequency = 0.315887
+frequency/min_freq_cutoff = 0.0
+frequency/slide = 0.0
+frequency/delta_slide = 0.0
+vibrato/depth = 0.0
+vibrato/speed = 0.0
+arpeggiation/frequency_mult = 0.0
+arpeggiation/change_speed = 0.0
+duty_cycle/duty_cycle = 1.0
+duty_cycle/sweep = 0.0
+retrigger/rate = 0.0
+flanger/offset = 0.0
+flanger/sweep = 0.0
+low_pass_filter/cutoff_frequency = 1.0
+low_pass_filter/cutoff_sweep = 0.0
+low_pass_filter/resonance = 0.0
+high_pass_filter/cutoff_frequency = 0.1
+high_pass_filter/cutoff_sweep = 0.0
 
 [node name="HUD" parent="." instance=ExtResource("3_vxlsc")]
 
