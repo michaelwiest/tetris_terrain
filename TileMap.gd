@@ -109,7 +109,7 @@ func convert_positions_to_local(positions):
 func _ready():
 	square.set_patterns([o_0])
 	line.set_patterns([i_0, i_90])
-	tee.set_patterns([t_0, t_90, t_180])
+	tee.set_patterns([t_0, t_90, t_180, t_270])
 	tee.set_target_atlas_locations([Vector2i(0, 0), Vector2i(0, 0),Vector2i(0, 0),Vector2i(0, 0),])
 	square.set_target_atlas_locations([Vector2i(1, 0), Vector2i(1, 0),Vector2i(1, 0),Vector2i(1, 0),])
 	line.set_target_atlas_locations([Vector2i(2, 0), Vector2i(2, 0),Vector2i(2, 0),Vector2i(2, 0),])

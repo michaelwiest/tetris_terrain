@@ -34,7 +34,7 @@ animations = [{
 }],
 "loop": false,
 "name": &"default",
-"speed": 12.0
+"speed": 15.0
 }]
 
 [node name="animation" type="AnimatedSprite2D"]
