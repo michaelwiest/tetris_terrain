@@ -88,6 +88,7 @@ var grid = []
 @onready var move_sound = $SfxrStreamPlayer
 var recipes: Array = []
 var pattern_to_clear: Array = []
+var unmatched_pieces_to_sink: Array = []
 
 # Drop cleared part of piece
 # Get multi-colored patternss. Slash general pattern to scene.
@@ -104,6 +105,12 @@ func convert_positions_to_local(positions):
 		to_return.append(map_to_local(pos))
 	return to_return
 
+func get_active_piece_not_in_pattern(matched_pattern: Array) -> Array:
+	var to_return = []
+	for p in active_piece:
+		if cur_pos + p not in matched_pattern:
+			to_return.append(cur_pos + p)
+	return to_return
 		
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -234,8 +241,10 @@ func check_board():
 		var maybe_matched_recipe = r.find_patterns_in_tilemap(self, board_layer, 0, GLOBAL_COL_OFFSET)
 		var has_match = maybe_matched_recipe[0]
 		if has_match:
-			r.animate(convert_positions_to_local(maybe_matched_recipe[1]))
-			pattern_to_clear = maybe_matched_recipe[1]
+			var matched_pattern = maybe_matched_recipe[1]
+			unmatched_pieces_to_sink = get_active_piece_not_in_pattern(matched_pattern)
+			r.animate(convert_positions_to_local(matched_pattern))
+			pattern_to_clear = matched_pattern
 			current_state = State.ANIMATING
 			break
 		else:
@@ -243,6 +252,8 @@ func check_board():
 
 func cleanup():
 	shift_rows_from_pattern(pattern_to_clear)
+	sink_unmatched_pieces(unmatched_pieces_to_sink)
+	active_piece = []
 	current_state = State.CHECKING
 	
 	score += REWARD
@@ -280,11 +291,6 @@ func can_rotate():
 
 func is_free(pos):
 	return get_cell_source_id(board_layer, pos) == -1
-
-
-func set_grid(loc: Vector2i, val: int):
-	# Indices swapped and shifted by one
-	grid[loc[1] - 1][loc[0] - 1] = val
 
 
 func land_piece():
@@ -327,6 +333,24 @@ func shift_column(col, row, n_shifts):
 			erase_cell(board_layer, Vector2i(col, i))
 		else:
 			set_cell(board_layer, Vector2i(col, i), tile_id, atlas2)
+
+
+func sink_unmatched_pieces(piece: Array):
+	for p in piece:
+		var col = p[0]
+		var row = p[1]
+		var latest_row: int = row
+		var current_atlas = get_cell_atlas_coords(board_layer, Vector2i(col, row))
+		for i in range(row + 1, ROWS + 1, 1):
+			var atlas = get_cell_atlas_coords(board_layer, Vector2i(col, i))
+			if atlas == Vector2i(-1, -1):
+				latest_row = i
+		erase_cell(board_layer, Vector2i(col, row))
+		set_cell(board_layer, Vector2i(col, latest_row), tile_id, current_atlas)
+		
+				
+	
+
 
 func shift_rows(row):
 	var atlas

@@ -50,9 +50,8 @@ script = ExtResource("2_y6mwb")
 
 [node name="SfxrStreamPlayer" type="AudioStreamPlayer" parent="."]
 stream = SubResource("AudioStreamWAV_kb2eu")
-volume_db = -0.08
+volume_db = -17.24
 pitch_scale = 0.29
-autoplay = true
 script = ExtResource("3_tj5sr")
 wave/type = 1
 sample_params/sound_vol = 0.25
