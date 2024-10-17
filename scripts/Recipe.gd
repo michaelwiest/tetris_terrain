@@ -4,9 +4,11 @@ class_name Recipe
 @export var patterns: Array
 @export var target_atlas_locations: Array
 @export var tilemap: TileMap
-var animation = preload("res://scenes/green_animation.tscn")
+var animation = preload("res://scenes/flash.tscn")
+var particle = preload("res://scenes/explosion.tscn")
 var _is_animating: bool = false
 var animation_objects: Array = []
+var particle_objects: Array = []
 @onready var clear_sound = $SfxrStreamPlayer
 
 # Called when the node enters the scene tree for the first time.
@@ -40,7 +42,10 @@ func set_animation_finished():
 	_is_animating = false
 	for anim in animation_objects:
 		anim.queue_free()
+	for parti in particle_objects:
+		parti.queue_free()
 	animation_objects = []
+	particle_objects = []
 
 func is_animating():
 	return _is_animating
@@ -50,10 +55,15 @@ func animate(locs):
 	for i in range(len(locs)):
 		var loc = locs[i]
 		var anim = animation.instantiate()
+		var parti = particle.instantiate()
 		animation_objects.append(anim)
+		particle_objects.append(parti)
 		add_child(anim)
+		add_child(parti)
 		anim.position = loc
+		parti.position = loc
 		anim.play()
+		parti.restart()
 		if i == 0:
 			_is_animating = true
 			anim.animation_finished.connect(set_animation_finished)
