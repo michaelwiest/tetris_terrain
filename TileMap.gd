@@ -93,6 +93,7 @@ var combo_count: int = 0
 var recipes: Array = []
 var pattern_to_clear: Array = []
 var unmatched_pieces_to_sink: Array = []
+var tail_animation = preload("res://scenes/tail_effect.tscn")
 
 # Drop cleared part of piece
 	# animate droopping?
@@ -261,9 +262,7 @@ func check_board():
 			current_state = State.PREP
 
 func cleanup():
-	print(unmatched_pieces_to_sink)
 	shift_rows_from_pattern(pattern_to_clear)
-	print(unmatched_pieces_to_sink)
 	sink_unmatched_pieces(unmatched_pieces_to_sink)
 	active_piece = []
 	current_state = State.CHECKING
@@ -368,6 +367,11 @@ func sink_unmatched_pieces(piece: Array):
 				latest_row = i
 		erase_cell(board_layer, p)
 		set_cell(board_layer, Vector2i(col, latest_row), tile_id, current_atlas)
+		var tail_anim  = tail_animation.instantiate()
+		tail_anim.scale = Vector2i(1, latest_row - row)
+		add_child(tail_anim)
+		tail_anim.position = map_to_local(Vector2i(col, latest_row))
+		tail_anim.restart()
 		
 				
 	
