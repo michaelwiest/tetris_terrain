@@ -43,8 +43,8 @@ var j_180 := [Vector2i(0, 1), Vector2i(1, 1), Vector2i(2, 1), Vector2i(2, 2)]
 var j_270 := [Vector2i(1, 0), Vector2i(1, 1), Vector2i(0, 2), Vector2i(1, 2)]
 var j := [j_0, j_90, j_180, j_270]
 
-#var shapes := [i, t, o, z, s, l, j]
-var shapes = [o]
+var shapes := [i, t, o, z, s, l, j]
+#var shapes = [o]
 var shapes_full := shapes.duplicate()
 
 #grid variables
@@ -145,7 +145,7 @@ func new_game():
 	$HUD.get_node("GameOverLabel").hide()
 	#clear everything
 	clear_piece()
-#	clear_board()
+	clear_board()
 	clear_panel()
 	piece_type = pick_piece()
 	# Hack to simplify
@@ -231,7 +231,7 @@ func rotate_piece():
 		draw_piece(active_piece, cur_pos, piece_atlas)
 
 func pick_piece_atlas():
-	return Vector2i(randi_range(0, 0), 0)
+	return Vector2i(randi_range(0, 2), 0)
 
 
 func prep():
