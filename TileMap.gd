@@ -43,8 +43,8 @@ var j_180 := [Vector2i(0, 1), Vector2i(1, 1), Vector2i(2, 1), Vector2i(2, 2)]
 var j_270 := [Vector2i(1, 0), Vector2i(1, 1), Vector2i(0, 2), Vector2i(1, 2)]
 var j := [j_0, j_90, j_180, j_270]
 
-var shapes := [i, t, o, z, s, l, j]
-#var shapes = [o]
+#var shapes := [i, t, o, z, s, l, j]
+var shapes = [o]
 var shapes_full := shapes.duplicate()
 
 #grid variables
@@ -144,7 +144,7 @@ func new_game():
 	$HUD.get_node("GameOverLabel").hide()
 	#clear everything
 	clear_piece()
-	clear_board()
+#	clear_board()
 	clear_panel()
 	piece_type = pick_piece()
 	# Hack to simplify
@@ -230,7 +230,7 @@ func rotate_piece():
 		draw_piece(active_piece, cur_pos, piece_atlas)
 
 func pick_piece_atlas():
-	return Vector2i(randi_range(0, 2), 0)
+	return Vector2i(randi_range(0, 0), 0)
 
 
 func prep():
@@ -253,7 +253,6 @@ func check_board():
 		if has_match:
 			var matched_pattern = maybe_matched_recipe[1]
 			unmatched_pieces_to_sink = get_active_piece_not_in_pattern(matched_pattern)
-			print(unmatched_pieces_to_sink)
 			r.animate(convert_positions_to_local(matched_pattern))
 			pattern_to_clear = matched_pattern
 			current_state = State.ANIMATING
@@ -262,7 +261,9 @@ func check_board():
 			current_state = State.PREP
 
 func cleanup():
+	print(unmatched_pieces_to_sink)
 	shift_rows_from_pattern(pattern_to_clear)
+	print(unmatched_pieces_to_sink)
 	sink_unmatched_pieces(unmatched_pieces_to_sink)
 	active_piece = []
 	current_state = State.CHECKING
@@ -336,6 +337,11 @@ func shift_column(col, row, n_shifts):
 	var atlases = []
 	for i in range(row, 1 + n_shifts, -1):
 		atlas = get_cell_atlas_coords(board_layer, Vector2i(col, i - n_shifts))
+		var found_unmatched_piece_index = unmatched_pieces_to_sink.find(Vector2i(col, i))
+		# We need to shift any unmatched pieces that are ABOVE the piece being cleared otherwise
+		# their location will get lost.
+		if found_unmatched_piece_index != -1:
+			unmatched_pieces_to_sink[found_unmatched_piece_index] = Vector2i(col, i + n_shifts)
 		atlases.append(atlas)
 	var to_traverse = range(row, 1 + n_shifts, -1)
 	for tt in to_traverse:
@@ -358,10 +364,8 @@ func sink_unmatched_pieces(piece: Array):
 		var current_atlas = get_cell_atlas_coords(board_layer, Vector2i(col, row))
 		for i in range(row + 1, ROWS + 1, 1):
 			var atlas = get_cell_atlas_coords(board_layer, Vector2i(col, i))
-			if atlas == Vector2i(-1, -1) or p in pattern_to_clear:
+			if atlas == Vector2i(-1, -1):
 				latest_row = i
-		print(col, latest_row)
-		print(current_atlas)
 		erase_cell(board_layer, p)
 		set_cell(board_layer, Vector2i(col, latest_row), tile_id, current_atlas)
 		
