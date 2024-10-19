@@ -43,8 +43,8 @@ var j_180 := [Vector2i(0, 1), Vector2i(1, 1), Vector2i(2, 1), Vector2i(2, 2)]
 var j_270 := [Vector2i(1, 0), Vector2i(1, 1), Vector2i(0, 2), Vector2i(1, 2)]
 var j := [j_0, j_90, j_180, j_270]
 
-#var shapes := [i, t, o, z, s, l, j]
-var shapes = [o]
+var shapes := [i, t, o, z, s, l, j]
+#var shapes = [o]
 var shapes_full := shapes.duplicate()
 
 #grid variables
@@ -70,6 +70,7 @@ var active_piece : Array
 #game variables
 var score : int
 const REWARD : int = 100
+var temp_reward: int = REWARD
 var game_running : bool
 
 #tilemap variables
@@ -83,6 +84,8 @@ var board_layer : int = 0
 var active_layer : int = 1
 var grid = []
 
+var combo_count: int = 0
+
 @onready var line: Recipe = $Line
 @onready var square: Recipe = $Square
 @onready var tee: Recipe = $Tee
@@ -92,6 +95,9 @@ var pattern_to_clear: Array = []
 var unmatched_pieces_to_sink: Array = []
 
 # Drop cleared part of piece
+	# animate droopping?
+# fix bug at edge of screen.
+# score multiplier
 # Get multi-colored patternss. Slash general pattern to scene.
 # Display available recipes.
 # 
@@ -131,13 +137,14 @@ func _ready():
 
 func new_game():
 	score = 0
-	speed = 1.0
+#	speed = 1.0
+	speed = 0.7
 	game_running = true
 	steps = [0, 0, 0] #0:left, 1:right, 2:down
 	$HUD.get_node("GameOverLabel").hide()
 	#clear everything
 	clear_piece()
-#	clear_board()
+	clear_board()
 	clear_panel()
 	piece_type = pick_piece()
 	# Hack to simplify
@@ -223,18 +230,20 @@ func rotate_piece():
 		draw_piece(active_piece, cur_pos, piece_atlas)
 
 func pick_piece_atlas():
-	return Vector2i(randi_range(0, 0), 0)
+	return Vector2i(randi_range(0, 2), 0)
 
 
 func prep():
+	temp_reward = REWARD
+	combo_count = 0
 	piece_type = next_piece_type
-	piece_atlas = pick_piece_atlas()
-	# Purple is 1
+	piece_atlas = next_piece_atlas
 	next_piece_type = pick_piece()
 	next_piece_atlas = pick_piece_atlas()
 	clear_panel()
 	create_piece()
 	check_game_over()
+	
 	current_state = State.MOVING
 
 func check_board():
@@ -258,7 +267,9 @@ func cleanup():
 	active_piece = []
 	current_state = State.CHECKING
 	
-	score += REWARD
+	score += temp_reward
+	temp_reward *= 2
+	combo_count += 1
 	$HUD.get_node("ScoreLabel").text = "SCORE: " + str(score)
 	speed += ACCEL
 	
