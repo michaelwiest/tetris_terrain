@@ -61,11 +61,8 @@ var cur_pos : Vector2i
 @onready var speed : float = initial_speed
 @export var ACCEL : float = 0.12
 
-#game piece variables
-var piece_type
-var next_piece_type
-var rotation_index : int = 0
-var active_piece : Array
+
+
 
 #game variables
 var score : int
@@ -82,21 +79,21 @@ var next_piece_atlas : Vector2i
 #layer variables
 var board_layer : int = 0
 var active_layer : int = 1
-var grid = []
 
 var combo_count: int = 0
 
 @onready var line: Recipe = $Line
 @onready var square: Recipe = $Square
 @onready var tee: Recipe = $Tee
-@onready var active_piece2: Piece = $Piece
+@onready var active_piece: Piece
+@onready var next_piece: Piece
 @onready var move_sound = $SfxrStreamPlayer
 var recipes: Array = []
 var pattern_to_clear: Array = []
 var unmatched_pieces_to_sink: Array = []
 var tail_animation = preload("res://scenes/tail_effect.tscn")
+var piece_resource = preload("res://scenes/Piece.tscn")
 
-# fix bug at edge of screen.
 # score multiplier
 # Get multi-colored patterns. Slash general pattern to scene.
 # Display available recipes.
@@ -114,7 +111,7 @@ func convert_positions_to_local(positions):
 
 func get_active_piece_not_in_pattern(matched_pattern: Array) -> Array:
 	var to_return = []
-	for p in active_piece:
+	for p in active_piece.active_piece:
 		if cur_pos + p not in matched_pattern:
 			to_return.append(cur_pos + p)
 	return to_return
@@ -144,16 +141,12 @@ func new_game():
 	$HUD.get_node("GameOverLabel").hide()
 	$HUD.get_node("ScoreValue").text = str(score)
 	#clear everything
-	clear_piece()
+#	clear_piece()
 	clear_board()
 	clear_panel()
-	piece_type = pick_piece()
+	active_piece = pick_piece2()
 	# Hack to simplify
-	piece_atlas = pick_piece_atlas()
-	
-	next_piece_type = pick_piece()
-	#next_piece_atlas = Vector2i(shapes_full.find(next_piece_type), 0)
-	next_piece_atlas = pick_piece_atlas()
+	next_piece = pick_piece2()
 	create_piece()
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -199,61 +192,67 @@ func pick_piece():
 		shapes = shapes_full.duplicate()
 		shapes.shuffle()
 		piece = shapes.pop_front()
+	
 	return piece
+
+
+func pick_piece2() -> Piece:
+	var piece_positions
+	if not shapes.is_empty():
+		shapes.shuffle()
+		piece_positions = shapes.pop_front()
+	else:
+		shapes = shapes_full.duplicate()
+		shapes.shuffle()
+		piece_positions = shapes.pop_front()
+	var temp_atlas = pick_piece_atlas()
+	var new_piece = piece_resource.instantiate()
+	
+	new_piece.instance(piece_positions, [temp_atlas, temp_atlas, temp_atlas, temp_atlas])
+	add_child(new_piece)
+	return new_piece
 
 func create_piece():
 	#reset variables
 	steps = [0, 0, 0] #0:left, 1:right, 2:down
 	cur_pos = start_pos
-	active_piece = piece_type[rotation_index]
-	draw_piece(active_piece, cur_pos, piece_atlas)
+	
+	draw_piece(active_piece, cur_pos)
 	#show next piece
-	draw_piece(next_piece_type[0], Vector2i(15, 6), next_piece_atlas)
+	draw_piece(next_piece, Vector2i(15, 6))
 
-func clear_piece():
-	for i in active_piece:
-		erase_cell(active_layer, cur_pos + i)
-
-func draw_piece(piece, pos, atlas):
-	for i in range(len(piece)):
-		var piece_i = piece[i]
-		
-		set_cell(active_layer, pos + piece_i, tile_id, atlas)
-
-
-func draw_piece2(piece: Piece, pos):
+func draw_piece(piece: Piece, pos):
 	for i in range(len(piece.active_piece)):
 		var piece_i = piece.active_piece[i]
-		
 		set_cell(active_layer, pos + piece_i, tile_id, piece.tilemap_ids[i])
+
+func clear_piece(piece: Piece):
+	for i in piece.active_piece:
+		erase_cell(active_layer, cur_pos + i)
 
 
 func rotate_piece():
-	if can_rotate(cur_pos):
-		clear_piece()
-		rotation_index = (rotation_index + 1) % 4
-		active_piece = piece_type[rotation_index]
-		draw_piece(active_piece, cur_pos, piece_atlas)
+	if can_rotate(cur_pos, active_piece):
+		clear_piece(active_piece)
+		active_piece.rotate_piece()
+		draw_piece(active_piece, cur_pos)
 	else:
 		# Check if we're on the left and right edges in which case we need to 
 		# move over inside.
 		var temp_right = cur_pos + Vector2i.RIGHT
 		var temp_left = cur_pos + Vector2i.LEFT
-		if can_rotate(temp_right):
-			clear_piece()
-			rotation_index = (rotation_index + 1) % 4
-			active_piece = piece_type[rotation_index]
-			draw_piece(active_piece, temp_right, piece_atlas)
+		if can_rotate(temp_right, active_piece):
+			clear_piece(active_piece)
 			cur_pos = temp_right
-		elif can_rotate(temp_left):
-			clear_piece()
-			rotation_index = (rotation_index + 1) % 4
-			active_piece = piece_type[rotation_index]
-			draw_piece(active_piece, temp_left, piece_atlas)
-			cur_pos = temp_left
+			active_piece.rotate_piece()
+			draw_piece(active_piece, cur_pos)
 			
+		elif can_rotate(temp_left, active_piece):
+			clear_piece(active_piece)
+			cur_pos = temp_left
+			active_piece.rotate_piece()
+			draw_piece(active_piece, cur_pos)
 
-		
 
 func pick_piece_atlas():
 	return Vector2i(randi_range(0, 2), 0)
@@ -262,10 +261,8 @@ func pick_piece_atlas():
 func prep():
 	temp_reward = REWARD
 	combo_count = 0
-	piece_type = next_piece_type
-	piece_atlas = next_piece_atlas
-	next_piece_type = pick_piece()
-	next_piece_atlas = pick_piece_atlas()
+	active_piece = next_piece
+	next_piece = pick_piece2()
 	clear_panel()
 	create_piece()
 	check_game_over()
@@ -289,7 +286,7 @@ func check_board():
 func cleanup():
 	shift_rows_from_pattern(pattern_to_clear)
 	sink_unmatched_pieces(unmatched_pieces_to_sink)
-	active_piece = []
+	active_piece.queue_free()
 	current_state = State.CHECKING
 	
 	score += temp_reward
@@ -300,10 +297,10 @@ func cleanup():
 	
 
 func move_piece(dir):
-	if can_move(dir):
-		clear_piece()
+	if can_move(active_piece, dir):
+		clear_piece(active_piece)
 		cur_pos += dir
-		draw_piece(active_piece, cur_pos, piece_atlas)
+		draw_piece(active_piece, cur_pos)
 		if dir == Vector2i.DOWN:
 			move_sound.play()
 	else:
@@ -311,18 +308,18 @@ func move_piece(dir):
 			land_piece()
 			current_state = State.CHECKING
 
-func can_move(dir):
+func can_move(piece: Piece, dir):
 	#check if there is space to move
 	var cm = true
-	for i in active_piece:
+	for i in piece.active_piece:
 		if not is_free(i + cur_pos + dir):
 			cm = false
 	return cm
 
-func can_rotate(pos_to_check):
+func can_rotate(pos_to_check, current_piece: Piece):
 	var cr = true
-	var temp_rotation_index = (rotation_index + 1) % 4
-	for i in piece_type[temp_rotation_index]:
+#	var temp_rotation_index = (rotation_index + 1) % 4
+	for i in current_piece.rotated_positions():
 		if not is_free(i + pos_to_check):
 			cr = false
 	return cr
@@ -333,9 +330,11 @@ func is_free(pos):
 
 func land_piece():
 	#remove each segment from the active layer and move to board layer
-	for i in active_piece:
-		erase_cell(active_layer, cur_pos + i)
-		set_cell(board_layer, cur_pos + i, tile_id, piece_atlas)
+	for i in range(len(active_piece.active_piece)):
+		var ap = active_piece.active_piece[i]
+		var tm = active_piece.tilemap_ids[i]
+		erase_cell(active_layer, cur_pos + ap)
+		set_cell(board_layer, cur_pos + ap, tile_id, tm)
 
 func clear_panel():
 	for i in range(14, 19):
@@ -396,8 +395,6 @@ func sink_unmatched_pieces(piece: Array):
 		tail_anim.position = map_to_local(Vector2i(col, latest_row))
 		tail_anim.restart()
 		
-				
-	
 
 
 func shift_rows(row):
@@ -417,7 +414,7 @@ func clear_board():
 
 func check_game_over():
 	# Something is broken in here.
-	for i in active_piece:
+	for i in active_piece.active_piece:
 		if not is_free(i + cur_pos):
 			land_piece()
 			$HUD.get_node("GameOverLabel").show()

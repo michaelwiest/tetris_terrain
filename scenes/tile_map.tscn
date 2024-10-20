@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=3 uid="uid://v07im6ckn0y5"]
+[gd_scene load_steps=10 format=3 uid="uid://v07im6ckn0y5"]
 
 [ext_resource type="Texture2D" uid="uid://22c2gue343i1" path="res://assets/tetrominoes2.png" id="1_q48xm"]
 [ext_resource type="Script" path="res://TileMap.gd" id="2_y6mwb"]
@@ -6,7 +6,6 @@
 [ext_resource type="PackedScene" uid="uid://psjnbhu2tahx" path="res://scenes/hud.tscn" id="3_vxlsc"]
 [ext_resource type="PackedScene" uid="uid://bm63pn6lopyqj" path="res://scenes/Recipe.tscn" id="4_1dfvb"]
 [ext_resource type="PackedScene" uid="uid://dh7atsdolj1wo" path="res://scenes/tail_effect.tscn" id="6_1rcvc"]
-[ext_resource type="PackedScene" uid="uid://0ullwvmt2wmn" path="res://scenes/Piece.tscn" id="7_jncaj"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_wgf51"]
 texture = ExtResource("1_q48xm")
@@ -100,5 +99,3 @@ high_pass_filter/cutoff_sweep = 0.0
 [node name="HUD" parent="." instance=ExtResource("3_vxlsc")]
 offset = Vector2(-400, 2.08165e-12)
 transform = Transform2D(1, 0, 0, 1, -400, 2.08165e-12)
-
-[node name="Piece" parent="." instance=ExtResource("7_jncaj")]
