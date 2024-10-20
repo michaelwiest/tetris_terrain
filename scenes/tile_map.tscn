@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3 uid="uid://v07im6ckn0y5"]
+[gd_scene load_steps=11 format=3 uid="uid://v07im6ckn0y5"]
 
 [ext_resource type="Texture2D" uid="uid://22c2gue343i1" path="res://assets/tetrominoes2.png" id="1_q48xm"]
 [ext_resource type="Script" path="res://TileMap.gd" id="2_y6mwb"]
@@ -6,6 +6,7 @@
 [ext_resource type="PackedScene" uid="uid://psjnbhu2tahx" path="res://scenes/hud.tscn" id="3_vxlsc"]
 [ext_resource type="PackedScene" uid="uid://bm63pn6lopyqj" path="res://scenes/Recipe.tscn" id="4_1dfvb"]
 [ext_resource type="PackedScene" uid="uid://dh7atsdolj1wo" path="res://scenes/tail_effect.tscn" id="6_1rcvc"]
+[ext_resource type="PackedScene" uid="uid://0ullwvmt2wmn" path="res://scenes/Piece.tscn" id="7_jncaj"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_wgf51"]
 texture = ExtResource("1_q48xm")
@@ -88,38 +89,6 @@ low_pass_filter/resonance = 0.0
 high_pass_filter/cutoff_frequency = 0.245038
 high_pass_filter/cutoff_sweep = 0.0
 
-[node name="HUD" parent="." instance=ExtResource("3_vxlsc")]
-
-[node name="Panel" parent="HUD" index="0"]
-offset_left = 1141.0
-offset_top = 332.0
-offset_right = 1452.0
-offset_bottom = 537.0
-
-[node name="Label" parent="HUD" index="1"]
-offset_left = 1180.0
-offset_top = 256.0
-offset_right = 1360.0
-offset_bottom = 301.0
-
-[node name="ScoreLabel" parent="HUD" index="2"]
-offset_left = 1106.0
-offset_top = 532.0
-offset_right = 1340.0
-offset_bottom = 619.0
-
-[node name="GameOverLabel" parent="HUD" index="3"]
-offset_left = 508.0
-offset_top = 392.0
-offset_right = 747.0
-offset_bottom = 450.0
-
-[node name="StartButton" parent="HUD" index="4"]
-offset_left = 1185.0
-offset_top = 701.0
-offset_right = 1365.0
-offset_bottom = 741.0
-
 [node name="Line" parent="." instance=ExtResource("4_1dfvb")]
 
 [node name="Square" parent="." instance=ExtResource("4_1dfvb")]
@@ -128,4 +97,8 @@ offset_bottom = 741.0
 
 [node name="TailEffect" parent="." instance=ExtResource("6_1rcvc")]
 
-[editable path="HUD"]
+[node name="HUD" parent="." instance=ExtResource("3_vxlsc")]
+offset = Vector2(-400, 2.08165e-12)
+transform = Transform2D(1, 0, 0, 1, -400, 2.08165e-12)
+
+[node name="Piece" parent="." instance=ExtResource("7_jncaj")]

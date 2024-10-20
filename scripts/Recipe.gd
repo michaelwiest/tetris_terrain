@@ -71,33 +71,39 @@ func animate(locs):
 	
 
 
-func find_patterns_in_tilemap(tilemap: TileMap, board_layer: int):
+func find_patterns_in_tilemap(
+	tilemap: TileMap, 
+	board_layer: int, 
+	row_max: int, 
+	col_max: int, 
+	row_min: int = 0, 
+	col_min: int = 0
+	):
 	var has_match
 	var matching_locations = []
-	var rows = tilemap.get_used_rect().size[1]
 	
-	var row_to_check = range(0, rows)
+	var row_to_check = range(row_min, row_max)
 	# Need to shift indices if going from bottom
 	if check_from_bottom:
-		row_to_check = range(rows -1 , -1, -1)
+		row_to_check = range(row_max -1 , row_min -1, -1)
 	
-	var cols = tilemap.get_used_rect().size[0]
 	for p in patterns[0]:
 		matching_locations.append(Vector2i(-1, -1))
+	var cols_to_check = range(col_min, col_max)
 	for row in row_to_check:
-		for col in cols:
+		for col in cols_to_check:
 			for j in len(patterns):
 				has_match = true
 				for i in len(patterns[j]):
 					var p = patterns[j][i]
 					var atlas_to_match = self.target_atlas_locations[i]
 
-					var rc = row + p[1]
-					var cc = col + p[0]
-					if (rc > rows):
+					var rc = row + p[0]
+					var cc = col + p[1]
+					if (rc > row_max):
 						has_match = false
 						continue
-					if (cc > cols):
+					if (cc > col_max):
 						has_match = false
 						continue
 					if (tilemap.get_cell_atlas_coords(board_layer, Vector2i(cc, rc)) != atlas_to_match):

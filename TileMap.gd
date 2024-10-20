@@ -57,8 +57,9 @@ var steps : Array
 const steps_req : int = 50
 const start_pos := Vector2i(5 , 1)
 var cur_pos : Vector2i
-var speed : float
-const ACCEL : float = 0.12
+@export var initial_speed: float = 0.7
+@onready var speed : float = initial_speed
+@export var ACCEL : float = 0.12
 
 #game piece variables
 var piece_type
@@ -88,6 +89,7 @@ var combo_count: int = 0
 @onready var line: Recipe = $Line
 @onready var square: Recipe = $Square
 @onready var tee: Recipe = $Tee
+@onready var active_piece2: Piece = $Piece
 @onready var move_sound = $SfxrStreamPlayer
 var recipes: Array = []
 var pattern_to_clear: Array = []
@@ -96,7 +98,7 @@ var tail_animation = preload("res://scenes/tail_effect.tscn")
 
 # fix bug at edge of screen.
 # score multiplier
-# Get multi-colored patternss. Slash general pattern to scene.
+# Get multi-colored patterns. Slash general pattern to scene.
 # Display available recipes.
 # 
 
@@ -135,11 +137,12 @@ func _ready():
 
 func new_game():
 	score = 0
-#	speed = 1.0
-	speed = 0.7
+	speed = initial_speed
+	
 	game_running = true
 	steps = [0, 0, 0] #0:left, 1:right, 2:down
 	$HUD.get_node("GameOverLabel").hide()
+	$HUD.get_node("ScoreValue").text = str(score)
 	#clear everything
 	clear_piece()
 	clear_board()
@@ -214,11 +217,16 @@ func clear_piece():
 func draw_piece(piece, pos, atlas):
 	for i in range(len(piece)):
 		var piece_i = piece[i]
-		var atlas_i = Vector2i(2, 0)
-		if i % 2 == 0:
-			atlas_i = Vector2i(1, 0)
 		
 		set_cell(active_layer, pos + piece_i, tile_id, atlas)
+
+
+func draw_piece2(piece: Piece, pos):
+	for i in range(len(piece.active_piece)):
+		var piece_i = piece.active_piece[i]
+		
+		set_cell(active_layer, pos + piece_i, tile_id, piece.tilemap_ids[i])
+
 
 func rotate_piece():
 	if can_rotate(cur_pos):
@@ -266,7 +274,7 @@ func prep():
 
 func check_board():
 	for r in recipes:
-		var maybe_matched_recipe = r.find_patterns_in_tilemap(self, board_layer)
+		var maybe_matched_recipe = r.find_patterns_in_tilemap(self, board_layer, ROWS, COLS, 0, 0)
 		var has_match = maybe_matched_recipe[0]
 		if has_match:
 			var matched_pattern = maybe_matched_recipe[1]
@@ -287,7 +295,7 @@ func cleanup():
 	score += temp_reward
 	temp_reward *= 2
 	combo_count += 1
-	$HUD.get_node("ScoreLabel").text = "SCORE: " + str(score)
+	$HUD.get_node("ScoreValue").text = str(score)
 	speed += ACCEL
 	
 

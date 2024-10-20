@@ -1,4 +1,4 @@
-[gd_scene load_steps=5 format=3 uid="uid://psjnbhu2tahx"]
+[gd_scene load_steps=8 format=3 uid="uid://psjnbhu2tahx"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_xosvn"]
 bg_color = Color(0.6, 0.6, 0.6, 0)
@@ -7,6 +7,9 @@ border_width_top = 5
 border_width_right = 5
 border_width_bottom = 5
 border_color = Color(0.054902, 0.054902, 0.054902, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_eiym4"]
+font_size = 42
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_42puf"]
 bg_color = Color(0.443137, 0.643137, 0.643137, 1)
@@ -17,34 +20,41 @@ bg_color = Color(0.709804, 0.541176, 0.654902, 1)
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ngyvp"]
 bg_color = Color(0.470588, 0.654902, 0.490196, 1)
 
+[sub_resource type="SystemFont" id="SystemFont_wefwn"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_4tub3"]
+font = SubResource("SystemFont_wefwn")
+font_size = 48
+
 [node name="HUD" type="CanvasLayer"]
 
 [node name="Panel" type="Panel" parent="."]
-offset_left = 1401.0
-offset_top = 372.0
-offset_right = 1712.0
-offset_bottom = 577.0
+offset_left = 1347.0
+offset_top = 322.0
+offset_right = 1784.0
+offset_bottom = 568.0
 theme_override_styles/panel = SubResource("StyleBoxFlat_xosvn")
 
 [node name="Label" type="Label" parent="."]
-offset_left = 1440.0
-offset_top = 296.0
-offset_right = 1620.0
-offset_bottom = 341.0
+offset_left = 1348.0
+offset_top = 265.0
+offset_right = 1528.0
+offset_bottom = 310.0
 theme_override_font_sizes/font_size = 30
 text = "NEXT PIECE:"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="ScoreLabel" type="Label" parent="."]
-offset_left = 1366.0
-offset_top = 572.0
-offset_right = 1600.0
-offset_bottom = 659.0
+[node name="ScoreValue" type="Label" parent="."]
+offset_left = 1427.0
+offset_top = 44.0
+offset_right = 1661.0
+offset_bottom = 131.0
 scale = Vector2(1.5, 1.5)
 theme_override_font_sizes/font_size = 30
-text = "SCORE: 0"
-horizontal_alignment = 1
+text = "0"
+label_settings = SubResource("LabelSettings_eiym4")
+horizontal_alignment = 2
 vertical_alignment = 1
 
 [node name="GameOverLabel" type="Label" parent="."]
@@ -67,3 +77,19 @@ theme_override_styles/normal = SubResource("StyleBoxFlat_42puf")
 theme_override_styles/hover = SubResource("StyleBoxFlat_adx1n")
 theme_override_styles/pressed = SubResource("StyleBoxFlat_ngyvp")
 text = "NEW GAME"
+
+[node name="ScoreLabel" type="Label" parent="."]
+offset_left = 1653.0
+offset_top = 163.0
+offset_right = 1781.0
+offset_bottom = 233.0
+text = "Score"
+label_settings = SubResource("LabelSettings_4tub3")
+horizontal_alignment = 2
+
+[node name="HSeparator" type="HSeparator" parent="ScoreLabel"]
+offset_left = -307.0
+offset_top = -14.0
+offset_right = 119.0
+offset_bottom = -10.0
+scale = Vector2(1, 5)
