@@ -71,7 +71,7 @@ func animate(locs):
 	
 
 
-func find_patterns_in_tilemap(tilemap: TileMap, board_layer: int, row_offset: int, col_offset: int):
+func find_patterns_in_tilemap(tilemap: TileMap, board_layer: int):
 	var has_match
 	var matching_locations = []
 	var rows = tilemap.get_used_rect().size[1]

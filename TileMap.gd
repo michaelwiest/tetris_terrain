@@ -50,13 +50,12 @@ var shapes_full := shapes.duplicate()
 #grid variables
 const COLS : int = 10
 const ROWS : int = 20
-const GLOBAL_COL_OFFSET = 0
 
 #movement variables
 const directions := [Vector2i.LEFT, Vector2i.RIGHT, Vector2i.DOWN]
 var steps : Array
 const steps_req : int = 50
-const start_pos := Vector2i(5 + GLOBAL_COL_OFFSET, 1)
+const start_pos := Vector2i(5 , 1)
 var cur_pos : Vector2i
 var speed : float
 const ACCEL : float = 0.12
@@ -206,7 +205,7 @@ func create_piece():
 	active_piece = piece_type[rotation_index]
 	draw_piece(active_piece, cur_pos, piece_atlas)
 	#show next piece
-	draw_piece(next_piece_type[0], Vector2i(15 + GLOBAL_COL_OFFSET, 6), next_piece_atlas)
+	draw_piece(next_piece_type[0], Vector2i(15, 6), next_piece_atlas)
 
 func clear_piece():
 	for i in active_piece:
@@ -222,11 +221,31 @@ func draw_piece(piece, pos, atlas):
 		set_cell(active_layer, pos + piece_i, tile_id, atlas)
 
 func rotate_piece():
-	if can_rotate():
+	if can_rotate(cur_pos):
 		clear_piece()
 		rotation_index = (rotation_index + 1) % 4
 		active_piece = piece_type[rotation_index]
 		draw_piece(active_piece, cur_pos, piece_atlas)
+	else:
+		# Check if we're on the left and right edges in which case we need to 
+		# move over inside.
+		var temp_right = cur_pos + Vector2i.RIGHT
+		var temp_left = cur_pos + Vector2i.LEFT
+		if can_rotate(temp_right):
+			clear_piece()
+			rotation_index = (rotation_index + 1) % 4
+			active_piece = piece_type[rotation_index]
+			draw_piece(active_piece, temp_right, piece_atlas)
+			cur_pos = temp_right
+		elif can_rotate(temp_left):
+			clear_piece()
+			rotation_index = (rotation_index + 1) % 4
+			active_piece = piece_type[rotation_index]
+			draw_piece(active_piece, temp_left, piece_atlas)
+			cur_pos = temp_left
+			
+
+		
 
 func pick_piece_atlas():
 	return Vector2i(randi_range(0, 2), 0)
@@ -247,7 +266,7 @@ func prep():
 
 func check_board():
 	for r in recipes:
-		var maybe_matched_recipe = r.find_patterns_in_tilemap(self, board_layer, 0, GLOBAL_COL_OFFSET)
+		var maybe_matched_recipe = r.find_patterns_in_tilemap(self, board_layer)
 		var has_match = maybe_matched_recipe[0]
 		if has_match:
 			var matched_pattern = maybe_matched_recipe[1]
@@ -292,11 +311,11 @@ func can_move(dir):
 			cm = false
 	return cm
 
-func can_rotate():
+func can_rotate(pos_to_check):
 	var cr = true
 	var temp_rotation_index = (rotation_index + 1) % 4
 	for i in piece_type[temp_rotation_index]:
-		if not is_free(i + cur_pos):
+		if not is_free(i + pos_to_check):
 			cr = false
 	return cr
 
@@ -311,8 +330,8 @@ func land_piece():
 		set_cell(board_layer, cur_pos + i, tile_id, piece_atlas)
 
 func clear_panel():
-	for i in range(14, 19 + GLOBAL_COL_OFFSET):
-		for j in range(5, 9 + GLOBAL_COL_OFFSET):
+	for i in range(14, 19):
+		for j in range(5, 9):
 			erase_cell(active_layer, Vector2i(i, j))
 
 func shift_rows_from_pattern(matching_location):
@@ -352,8 +371,6 @@ func shift_column(col, row, n_shifts):
 
 
 func sink_unmatched_pieces(piece: Array):
-# Current bug is that if the unmatched piece is above a matched pattern then it will have been shifted.
-# so we need to change its location.
 	for p in piece:
 		var col = p[0]
 		var row = p[1]
@@ -387,10 +404,11 @@ func shift_rows(row):
 
 func clear_board():
 	for i in range(ROWS):
-		for j in range(GLOBAL_COL_OFFSET, COLS + GLOBAL_COL_OFFSET):
+		for j in range(COLS):
 			erase_cell(board_layer, Vector2i(j + 1, i + 1))
 
 func check_game_over():
+	# Something is broken in here.
 	for i in active_piece:
 		if not is_free(i + cur_pos):
 			land_piece()
