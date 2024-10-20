@@ -50,7 +50,7 @@ var shapes_full := shapes.duplicate()
 #grid variables
 const COLS : int = 10
 const ROWS : int = 20
-const GLOBAL_COL_OFFSET = 8
+const GLOBAL_COL_OFFSET = 0
 
 #movement variables
 const directions := [Vector2i.LEFT, Vector2i.RIGHT, Vector2i.DOWN]
@@ -95,8 +95,6 @@ var pattern_to_clear: Array = []
 var unmatched_pieces_to_sink: Array = []
 var tail_animation = preload("res://scenes/tail_effect.tscn")
 
-# Drop cleared part of piece
-	# animate droopping?
 # fix bug at edge of screen.
 # score multiplier
 # Get multi-colored patternss. Slash general pattern to scene.

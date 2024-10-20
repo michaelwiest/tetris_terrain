@@ -38,6 +38,7 @@ animations = [{
 }]
 
 [node name="animation" type="AnimatedSprite2D"]
+z_index = 2
 sprite_frames = SubResource("SpriteFrames_ghmyr")
 frame = 4
 frame_progress = 1.0

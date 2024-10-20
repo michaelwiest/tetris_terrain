@@ -4,6 +4,7 @@ class_name Recipe
 @export var patterns: Array
 @export var target_atlas_locations: Array
 @export var tilemap: TileMap
+@export var check_from_bottom: bool = true
 var animation = preload("res://scenes/flash.tscn")
 var particle = preload("res://scenes/explosion.tscn")
 var _is_animating: bool = false
@@ -74,10 +75,16 @@ func find_patterns_in_tilemap(tilemap: TileMap, board_layer: int, row_offset: in
 	var has_match
 	var matching_locations = []
 	var rows = tilemap.get_used_rect().size[1]
+	
+	var row_to_check = range(0, rows)
+	# Need to shift indices if going from bottom
+	if check_from_bottom:
+		row_to_check = range(rows -1 , -1, -1)
+	
 	var cols = tilemap.get_used_rect().size[0]
 	for p in patterns[0]:
 		matching_locations.append(Vector2i(-1, -1))
-	for row in rows:
+	for row in row_to_check:
 		for col in cols:
 			for j in len(patterns):
 				has_match = true
