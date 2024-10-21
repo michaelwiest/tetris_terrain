@@ -100,18 +100,22 @@ offset_right = 119.0
 offset_bottom = -10.0
 scale = Vector2(1, 5)
 
+[node name="Label2" type="Label" parent="."]
+offset_left = 991.0
+offset_top = 801.0
+offset_right = 1436.0
+offset_bottom = 846.0
+theme_override_font_sizes/font_size = 30
+text = "Patterns to Make"
+vertical_alignment = 1
+
 [node name="RecipeContainer" type="GridContainer" parent="."]
 custom_minimum_size = Vector2(100, 100)
 offset_left = 1000.0
-offset_top = 818.0
-offset_right = 1422.0
-offset_bottom = 1303.0
+offset_top = 870.0
+offset_right = 1464.0
+offset_bottom = 1320.0
+size_flags_horizontal = 3
+theme_override_constants/h_separation = 20
+theme_override_constants/v_separation = 20
 columns = 2
-
-[node name="Label" type="Label" parent="RecipeContainer"]
-layout_mode = 2
-text = "REALLY REALLY LONG NAME"
-
-[node name="Label2" type="Label" parent="RecipeContainer"]
-layout_mode = 2
-text = "ANOTER LONG NAME"

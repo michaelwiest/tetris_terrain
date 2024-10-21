@@ -1,8 +1,9 @@
 extends Node2D
 class_name Recipe
 
+@export var display_name: String
+@export var display_color: Color
 @export var piece: Piece
-@export var tilemap: TileMap
 @export var check_from_bottom: bool = true
 var animation = preload("res://scenes/flash.tscn")
 var particle = preload("res://scenes/explosion.tscn")

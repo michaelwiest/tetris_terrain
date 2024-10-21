@@ -99,7 +99,6 @@ var recipe_display = preload("res://scenes/RecipeDisplay.tscn")
 @onready var piece_display = $HUD/Panel/PieceDisplay
 
 # Save individual recipes as scenes.
-# Display available recipes.
 # score multiplier
 
 # Bugs:
@@ -214,11 +213,10 @@ func pick_piece(disable_auto_match: bool = true) -> Piece:
 		shapes.shuffle()
 		piece_positions = shapes.pop_front()
 	
-	var temp_atlas_0 = pick_piece_atlas()
-	var temp_atlas_1 = pick_piece_atlas()
+	var atlas_arr = pick_piece_atlas()
 	var new_piece = piece_resource.instantiate()
 	
-	new_piece.instance(piece_positions, [temp_atlas_0, temp_atlas_0, temp_atlas_0, temp_atlas_0])
+	new_piece.instance(piece_positions, atlas_arr)
 	add_child(new_piece)
 	if disable_auto_match:
 		for r in recipes:
@@ -266,8 +264,12 @@ func rotate_piece():
 			draw_piece(active_piece, cur_pos)
 
 
-func pick_piece_atlas():
-	return Vector2i(randi_range(0, 2), 0)
+func pick_piece_atlas(n_entries: int = 4):
+	var choice_0 = Vector2i(randi_range(0, 2), 0)
+	var choice_1 = choice_0
+	if randf_range(0, 1.0) < split_color_chance:
+		choice_1 = Vector2i(randi_range(0, 2), 0)
+	return [choice_0, choice_0, choice_1, choice_1]
 
 
 func prep():
@@ -331,7 +333,6 @@ func can_move(piece: Piece, dir):
 
 func can_rotate(pos_to_check, current_piece: Piece):
 	var cr = true
-#	var temp_rotation_index = (rotation_index + 1) % 4
 	for i in current_piece.rotated_positions():
 		if not is_free(i + pos_to_check):
 			cr = false

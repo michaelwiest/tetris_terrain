@@ -88,12 +88,18 @@ low_pass_filter/resonance = 0.0
 high_pass_filter/cutoff_frequency = 0.245038
 high_pass_filter/cutoff_sweep = 0.0
 
-[node name="Line" parent="." instance=ExtResource("4_1dfvb")]
-
-[node name="Square" parent="." instance=ExtResource("4_1dfvb")]
-
-[node name="Tee" parent="." instance=ExtResource("4_1dfvb")]
-
 [node name="TailEffect" parent="." instance=ExtResource("6_1rcvc")]
 
 [node name="HUD" parent="." instance=ExtResource("3_vxlsc")]
+
+[node name="Line" parent="." instance=ExtResource("4_1dfvb")]
+display_name = "Red Line"
+display_color = Color(0.913725, 0.270588, 0.25098, 1)
+
+[node name="Tee" parent="." instance=ExtResource("4_1dfvb")]
+display_name = "Green Tee"
+display_color = Color(0.286275, 0.74902, 0.364706, 1)
+
+[node name="Square" parent="." instance=ExtResource("4_1dfvb")]
+display_name = "Blue Square"
+display_color = Color(0.14902, 0.388235, 0.866667, 1)

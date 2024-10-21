@@ -11,8 +11,6 @@ data = PackedByteArray(37, 37, 37, 37, 37, 37, 37, 37, 37, 37, 37, 37, 37, 37, 3
 script = ExtResource("1_in1c5")
 metadata/patterns = [Vector2i(0, 0)]
 
-[node name="Sprite2d" type="Sprite2D" parent="."]
-
 [node name="SfxrStreamPlayer" type="AudioStreamPlayer" parent="."]
 stream = SubResource("AudioStreamWAV_q38xk")
 script = ExtResource("2_h0x0v")
