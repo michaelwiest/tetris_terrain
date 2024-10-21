@@ -13,6 +13,8 @@ var active_piece: Array
 @onready var is_ready: bool = false
 @onready var rotation_index: int = 0
 
+# TODO: implement a way to figure out the shape type of the current piece. 
+
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	pass # Replace with function body.

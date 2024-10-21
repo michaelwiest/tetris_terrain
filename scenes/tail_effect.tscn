@@ -5,10 +5,11 @@ _data = [Vector2(0.11499, 1), 0.0, 0.0, 0, 0, Vector2(0.988901, 0.16119), 0.0, 0
 point_count = 2
 
 [node name="TailEffect" type="CPUParticles2D"]
-z_index = 2
+z_index = 1
+position = Vector2(2.08165e-12, 2.08165e-12)
 emitting = false
 amount = 32
-lifetime = 0.1
+lifetime = 0.2
 one_shot = true
 emission_shape = 3
 emission_rect_extents = Vector2(32, 1)

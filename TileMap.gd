@@ -3,48 +3,47 @@ extends TileMap
 #tetrominoes
 var i_0 := [Vector2i(0, 1), Vector2i(1, 1), Vector2i(2, 1), Vector2i(3, 1)]
 var i_90 := [Vector2i(2, 0), Vector2i(2, 1), Vector2i(2, 2), Vector2i(2, 3)]
-var i_180 := [Vector2i(0, 2), Vector2i(1, 2), Vector2i(2, 2), Vector2i(3, 2)]
-var i_270 := [Vector2i(1, 0), Vector2i(1, 1), Vector2i(1, 2), Vector2i(1, 3)]
+var i_180 := [ Vector2i(3, 2), Vector2i(2, 2), Vector2i(1, 2), Vector2i(0, 2), ]
+var i_270 := [ Vector2i(1, 3), Vector2i(1, 2), Vector2i(1, 1), Vector2i(1, 0), ]
 var i := [i_0, i_90, i_180, i_270]
 
 var t_0 := [Vector2i(1, 0), Vector2i(0, 1), Vector2i(1, 1), Vector2i(2, 1)]
-var t_90 := [Vector2i(1, 0), Vector2i(1, 1), Vector2i(2, 1), Vector2i(1, 2)]
-var t_180 := [Vector2i(0, 1), Vector2i(1, 1), Vector2i(2, 1), Vector2i(1, 2)]
-var t_270 := [Vector2i(1, 0), Vector2i(0, 1), Vector2i(1, 1), Vector2i(1, 2)]
+var t_90 := [Vector2i(2, 1),Vector2i(1, 0), Vector2i(1, 1),  Vector2i(1, 2)]
+var t_180 := [Vector2i(1, 2), Vector2i(2, 1), Vector2i(1, 1), Vector2i(0, 1), ]
+var t_270 := [Vector2i(0, 1),Vector2i(1, 2), Vector2i(1, 1), Vector2i(1, 0),  ]
 var t := [t_0, t_90, t_180, t_270]
 
 var o_0 := [Vector2i(0, 0), Vector2i(1, 0), Vector2i(0, 1), Vector2i(1, 1)]
-var o_90 := [Vector2i(0, 0), Vector2i(1, 0), Vector2i(0, 1), Vector2i(1, 1)]
-var o_180 := [Vector2i(0, 0), Vector2i(1, 0), Vector2i(0, 1), Vector2i(1, 1)]
-var o_270 := [Vector2i(0, 0), Vector2i(1, 0), Vector2i(0, 1), Vector2i(1, 1)]
+var o_90 := [Vector2i(1, 0),  Vector2i(1, 1), Vector2i(0, 0), Vector2i(0, 1)]
+var o_180 := [Vector2i(1, 1),   Vector2i(0, 1),Vector2i(1, 0), Vector2i(0, 0)]
+var o_270 := [Vector2i(0, 1), Vector2i(0, 0), Vector2i(1, 1), Vector2i(1, 0)]
 var o := [o_0, o_90, o_180, o_270]
 
 var z_0 := [Vector2i(0, 0), Vector2i(1, 0), Vector2i(1, 1), Vector2i(2, 1)]
-var z_90 := [Vector2i(2, 0), Vector2i(1, 1), Vector2i(2, 1), Vector2i(1, 2)]
-var z_180 := [Vector2i(0, 1), Vector2i(1, 1), Vector2i(1, 2), Vector2i(2, 2)]
-var z_270 := [Vector2i(1, 0), Vector2i(0, 1), Vector2i(1, 1), Vector2i(0, 2)]
+var z_90 := [Vector2i(2, 0), Vector2i(2, 1),Vector2i(1, 1),  Vector2i(1, 2)]
+var z_180 := [Vector2i(2, 2), Vector2i(1, 2), Vector2i(1, 1), Vector2i(0, 1)]
+var z_270 := [ Vector2i(0, 2), Vector2i(0, 1), Vector2i(1, 1), Vector2i(1, 0),]
 var z := [z_0, z_90, z_180, z_270]
 
-var s_0 := [Vector2i(1, 0), Vector2i(2, 0), Vector2i(0, 1), Vector2i(1, 1)]
-var s_90 := [Vector2i(1, 0), Vector2i(1, 1), Vector2i(2, 1), Vector2i(2, 2)]
-var s_180 := [Vector2i(1, 1), Vector2i(2, 1), Vector2i(0, 2), Vector2i(1, 2)]
-var s_270 := [Vector2i(0, 0), Vector2i(0, 1), Vector2i(1, 1), Vector2i(1, 2)]
+var s_0 := [Vector2i(2, 0), Vector2i(1, 0), Vector2i(0, 1), Vector2i(1, 1)]
+var s_90 := [Vector2i(2, 2), Vector2i(2, 1), Vector2i(1, 0), Vector2i(1, 1), ]
+var s_180 := [Vector2i(0, 2), Vector2i(1, 2), Vector2i(2, 1), Vector2i(1, 1),  ]
+var s_270 := [Vector2i(0, 0), Vector2i(0, 1), Vector2i(1, 2), Vector2i(1, 1), ]
 var s := [s_0, s_90, s_180, s_270]
 
-var l_0 := [Vector2i(2, 0), Vector2i(0, 1), Vector2i(1, 1), Vector2i(2, 1)]
-var l_90 := [Vector2i(1, 0), Vector2i(1, 1), Vector2i(1, 2), Vector2i(2, 2)]
-var l_180 := [Vector2i(0, 1), Vector2i(1, 1), Vector2i(2, 1), Vector2i(0, 2)]
-var l_270 := [Vector2i(0, 0), Vector2i(1, 0), Vector2i(1, 1), Vector2i(1, 2)]
+var l_0 := [Vector2i(1, 1), Vector2i(0, 1),  Vector2i(2, 1), Vector2i(2, 0), ]
+var l_90 := [Vector2i(1, 1), Vector2i(1, 0), Vector2i(1, 2), Vector2i(2, 2)]
+var l_180 := [Vector2i(1, 1), Vector2i(2, 1), Vector2i(0, 1), Vector2i(0, 2), ]
+var l_270 := [Vector2i(1, 1), Vector2i(1, 2), Vector2i(1, 0),  Vector2i(0, 0),]
 var l := [l_0, l_90, l_180, l_270]
 
-var j_0 := [Vector2i(0, 0), Vector2i(0, 1), Vector2i(1, 1), Vector2i(2, 1)]
+var j_0 := [Vector2i(0, 1), Vector2i(0, 0), Vector2i(1, 1), Vector2i(2, 1)]
 var j_90 := [Vector2i(1, 0), Vector2i(2, 0), Vector2i(1, 1), Vector2i(1, 2)]
-var j_180 := [Vector2i(0, 1), Vector2i(1, 1), Vector2i(2, 1), Vector2i(2, 2)]
-var j_270 := [Vector2i(1, 0), Vector2i(1, 1), Vector2i(0, 2), Vector2i(1, 2)]
+var j_180 := [ Vector2i(2, 1), Vector2i(2, 2), Vector2i(1, 1), Vector2i(0, 1), ]
+var j_270 := [Vector2i(1, 2), Vector2i(0, 2), Vector2i(1, 1), Vector2i(1, 0), ]
 var j := [j_0, j_90, j_180, j_270]
 
 var shapes := [i, t, o, z, s, l, j]
-#var shapes = [o]
 var shapes_full := shapes.duplicate()
 
 #grid variables
@@ -61,6 +60,7 @@ var cur_pos : Vector2i
 @onready var speed : float = initial_speed
 @export var ACCEL : float = 0.12
 
+@export var split_color_chance = 0.2
 
 
 
@@ -94,10 +94,15 @@ var unmatched_pieces_to_sink: Array = []
 var tail_animation = preload("res://scenes/tail_effect.tscn")
 var piece_resource = preload("res://scenes/Piece.tscn")
 
-# score multiplier
-# Get multi-colored patterns. Slash general pattern to scene.
+
+# Save individual recipes as scenes.
+# Implement recipe with pieces!
 # Display available recipes.
-# 
+# score multiplier
+
+# Bugs:
+# - Something with sinking pieces is wrong...
+# - something with drawing the tailing animation on the pieces to sink is bad.
 
 enum State {MOVING, CHECKING, ANIMATING, PREP, CLEANUP}
 
@@ -144,9 +149,9 @@ func new_game():
 #	clear_piece()
 	clear_board()
 	clear_panel()
-	active_piece = pick_piece2()
+	active_piece = pick_piece()
 	# Hack to simplify
-	next_piece = pick_piece2()
+	next_piece = pick_piece()
 	create_piece()
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -183,20 +188,8 @@ func _process(delta):
 				prep()
 				
 
-func pick_piece():
-	var piece
-	if not shapes.is_empty():
-		shapes.shuffle()
-		piece = shapes.pop_front()
-	else:
-		shapes = shapes_full.duplicate()
-		shapes.shuffle()
-		piece = shapes.pop_front()
-	
-	return piece
 
-
-func pick_piece2() -> Piece:
+func pick_piece() -> Piece:
 	var piece_positions
 	if not shapes.is_empty():
 		shapes.shuffle()
@@ -205,10 +198,12 @@ func pick_piece2() -> Piece:
 		shapes = shapes_full.duplicate()
 		shapes.shuffle()
 		piece_positions = shapes.pop_front()
-	var temp_atlas = pick_piece_atlas()
+	
+	var temp_atlas_0 = pick_piece_atlas()
+	var temp_atlas_1 = pick_piece_atlas()
 	var new_piece = piece_resource.instantiate()
 	
-	new_piece.instance(piece_positions, [temp_atlas, temp_atlas, temp_atlas, temp_atlas])
+	new_piece.instance(piece_positions, [temp_atlas_0, temp_atlas_0, temp_atlas_1, temp_atlas_1])
 	add_child(new_piece)
 	return new_piece
 
@@ -262,7 +257,7 @@ func prep():
 	temp_reward = REWARD
 	combo_count = 0
 	active_piece = next_piece
-	next_piece = pick_piece2()
+	next_piece = pick_piece()
 	clear_panel()
 	create_piece()
 	check_game_over()
@@ -286,7 +281,6 @@ func check_board():
 func cleanup():
 	shift_rows_from_pattern(pattern_to_clear)
 	sink_unmatched_pieces(unmatched_pieces_to_sink)
-	active_piece.queue_free()
 	current_state = State.CHECKING
 	
 	score += temp_reward
@@ -387,6 +381,8 @@ func sink_unmatched_pieces(piece: Array):
 			var atlas = get_cell_atlas_coords(board_layer, Vector2i(col, i))
 			if atlas == Vector2i(-1, -1):
 				latest_row = i
+			else:
+				break
 		erase_cell(board_layer, p)
 		set_cell(board_layer, Vector2i(col, latest_row), tile_id, current_atlas)
 		var tail_anim  = tail_animation.instantiate()
