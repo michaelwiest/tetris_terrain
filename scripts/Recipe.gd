@@ -1,8 +1,7 @@
 extends Node2D
 class_name Recipe
 
-@export var patterns: Array
-@export var target_atlas_locations: Array
+@export var piece: Piece
 @export var tilemap: TileMap
 @export var check_from_bottom: bool = true
 var animation = preload("res://scenes/flash.tscn")
@@ -14,30 +13,30 @@ var particle_objects: Array = []
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	if len(patterns) != len(target_atlas_locations):
-		push_error("Recipe pattern length and target_atlas_location must be the same.")
-
+	pass
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
 	pass
 
-func set_patterns(p):
-	if len(patterns) > 0:
-		push_warning("Overwriting pattern to match.")
-	patterns = []
-	for pi in p:
-		patterns.append(pi)
-
-func set_target_atlas_locations(l):
-	if len(target_atlas_locations) > 0:
-		push_warning("Overwriting target_atlas_alocations to match.")
-	target_atlas_locations = []
-	for li in l:
-		target_atlas_locations.append(li)
+#func set_patterns(p):
+#	if len(patterns) > 0:
+#		push_warning("Overwriting pattern to match.")
+#	patterns = []
+#	for pi in p:
+#		patterns.append(pi)
+#
+#func set_target_atlas_locations(l):
+#	if len(target_atlas_locations) > 0:
+#		push_warning("Overwriting target_atlas_alocations to match.")
+#	target_atlas_locations = []
+#	for li in l:
+#		target_atlas_locations.append(li)
 	
+func instantiate(temp_piece: Piece):
+	piece = temp_piece
 	
 func print_patterns():
-	print(patterns)
+	print(piece.active_piece)
 
 func set_animation_finished():
 	_is_animating = false
@@ -87,16 +86,17 @@ func find_patterns_in_tilemap(
 	if check_from_bottom:
 		row_to_check = range(row_max -1 , row_min -1, -1)
 	
-	for p in patterns[0]:
+	for p in piece.tilemap_ids:
 		matching_locations.append(Vector2i(-1, -1))
 	var cols_to_check = range(col_min, col_max)
 	for row in row_to_check:
 		for col in cols_to_check:
-			for j in len(patterns):
+			for j in len(piece.all_pieces):
+				var piece_to_check = piece.all_pieces[j]
 				has_match = true
-				for i in len(patterns[j]):
-					var p = patterns[j][i]
-					var atlas_to_match = self.target_atlas_locations[i]
+				for i in len(piece_to_check):
+					var p: Vector2i = piece_to_check[i]
+					var atlas_to_match = piece.tilemap_ids[i]
 
 					var rc = row + p[0]
 					var cc = col + p[1]

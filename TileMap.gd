@@ -43,7 +43,8 @@ var j_180 := [ Vector2i(2, 1), Vector2i(2, 2), Vector2i(1, 1), Vector2i(0, 1), ]
 var j_270 := [Vector2i(1, 2), Vector2i(0, 2), Vector2i(1, 1), Vector2i(1, 0), ]
 var j := [j_0, j_90, j_180, j_270]
 
-var shapes := [i, t, o, z, s, l, j]
+#var shapes := [i, t, o, z, s, l, j]
+var shapes := [s]
 var shapes_full := shapes.duplicate()
 
 #grid variables
@@ -96,12 +97,10 @@ var piece_resource = preload("res://scenes/Piece.tscn")
 
 
 # Save individual recipes as scenes.
-# Implement recipe with pieces!
 # Display available recipes.
 # score multiplier
 
 # Bugs:
-# - Something with sinking pieces is wrong...
 # - something with drawing the tailing animation on the pieces to sink is bad.
 
 enum State {MOVING, CHECKING, ANIMATING, PREP, CLEANUP}
@@ -123,14 +122,19 @@ func get_active_piece_not_in_pattern(matched_pattern: Array) -> Array:
 		
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	square.set_patterns([o_0])
-	line.set_patterns([i_0, i_90])
-	tee.set_patterns([t_0, t_90, t_180, t_270])
-	tee.set_target_atlas_locations([Vector2i(0, 0), Vector2i(0, 0),Vector2i(0, 0),Vector2i(0, 0),])
-	square.set_target_atlas_locations([Vector2i(1, 0), Vector2i(1, 0),Vector2i(1, 0),Vector2i(1, 0),])
-	line.set_target_atlas_locations([Vector2i(2, 0), Vector2i(2, 0),Vector2i(2, 0),Vector2i(2, 0),])
+	# Set our patterns to check for
+	var square_piece = piece_resource.instantiate()
+	square_piece.instance(o, [Vector2i(1, 0), Vector2i(1, 0),Vector2i(1, 0),Vector2i(1, 0),])
+	square.instantiate(square_piece)
 	
+	var tee_piece = piece_resource.instantiate()
+	tee_piece.instance(t, [Vector2i(0, 0), Vector2i(0, 0),Vector2i(0, 0),Vector2i(0, 0),])
+	tee.instantiate(tee_piece)
 	
+	var i_piece = piece_resource.instantiate()
+	i_piece.instance(i, [Vector2i(2, 0), Vector2i(2, 0),Vector2i(2, 0),Vector2i(2, 0),])
+	line.instantiate(i_piece)
+#
 	recipes.append(square)
 	recipes.append(line)
 	recipes.append(tee)
@@ -146,8 +150,7 @@ func new_game():
 	$HUD.get_node("GameOverLabel").hide()
 	$HUD.get_node("ScoreValue").text = str(score)
 	#clear everything
-#	clear_piece()
-	clear_board()
+#	clear_board()
 	clear_panel()
 	active_piece = pick_piece()
 	# Hack to simplify
@@ -203,7 +206,8 @@ func pick_piece() -> Piece:
 	var temp_atlas_1 = pick_piece_atlas()
 	var new_piece = piece_resource.instantiate()
 	
-	new_piece.instance(piece_positions, [temp_atlas_0, temp_atlas_0, temp_atlas_1, temp_atlas_1])
+#	new_piece.instance(piece_positions, [temp_atlas_0, temp_atlas_0, temp_atlas_1, temp_atlas_1])
+	new_piece.instance(piece_positions, [Vector2i(2, 0), Vector2i(2, 0), Vector2i(2, 0), Vector2i(2, 0),])
 	add_child(new_piece)
 	return new_piece
 
@@ -271,6 +275,7 @@ func check_board():
 		if has_match:
 			var matched_pattern = maybe_matched_recipe[1]
 			unmatched_pieces_to_sink = get_active_piece_not_in_pattern(matched_pattern)
+			print(unmatched_pieces_to_sink)
 			r.animate(convert_positions_to_local(matched_pattern))
 			pattern_to_clear = matched_pattern
 			current_state = State.ANIMATING
@@ -280,6 +285,7 @@ func check_board():
 
 func cleanup():
 	shift_rows_from_pattern(pattern_to_clear)
+	print(unmatched_pieces_to_sink)
 	sink_unmatched_pieces(unmatched_pieces_to_sink)
 	current_state = State.CHECKING
 	
@@ -370,8 +376,14 @@ func shift_column(col, row, n_shifts):
 		else:
 			set_cell(board_layer, Vector2i(col, i), tile_id, atlas2)
 
+func _sort_by_col(a: Vector2i, b: Vector2i):
+	if a[1] > b[1]:
+		return true
+	return false
 
 func sink_unmatched_pieces(piece: Array):
+	# Sort the pieces by their row (second index)
+	piece.sort_custom(_sort_by_col)
 	for p in piece:
 		var col = p[0]
 		var row = p[1]
@@ -383,13 +395,14 @@ func sink_unmatched_pieces(piece: Array):
 				latest_row = i
 			else:
 				break
-		erase_cell(board_layer, p)
-		set_cell(board_layer, Vector2i(col, latest_row), tile_id, current_atlas)
-		var tail_anim  = tail_animation.instantiate()
-		tail_anim.scale = Vector2i(1, latest_row - row)
-		add_child(tail_anim)
-		tail_anim.position = map_to_local(Vector2i(col, latest_row))
-		tail_anim.restart()
+		if latest_row > row:
+			erase_cell(board_layer, p)
+			set_cell(board_layer, Vector2i(col, latest_row), tile_id, current_atlas)
+			var tail_anim  = tail_animation.instantiate()
+			tail_anim.scale = Vector2i(1, latest_row - row)
+			add_child(tail_anim)
+			tail_anim.position = map_to_local(Vector2i(col, latest_row))
+			tail_anim.restart()
 		
 
 
