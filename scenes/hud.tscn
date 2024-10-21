@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3 uid="uid://psjnbhu2tahx"]
+[gd_scene load_steps=11 format=3 uid="uid://psjnbhu2tahx"]
 
 [ext_resource type="PackedScene" uid="uid://ciw2mhu08gs3k" path="res://scenes/PieceDisplay.tscn" id="1_x83pp"]
 
@@ -8,10 +8,19 @@ border_width_left = 5
 border_width_top = 5
 border_width_right = 5
 border_width_bottom = 5
-border_color = Color(0.054902, 0.054902, 0.054902, 1)
+border_color = Color(1, 1, 1, 1)
+
+[sub_resource type="SystemFont" id="SystemFont_wefwn"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_4tub3"]
+font = SubResource("SystemFont_wefwn")
+font_size = 24
+
+[sub_resource type="StyleBoxLine" id="StyleBoxLine_wi7q2"]
+color = Color(1, 1, 1, 1)
 
 [sub_resource type="LabelSettings" id="LabelSettings_eiym4"]
-font_size = 42
+font_size = 48
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_42puf"]
 bg_color = Color(0.443137, 0.643137, 0.643137, 1)
@@ -22,39 +31,63 @@ bg_color = Color(0.709804, 0.541176, 0.654902, 1)
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ngyvp"]
 bg_color = Color(0.470588, 0.654902, 0.490196, 1)
 
-[sub_resource type="SystemFont" id="SystemFont_wefwn"]
-
-[sub_resource type="LabelSettings" id="LabelSettings_4tub3"]
-font = SubResource("SystemFont_wefwn")
-font_size = 48
+[sub_resource type="LabelSettings" id="LabelSettings_qjkd3"]
+font_size = 24
 
 [node name="HUD" type="CanvasLayer"]
 
 [node name="Panel" type="Panel" parent="."]
 offset_left = 992.0
-offset_top = 322.0
+offset_top = 452.0
 offset_right = 1429.0
-offset_bottom = 568.0
+offset_bottom = 698.0
 theme_override_styles/panel = SubResource("StyleBoxFlat_xosvn")
 
-[node name="PieceDisplay" parent="Panel" instance=ExtResource("1_x83pp")]
-layout_mode = 1
+[node name="MarginContainer" type="MarginContainer" parent="Panel"]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 20
+
+[node name="PieceDisplay" parent="Panel/MarginContainer" instance=ExtResource("1_x83pp")]
+layout_mode = 2
+offset = Vector2i(0, 0)
 
 [node name="Label" type="Label" parent="."]
 offset_left = 993.0
-offset_top = 265.0
+offset_top = 395.0
 offset_right = 1173.0
-offset_bottom = 310.0
+offset_bottom = 440.0
 theme_override_font_sizes/font_size = 30
 text = "NEXT PIECE:"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="ScoreValue" type="Label" parent="."]
-offset_left = 1072.0
-offset_top = 44.0
-offset_right = 1306.0
-offset_bottom = 131.0
+[node name="ScoreLabel" type="Label" parent="."]
+offset_left = 1303.0
+offset_top = 163.0
+offset_right = 1431.0
+offset_bottom = 233.0
+text = "Score"
+label_settings = SubResource("LabelSettings_4tub3")
+horizontal_alignment = 2
+
+[node name="HSeparator" type="HSeparator" parent="ScoreLabel"]
+layout_mode = 0
+offset_left = -304.0
+offset_top = -14.0
+offset_right = 122.0
+offset_bottom = -10.0
+scale = Vector2(1, 5)
+theme_override_styles/separator = SubResource("StyleBoxLine_wi7q2")
+
+[node name="ScoreValue" type="Label" parent="ScoreLabel"]
+layout_mode = 0
+offset_left = -227.0
+offset_top = -118.0
+offset_right = 7.0
+offset_bottom = -31.0
 scale = Vector2(1.5, 1.5)
 theme_override_font_sizes/font_size = 30
 text = "0"
@@ -72,50 +105,72 @@ text = "GAME OVER!"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="StartButton" type="Button" parent="."]
-offset_left = 1090.0
-offset_top = 741.0
-offset_right = 1270.0
-offset_bottom = 781.0
-theme_override_font_sizes/font_size = 28
-theme_override_styles/normal = SubResource("StyleBoxFlat_42puf")
-theme_override_styles/hover = SubResource("StyleBoxFlat_adx1n")
-theme_override_styles/pressed = SubResource("StyleBoxFlat_ngyvp")
-text = "NEW GAME"
-
-[node name="ScoreLabel" type="Label" parent="."]
-offset_left = 1298.0
-offset_top = 163.0
-offset_right = 1426.0
-offset_bottom = 233.0
-text = "Score"
-label_settings = SubResource("LabelSettings_4tub3")
-horizontal_alignment = 2
-
-[node name="HSeparator" type="HSeparator" parent="ScoreLabel"]
-layout_mode = 0
-offset_left = -307.0
-offset_top = -14.0
-offset_right = 119.0
-offset_bottom = -10.0
-scale = Vector2(1, 5)
-
 [node name="Label2" type="Label" parent="."]
 offset_left = 991.0
-offset_top = 801.0
+offset_top = 713.0
 offset_right = 1436.0
-offset_bottom = 846.0
+offset_bottom = 758.0
 theme_override_font_sizes/font_size = 30
 text = "Patterns to Make"
 vertical_alignment = 1
 
+[node name="HSeparator" type="HSeparator" parent="."]
+offset_left = 993.0
+offset_top = 761.0
+offset_right = 1419.0
+offset_bottom = 765.0
+scale = Vector2(1, 5)
+theme_override_styles/separator = SubResource("StyleBoxLine_wi7q2")
+
 [node name="RecipeContainer" type="GridContainer" parent="."]
 custom_minimum_size = Vector2(100, 100)
 offset_left = 1000.0
-offset_top = 870.0
+offset_top = 806.0
 offset_right = 1464.0
 offset_bottom = 1320.0
 size_flags_horizontal = 3
 theme_override_constants/h_separation = 20
 theme_override_constants/v_separation = 20
 columns = 2
+
+[node name="StartButton" type="Button" parent="."]
+offset_left = 996.0
+offset_top = 1306.0
+offset_right = 1172.0
+offset_bottom = 1345.0
+theme_override_font_sizes/font_size = 28
+theme_override_styles/normal = SubResource("StyleBoxFlat_42puf")
+theme_override_styles/hover = SubResource("StyleBoxFlat_adx1n")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_ngyvp")
+text = "NEW GAME"
+
+[node name="StreakLabel" type="Label" parent="."]
+offset_left = 1300.0
+offset_top = 320.0
+offset_right = 1428.0
+offset_bottom = 390.0
+text = "Streak"
+label_settings = SubResource("LabelSettings_4tub3")
+horizontal_alignment = 2
+
+[node name="HSeparator" type="HSeparator" parent="StreakLabel"]
+layout_mode = 0
+offset_left = -304.0
+offset_top = -14.0
+offset_right = 122.0
+offset_bottom = -10.0
+scale = Vector2(1, 5)
+theme_override_styles/separator = SubResource("StyleBoxLine_wi7q2")
+
+[node name="StreakValue" type="Label" parent="StreakLabel"]
+layout_mode = 0
+offset_left = -142.0
+offset_top = -83.0
+offset_right = 36.0
+offset_bottom = -27.0
+scale = Vector2(1.5, 1.5)
+theme_override_font_sizes/font_size = 30
+text = "0"
+label_settings = SubResource("LabelSettings_qjkd3")
+horizontal_alignment = 2
+vertical_alignment = 1

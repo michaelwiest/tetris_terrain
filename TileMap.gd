@@ -81,7 +81,9 @@ var next_piece_atlas : Vector2i
 var board_layer : int = 0
 var active_layer : int = 1
 
-var combo_count: int = 0
+var streak_count: int = 0
+var previous_streak_count: int = 0
+var streak_mult: float = 1.0
 
 @onready var line: Recipe = $Line
 @onready var square: Recipe = $Square
@@ -96,7 +98,7 @@ var tail_animation = preload("res://scenes/tail_effect.tscn")
 var piece_resource = preload("res://scenes/Piece.tscn")
 var recipe_display = preload("res://scenes/RecipeDisplay.tscn")
 
-@onready var piece_display = $HUD/Panel/PieceDisplay
+@onready var piece_display = $HUD/Panel/MarginContainer/PieceDisplay
 
 # Save individual recipes as scenes.
 # score multiplier
@@ -157,7 +159,7 @@ func new_game():
 	game_running = true
 	steps = [0, 0, 0] #0:left, 1:right, 2:down
 	$HUD.get_node("GameOverLabel").hide()
-	$HUD.get_node("ScoreValue").text = str(score)
+	$HUD.get_node("ScoreLabel/ScoreValue").text = str(score)
 	#clear everything
 	clear_board()
 	active_piece = pick_piece()
@@ -274,7 +276,16 @@ func pick_piece_atlas(n_entries: int = 4):
 
 func prep():
 	temp_reward = REWARD
-	combo_count = 0
+	
+	if (streak_count <= previous_streak_count):
+		streak_count = 0
+		$HUD.get_node("StreakLabel/StreakValue").text = str(streak_count)
+	previous_streak_count = streak_count
+	# Nastiness for float <> int stuff.
+	if streak_count == 0:
+		streak_mult = 1.0
+	else:
+		streak_mult = 1.0 + (streak_count / 10.0)
 	active_piece = next_piece
 	# Attempt to not show pieces that match automatically.
 	next_piece = pick_piece()
@@ -303,11 +314,12 @@ func cleanup():
 	shift_rows_from_pattern(pattern_to_clear)
 	sink_unmatched_pieces(unmatched_pieces_to_sink)
 	current_state = State.CHECKING
-	
-	score += temp_reward
+	score += temp_reward * streak_mult
 	temp_reward *= 2
-	combo_count += 1
-	$HUD.get_node("ScoreValue").text = str(score)
+	streak_count += 1
+	
+	$HUD.get_node("ScoreLabel/ScoreValue").text = str(score)
+	$HUD.get_node("StreakLabel/StreakValue").text = str(streak_count)
 	speed += ACCEL
 	
 

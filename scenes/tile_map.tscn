@@ -89,6 +89,7 @@ high_pass_filter/cutoff_frequency = 0.245038
 high_pass_filter/cutoff_sweep = 0.0
 
 [node name="TailEffect" parent="." instance=ExtResource("6_1rcvc")]
+position = Vector2(2.08165e-12, -32)
 
 [node name="HUD" parent="." instance=ExtResource("3_vxlsc")]
 
