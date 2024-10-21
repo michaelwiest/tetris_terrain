@@ -1,4 +1,6 @@
-[gd_scene load_steps=8 format=3 uid="uid://psjnbhu2tahx"]
+[gd_scene load_steps=9 format=3 uid="uid://psjnbhu2tahx"]
+
+[ext_resource type="PackedScene" uid="uid://ciw2mhu08gs3k" path="res://scenes/PieceDisplay.tscn" id="1_x83pp"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_xosvn"]
 bg_color = Color(0.6, 0.6, 0.6, 0)
@@ -29,16 +31,19 @@ font_size = 48
 [node name="HUD" type="CanvasLayer"]
 
 [node name="Panel" type="Panel" parent="."]
-offset_left = 1347.0
+offset_left = 992.0
 offset_top = 322.0
-offset_right = 1784.0
+offset_right = 1429.0
 offset_bottom = 568.0
 theme_override_styles/panel = SubResource("StyleBoxFlat_xosvn")
 
+[node name="PieceDisplay" parent="Panel" instance=ExtResource("1_x83pp")]
+layout_mode = 1
+
 [node name="Label" type="Label" parent="."]
-offset_left = 1348.0
+offset_left = 993.0
 offset_top = 265.0
-offset_right = 1528.0
+offset_right = 1173.0
 offset_bottom = 310.0
 theme_override_font_sizes/font_size = 30
 text = "NEXT PIECE:"
@@ -46,9 +51,9 @@ horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="ScoreValue" type="Label" parent="."]
-offset_left = 1427.0
+offset_left = 1072.0
 offset_top = 44.0
-offset_right = 1661.0
+offset_right = 1306.0
 offset_bottom = 131.0
 scale = Vector2(1.5, 1.5)
 theme_override_font_sizes/font_size = 30
@@ -58,9 +63,9 @@ horizontal_alignment = 2
 vertical_alignment = 1
 
 [node name="GameOverLabel" type="Label" parent="."]
-offset_left = 789.0
+offset_left = 337.0
 offset_top = 438.0
-offset_right = 1028.0
+offset_right = 576.0
 offset_bottom = 496.0
 theme_override_font_sizes/font_size = 40
 text = "GAME OVER!"
@@ -68,9 +73,9 @@ horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="StartButton" type="Button" parent="."]
-offset_left = 1445.0
+offset_left = 1090.0
 offset_top = 741.0
-offset_right = 1625.0
+offset_right = 1270.0
 offset_bottom = 781.0
 theme_override_font_sizes/font_size = 28
 theme_override_styles/normal = SubResource("StyleBoxFlat_42puf")
@@ -79,17 +84,34 @@ theme_override_styles/pressed = SubResource("StyleBoxFlat_ngyvp")
 text = "NEW GAME"
 
 [node name="ScoreLabel" type="Label" parent="."]
-offset_left = 1653.0
+offset_left = 1298.0
 offset_top = 163.0
-offset_right = 1781.0
+offset_right = 1426.0
 offset_bottom = 233.0
 text = "Score"
 label_settings = SubResource("LabelSettings_4tub3")
 horizontal_alignment = 2
 
 [node name="HSeparator" type="HSeparator" parent="ScoreLabel"]
+layout_mode = 0
 offset_left = -307.0
 offset_top = -14.0
 offset_right = 119.0
 offset_bottom = -10.0
 scale = Vector2(1, 5)
+
+[node name="RecipeContainer" type="GridContainer" parent="."]
+custom_minimum_size = Vector2(100, 100)
+offset_left = 1000.0
+offset_top = 818.0
+offset_right = 1422.0
+offset_bottom = 1303.0
+columns = 2
+
+[node name="Label" type="Label" parent="RecipeContainer"]
+layout_mode = 2
+text = "REALLY REALLY LONG NAME"
+
+[node name="Label2" type="Label" parent="RecipeContainer"]
+layout_mode = 2
+text = "ANOTER LONG NAME"

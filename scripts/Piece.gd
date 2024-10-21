@@ -44,3 +44,13 @@ func rotated_positions():
 func rotate_piece():
 	rotation_index = (rotation_index + 1) % 4
 	active_piece = all_pieces[rotation_index]
+
+
+func draw(tilemap: TileMap, tilemap_layer: int, pos: Vector2i, tile_id: int):
+	for i in range(len(active_piece)):
+		var piece_i = active_piece[i]
+		tilemap.set_cell(tilemap_layer, pos + piece_i, tile_id, tilemap_ids[i])
+
+func clear(tilemap: TileMap, active_layer: int, pos: Vector2i):
+	for i in active_piece:
+		tilemap.erase_cell(active_layer, pos + i)

@@ -1,0 +1,15 @@
+[gd_scene load_steps=2 format=3 uid="uid://ciw2mhu08gs3k"]
+
+[ext_resource type="Script" path="res://scripts/PieceDisplay.gd" id="1_tf020"]
+
+[node name="PieceDisplay" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_tf020")
+
+[node name="TileMap" type="TileMap" parent="."]
+format = 2

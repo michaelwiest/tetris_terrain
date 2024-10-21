@@ -18,19 +18,6 @@ func _ready():
 func _process(delta):
 	pass
 
-#func set_patterns(p):
-#	if len(patterns) > 0:
-#		push_warning("Overwriting pattern to match.")
-#	patterns = []
-#	for pi in p:
-#		patterns.append(pi)
-#
-#func set_target_atlas_locations(l):
-#	if len(target_atlas_locations) > 0:
-#		push_warning("Overwriting target_atlas_alocations to match.")
-#	target_atlas_locations = []
-#	for li in l:
-#		target_atlas_locations.append(li)
 	
 func instantiate(temp_piece: Piece):
 	piece = temp_piece
@@ -67,8 +54,20 @@ func animate(locs):
 		if i == 0:
 			_is_animating = true
 			anim.animation_finished.connect(set_animation_finished)
-	
 
+# This code is pretty brittle and needs some checking	
+func has_piece(query_piece: Piece):
+	for pi in piece.all_pieces:
+		var has_match = true
+		for p in query_piece.active_piece:
+			if p not in pi:
+				has_match = false
+			
+		if has_match and piece.tilemap_ids == query_piece.tilemap_ids:
+			return true
+			
+	return false
+		
 
 func find_patterns_in_tilemap(
 	tilemap: TileMap, 

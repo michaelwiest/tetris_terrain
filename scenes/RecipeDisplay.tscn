@@ -1,0 +1,60 @@
+[gd_scene load_steps=4 format=3 uid="uid://bx42k4llsn43r"]
+
+[ext_resource type="Script" path="res://scenes/RecipeDisplay.gd" id="1_igvcu"]
+[ext_resource type="PackedScene" uid="uid://ciw2mhu08gs3k" path="res://scenes/PieceDisplay.tscn" id="2_x522k"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_pihue"]
+
+[node name="Panel" type="Panel"]
+custom_minimum_size = Vector2(250, 200)
+anchors_preset = -1
+anchor_right = 0.176
+anchor_bottom = 0.127
+offset_right = -0.800025
+offset_bottom = 0.183994
+script = ExtResource("1_igvcu")
+
+[node name="ColorRect" type="ColorRect" parent="."]
+layout_mode = 0
+offset_right = 314.0
+offset_bottom = 179.0
+color = Color(0.0862745, 0.0156863, 0.0980392, 1)
+
+[node name="Label2" type="Label" parent="."]
+layout_mode = 0
+offset_left = 20.0
+offset_top = 161.0
+offset_right = 296.0
+offset_bottom = 187.0
+text = "My Node"
+label_settings = SubResource("LabelSettings_pihue")
+
+[node name="Label" type="Label" parent="."]
+layout_mode = 2
+offset_left = 22.0
+offset_top = 1.0
+offset_right = 298.0
+offset_bottom = 27.0
+text = "My Node"
+label_settings = SubResource("LabelSettings_pihue")
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 0
+offset_right = 316.0
+offset_bottom = 180.0
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 30
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 20
+
+[node name="ColorRect" type="ColorRect" parent="MarginContainer"]
+layout_mode = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 50
+theme_override_constants/margin_top = 50
+
+[node name="PieceDisplay" parent="MarginContainer/MarginContainer" instance=ExtResource("2_x522k")]
+layout_mode = 2
+offset = Vector2i(0, 0)

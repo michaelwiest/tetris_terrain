@@ -43,8 +43,7 @@ var j_180 := [ Vector2i(2, 1), Vector2i(2, 2), Vector2i(1, 1), Vector2i(0, 1), ]
 var j_270 := [Vector2i(1, 2), Vector2i(0, 2), Vector2i(1, 1), Vector2i(1, 0), ]
 var j := [j_0, j_90, j_180, j_270]
 
-#var shapes := [i, t, o, z, s, l, j]
-var shapes := [s]
+var shapes := [i, t, o, z, s, l, j]
 var shapes_full := shapes.duplicate()
 
 #grid variables
@@ -63,6 +62,7 @@ var cur_pos : Vector2i
 
 @export var split_color_chance = 0.2
 
+@onready var recipe_display_container: GridContainer = $HUD/RecipeContainer
 
 
 #game variables
@@ -94,7 +94,9 @@ var pattern_to_clear: Array = []
 var unmatched_pieces_to_sink: Array = []
 var tail_animation = preload("res://scenes/tail_effect.tscn")
 var piece_resource = preload("res://scenes/Piece.tscn")
+var recipe_display = preload("res://scenes/RecipeDisplay.tscn")
 
+@onready var piece_display = $HUD/Panel/PieceDisplay
 
 # Save individual recipes as scenes.
 # Display available recipes.
@@ -123,21 +125,29 @@ func get_active_piece_not_in_pattern(matched_pattern: Array) -> Array:
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	# Set our patterns to check for
+	piece_display.set_tileset(self.tile_set)
 	var square_piece = piece_resource.instantiate()
 	square_piece.instance(o, [Vector2i(1, 0), Vector2i(1, 0),Vector2i(1, 0),Vector2i(1, 0),])
-	square.instantiate(square_piece)
+	square.piece = square_piece
 	
 	var tee_piece = piece_resource.instantiate()
 	tee_piece.instance(t, [Vector2i(0, 0), Vector2i(0, 0),Vector2i(0, 0),Vector2i(0, 0),])
-	tee.instantiate(tee_piece)
+	tee.piece = tee_piece
 	
 	var i_piece = piece_resource.instantiate()
 	i_piece.instance(i, [Vector2i(2, 0), Vector2i(2, 0),Vector2i(2, 0),Vector2i(2, 0),])
-	line.instantiate(i_piece)
+	line.piece = i_piece
 #
 	recipes.append(square)
 	recipes.append(line)
 	recipes.append(tee)
+	
+	for i in range(len(recipes)):
+		var new_container = recipe_display.instantiate()
+		new_container.recipe = recipes[i]
+		
+		recipe_display_container.add_child(new_container)
+		new_container.set_tileset(self.tile_set)
 	new_game()
 	$HUD.get_node("StartButton").pressed.connect(new_game)
 
@@ -150,11 +160,13 @@ func new_game():
 	$HUD.get_node("GameOverLabel").hide()
 	$HUD.get_node("ScoreValue").text = str(score)
 	#clear everything
-#	clear_board()
-	clear_panel()
+	clear_board()
 	active_piece = pick_piece()
 	# Hack to simplify
 	next_piece = pick_piece()
+	
+	piece_display.set_piece(next_piece)
+	
 	create_piece()
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -192,7 +204,7 @@ func _process(delta):
 				
 
 
-func pick_piece() -> Piece:
+func pick_piece(disable_auto_match: bool = true) -> Piece:
 	var piece_positions
 	if not shapes.is_empty():
 		shapes.shuffle()
@@ -206,9 +218,13 @@ func pick_piece() -> Piece:
 	var temp_atlas_1 = pick_piece_atlas()
 	var new_piece = piece_resource.instantiate()
 	
-#	new_piece.instance(piece_positions, [temp_atlas_0, temp_atlas_0, temp_atlas_1, temp_atlas_1])
-	new_piece.instance(piece_positions, [Vector2i(2, 0), Vector2i(2, 0), Vector2i(2, 0), Vector2i(2, 0),])
+	new_piece.instance(piece_positions, [temp_atlas_0, temp_atlas_0, temp_atlas_0, temp_atlas_0])
 	add_child(new_piece)
+	if disable_auto_match:
+		for r in recipes:
+			if r.has_piece(new_piece):
+				new_piece.queue_free()
+				return pick_piece(disable_auto_match)
 	return new_piece
 
 func create_piece():
@@ -217,17 +233,14 @@ func create_piece():
 	cur_pos = start_pos
 	
 	draw_piece(active_piece, cur_pos)
-	#show next piece
-	draw_piece(next_piece, Vector2i(15, 6))
+	
 
 func draw_piece(piece: Piece, pos):
-	for i in range(len(piece.active_piece)):
-		var piece_i = piece.active_piece[i]
-		set_cell(active_layer, pos + piece_i, tile_id, piece.tilemap_ids[i])
-
+	piece.draw(self, active_layer, pos, tile_id)
+	
 func clear_piece(piece: Piece):
-	for i in piece.active_piece:
-		erase_cell(active_layer, cur_pos + i)
+	piece.clear(self, active_layer, cur_pos)
+	
 
 
 func rotate_piece():
@@ -261,8 +274,10 @@ func prep():
 	temp_reward = REWARD
 	combo_count = 0
 	active_piece = next_piece
+	# Attempt to not show pieces that match automatically.
 	next_piece = pick_piece()
-	clear_panel()
+
+	piece_display.set_piece(next_piece)
 	create_piece()
 	check_game_over()
 	
@@ -275,7 +290,6 @@ func check_board():
 		if has_match:
 			var matched_pattern = maybe_matched_recipe[1]
 			unmatched_pieces_to_sink = get_active_piece_not_in_pattern(matched_pattern)
-			print(unmatched_pieces_to_sink)
 			r.animate(convert_positions_to_local(matched_pattern))
 			pattern_to_clear = matched_pattern
 			current_state = State.ANIMATING
@@ -285,7 +299,6 @@ func check_board():
 
 func cleanup():
 	shift_rows_from_pattern(pattern_to_clear)
-	print(unmatched_pieces_to_sink)
 	sink_unmatched_pieces(unmatched_pieces_to_sink)
 	current_state = State.CHECKING
 	
@@ -336,10 +349,6 @@ func land_piece():
 		erase_cell(active_layer, cur_pos + ap)
 		set_cell(board_layer, cur_pos + ap, tile_id, tm)
 
-func clear_panel():
-	for i in range(14, 19):
-		for j in range(5, 9):
-			erase_cell(active_layer, Vector2i(i, j))
 
 func shift_rows_from_pattern(matching_location):
 	var atlas
@@ -420,6 +429,7 @@ func clear_board():
 	for i in range(ROWS):
 		for j in range(COLS):
 			erase_cell(board_layer, Vector2i(j + 1, i + 1))
+			erase_cell(active_layer, Vector2i(j + 1, i + 1))
 
 func check_game_over():
 	# Something is broken in here.

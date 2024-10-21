@@ -97,5 +97,3 @@ high_pass_filter/cutoff_sweep = 0.0
 [node name="TailEffect" parent="." instance=ExtResource("6_1rcvc")]
 
 [node name="HUD" parent="." instance=ExtResource("3_vxlsc")]
-offset = Vector2(-400, 2.08165e-12)
-transform = Transform2D(1, 0, 0, 1, -400, 2.08165e-12)
