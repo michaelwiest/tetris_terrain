@@ -30,8 +30,8 @@ func set_animation_finished():
 	_is_animating = false
 	for anim in animation_objects:
 		anim.queue_free()
-	for parti in particle_objects:
-		parti.queue_free()
+#	for parti in particle_objects:
+#		parti.queue_free()
 	animation_objects = []
 	particle_objects = []
 
@@ -44,6 +44,8 @@ func animate(locs):
 		var loc = locs[i]
 		var anim = animation.instantiate()
 		var parti = particle.instantiate()
+		parti.color = display_color
+		print(parti.lifetime)
 		animation_objects.append(anim)
 		particle_objects.append(parti)
 		add_child(anim)
