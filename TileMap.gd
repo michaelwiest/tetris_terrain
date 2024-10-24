@@ -164,11 +164,8 @@ func new_game():
 	$HUD.get_node("GameOverLabel").hide()
 	$HUD.get_node("ScoreLabel/ScoreValue").text = str(score)
 	#clear everything
-#	clear_board()
+	clear_board()
 	active_piece = pick_piece()
-	var temp_effect: Effect = effect.instantiate()
-	active_piece.set_effects([temp_effect], [0])
-	# Hack to simplify
 	next_piece = pick_piece()
 	
 	piece_display.set_piece(next_piece)
@@ -293,9 +290,13 @@ func prep():
 		streak_mult = 1.0 + (streak_count / 10.0)
 	active_piece.queue_free()
 	active_piece = next_piece
-	var temp_effect: Effect = effect.instantiate()
-	active_piece.set_effects([temp_effect], [0])
-	# Attempt to not show pieces that match automatically.
+	
+	# Randomly set an upgrade on the piece.
+	if randf_range(0, 1.0) < split_color_chance:
+		var temp_effect: Effect = effect.instantiate()
+		active_piece.set_effects([temp_effect], [0])
+	
+	
 	next_piece = pick_piece()
 
 	piece_display.set_piece(next_piece)
@@ -321,7 +322,6 @@ func check_board():
 			matched_pattern = unique_matched.keys()
 			unmatched_pieces_to_sink = get_active_piece_not_in_pattern(matched_pattern)
 			r.animate(convert_positions_to_local(matched_pattern))
-			print("P2", convert_positions_to_local(matched_pattern))
 			pattern_to_clear = matched_pattern
 			current_state = State.ANIMATING
 			break
