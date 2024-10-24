@@ -45,7 +45,6 @@ func animate(locs):
 		var anim = animation.instantiate()
 		var parti = particle.instantiate()
 		parti.color = display_color
-		print(parti.lifetime)
 		animation_objects.append(anim)
 		particle_objects.append(parti)
 		add_child(anim)

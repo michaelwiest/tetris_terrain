@@ -97,6 +97,7 @@ var unmatched_pieces_to_sink: Array = []
 var tail_animation = preload("res://scenes/tail_effect.tscn")
 var piece_resource = preload("res://scenes/Piece.tscn")
 var recipe_display = preload("res://scenes/RecipeDisplay.tscn")
+var effect = preload("res://scenes/Effect.tscn")
 
 @onready var piece_display = $HUD/Panel/MarginContainer/PieceDisplay
 
@@ -104,7 +105,7 @@ var recipe_display = preload("res://scenes/RecipeDisplay.tscn")
 # - add upgrades!!! start with an exploding piece... Then try to expand to a recipe.
 # Likely some sort of enum of alteration types. eg, change matched pattern. alter board, alter game meta state.
 # - move from checking atlas coords to having custom data layer in the tileset.
-
+# Store the base shapes (eg o, t, i) as an autoload.
 # Bugs:
 # - something with drawing the tailing animation on the pieces to sink is bad.
 
@@ -130,7 +131,7 @@ func _ready():
 	# Set our patterns to check for
 	piece_display.set_tileset(self.tile_set)
 	var square_piece = piece_resource.instantiate()
-	square_piece.instance(o, [Vector2i(1, 0), Vector2i(1, 0),Vector2i(1, 0),Vector2i(1, 0),])
+	square_piece.instance(o, [Vector2i(1, 0), Vector2i(1, 0),Vector2i(1, 0),Vector2i(1, 0)])
 	square.piece = square_piece
 	
 	var tee_piece = piece_resource.instantiate()
@@ -163,8 +164,10 @@ func new_game():
 	$HUD.get_node("GameOverLabel").hide()
 	$HUD.get_node("ScoreLabel/ScoreValue").text = str(score)
 	#clear everything
-	clear_board()
+#	clear_board()
 	active_piece = pick_piece()
+	var temp_effect: Effect = effect.instantiate()
+	active_piece.set_effects([temp_effect], [0])
 	# Hack to simplify
 	next_piece = pick_piece()
 	
@@ -288,7 +291,10 @@ func prep():
 		streak_mult = 1.0
 	else:
 		streak_mult = 1.0 + (streak_count / 10.0)
+	active_piece.queue_free()
 	active_piece = next_piece
+	var temp_effect: Effect = effect.instantiate()
+	active_piece.set_effects([temp_effect], [0])
 	# Attempt to not show pieces that match automatically.
 	next_piece = pick_piece()
 
@@ -304,8 +310,18 @@ func check_board():
 		var has_match = maybe_matched_recipe[0]
 		if has_match:
 			var matched_pattern = maybe_matched_recipe[1]
+			var unique_matched := {}
+			for mp in matched_pattern:
+				unique_matched[mp] = null
+			active_piece.check_effects_matched(matched_pattern, cur_pos)
+			for e in active_piece.effects:
+				var tt: Array[Vector2i] = e.find_neighboring_cells(self)
+				for tti in tt:
+					unique_matched[tti] = null
+			matched_pattern = unique_matched.keys()
 			unmatched_pieces_to_sink = get_active_piece_not_in_pattern(matched_pattern)
 			r.animate(convert_positions_to_local(matched_pattern))
+			print("P2", convert_positions_to_local(matched_pattern))
 			pattern_to_clear = matched_pattern
 			current_state = State.ANIMATING
 			break
@@ -426,7 +442,6 @@ func sink_unmatched_pieces(piece: Array):
 			tail_anim.scale = Vector2i(1, latest_row - row)
 			add_child(tail_anim)
 			tail_anim.position = map_to_local(Vector2i(col, latest_row))
-			tail_anim.restart()
 		
 
 
