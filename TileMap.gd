@@ -102,12 +102,14 @@ var effect = preload("res://scenes/Effect.tscn")
 @onready var piece_display = $HUD/Panel/MarginContainer/PieceDisplay
 
 # TODO: 
+# - need to preferentially check for matches with upgrades in them in the case of multiple pattern matches.
+# - implement recipe upgrades.
 # - add upgrades!!! start with an exploding piece... Then try to expand to a recipe.
 # Likely some sort of enum of alteration types. eg, change matched pattern. alter board, alter game meta state.
 # - move from checking atlas coords to having custom data layer in the tileset.
 # Store the base shapes (eg o, t, i) as an autoload.
 # Bugs:
-# - something with drawing the tailing animation on the pieces to sink is bad.
+
 
 enum State {MOVING, CHECKING, ANIMATING, PREP, CLEANUP}
 
