@@ -58,9 +58,9 @@ const start_pos := Vector2i(5 , 1)
 var cur_pos : Vector2i
 @export var initial_speed: float = 0.7
 @onready var speed : float = initial_speed
-@export var ACCEL : float = 0.12
+@export var ACCEL : float = 0.09
 
-@export var split_color_chance = 0.2
+@export_range(0, 1.0) var split_color_chance = 0.2
 
 @onready var recipe_display_container: GridContainer = $HUD/RecipeContainer
 
@@ -440,7 +440,9 @@ func sink_unmatched_pieces(piece: Array):
 			set_cell(board_layer, Vector2i(col, latest_row), tile_id, current_atlas)
 			var tail_anim  = tail_animation.instantiate()
 			tail_anim.scale = Vector2i(1, latest_row - row)
+			tail_anim.restart()
 			add_child(tail_anim)
+			
 			tail_anim.position = map_to_local(Vector2i(col, latest_row))
 		
 
