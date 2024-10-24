@@ -100,8 +100,10 @@ var recipe_display = preload("res://scenes/RecipeDisplay.tscn")
 
 @onready var piece_display = $HUD/Panel/MarginContainer/PieceDisplay
 
-# Save individual recipes as scenes.
-# score multiplier
+# TODO: 
+# - add upgrades!!! start with an exploding piece... Then try to expand to a recipe.
+# Likely some sort of enum of alteration types. eg, change matched pattern. alter board, alter game meta state.
+# - move from checking atlas coords to having custom data layer in the tileset.
 
 # Bugs:
 # - something with drawing the tailing animation on the pieces to sink is bad.
