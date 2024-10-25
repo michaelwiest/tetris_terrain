@@ -18,5 +18,9 @@ func _process(delta):
 	pass
 
 func trigger(tilemap: TileMap):
+	if active:
+		trigger_internal(tilemap)
+	
+func trigger_internal(tilemap: TileMap):
 	pass
 

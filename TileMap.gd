@@ -97,7 +97,7 @@ var unmatched_pieces_to_sink: Array = []
 var tail_animation = preload("res://scenes/tail_effect.tscn")
 var piece_resource = preload("res://scenes/Piece.tscn")
 var recipe_display = preload("res://scenes/RecipeDisplay.tscn")
-var effect = preload("res://scenes/effects/explosion_effect.tscn")
+var effect = preload("res://scenes/effects/ScoreEffect.tscn")
 
 @onready var piece_display = $HUD/Panel/MarginContainer/PieceDisplay
 
@@ -316,6 +316,7 @@ func check_board():
 			active_piece.set_matched_effects(pattern_to_clear)
 			for e in active_piece.effects:
 				e.trigger(self)
+			print(score)
 			unmatched_pieces_to_sink = get_active_piece_not_in_pattern(matched_pattern)
 			r.animate(convert_positions_to_local(pattern_to_clear))
 			current_state = State.ANIMATING

@@ -13,9 +13,7 @@ func _process(delta):
 	pass
 
 
-func trigger(tilemap: TileMap):
-	if not active:
-		return []
+func trigger_internal(tilemap: TileMap):
 	var filtered_neighbors: Array[Vector2i] = find_neighboring_cells(tilemap)
 	var unique_matched := {}
 	# Clean this up.
