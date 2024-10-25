@@ -58,9 +58,9 @@ const start_pos := Vector2i(5 , 1)
 var cur_pos : Vector2i
 @export var initial_speed: float = 0.7
 @onready var speed : float = initial_speed
-@export var ACCEL : float = 0.12
+@export var ACCEL : float = 0.09
 
-@export var split_color_chance = 0.2
+@export_range(0, 1.0) var split_color_chance = 0.2
 
 @onready var recipe_display_container: GridContainer = $HUD/RecipeContainer
 
@@ -97,16 +97,20 @@ var unmatched_pieces_to_sink: Array = []
 var tail_animation = preload("res://scenes/tail_effect.tscn")
 var piece_resource = preload("res://scenes/Piece.tscn")
 var recipe_display = preload("res://scenes/RecipeDisplay.tscn")
+var effect = preload("res://scenes/effects/ScoreEffect.tscn")
 
 @onready var piece_display = $HUD/Panel/MarginContainer/PieceDisplay
 
 # TODO: 
+# - need to preferentially check for matches with upgrades in them in the case of multiple pattern matches.
+# - implement recipe upgrades.
 # - add upgrades!!! start with an exploding piece... Then try to expand to a recipe.
 # Likely some sort of enum of alteration types. eg, change matched pattern. alter board, alter game meta state.
 # - move from checking atlas coords to having custom data layer in the tileset.
-
+# Store the base shapes (eg o, t, i) as an autoload.
+# - Can then make a piece spawner node which has the base shapes as enum options.
 # Bugs:
-# - something with drawing the tailing animation on the pieces to sink is bad.
+
 
 enum State {MOVING, CHECKING, ANIMATING, PREP, CLEANUP}
 
@@ -130,7 +134,7 @@ func _ready():
 	# Set our patterns to check for
 	piece_display.set_tileset(self.tile_set)
 	var square_piece = piece_resource.instantiate()
-	square_piece.instance(o, [Vector2i(1, 0), Vector2i(1, 0),Vector2i(1, 0),Vector2i(1, 0),])
+	square_piece.instance(o, [Vector2i(1, 0), Vector2i(1, 0),Vector2i(1, 0),Vector2i(1, 0)])
 	square.piece = square_piece
 	
 	var tee_piece = piece_resource.instantiate()
@@ -163,9 +167,8 @@ func new_game():
 	$HUD.get_node("GameOverLabel").hide()
 	$HUD.get_node("ScoreLabel/ScoreValue").text = str(score)
 	#clear everything
-	clear_board()
+#	clear_board()
 	active_piece = pick_piece()
-	# Hack to simplify
 	next_piece = pick_piece()
 	
 	piece_display.set_piece(next_piece)
@@ -288,8 +291,15 @@ func prep():
 		streak_mult = 1.0
 	else:
 		streak_mult = 1.0 + (streak_count / 10.0)
+	active_piece.queue_free()
 	active_piece = next_piece
-	# Attempt to not show pieces that match automatically.
+	
+	# Randomly set an upgrade on the piece.
+	if randf_range(0, 1.0) < 1:
+		var temp_effect: Effect = effect.instantiate()
+		active_piece.set_effects([temp_effect], [0])
+	
+	
 	next_piece = pick_piece()
 
 	piece_display.set_piece(next_piece)
@@ -300,13 +310,14 @@ func prep():
 
 func check_board():
 	for r in recipes:
-		var maybe_matched_recipe = r.find_patterns_in_tilemap(self, board_layer, ROWS, COLS, 0, 0)
-		var has_match = maybe_matched_recipe[0]
-		if has_match:
-			var matched_pattern = maybe_matched_recipe[1]
-			unmatched_pieces_to_sink = get_active_piece_not_in_pattern(matched_pattern)
-			r.animate(convert_positions_to_local(matched_pattern))
+		var matched_pattern = r.find_patterns_in_tilemap(self, board_layer, ROWS, COLS, active_piece, 0, 0)
+		if r.has_match:
 			pattern_to_clear = matched_pattern
+			active_piece.set_matched_effects(pattern_to_clear)
+			for e in active_piece.effects:
+				e.trigger(self)
+			unmatched_pieces_to_sink = get_active_piece_not_in_pattern(matched_pattern)
+			r.animate(convert_positions_to_local(pattern_to_clear))
 			current_state = State.ANIMATING
 			break
 		else:
@@ -363,6 +374,7 @@ func land_piece():
 		var tm = active_piece.tilemap_ids[i]
 		erase_cell(active_layer, cur_pos + ap)
 		set_cell(board_layer, cur_pos + ap, tile_id, tm)
+	active_piece.land(cur_pos)
 
 
 func shift_rows_from_pattern(matching_location):
@@ -424,9 +436,10 @@ func sink_unmatched_pieces(piece: Array):
 			set_cell(board_layer, Vector2i(col, latest_row), tile_id, current_atlas)
 			var tail_anim  = tail_animation.instantiate()
 			tail_anim.scale = Vector2i(1, latest_row - row)
-			add_child(tail_anim)
-			tail_anim.position = map_to_local(Vector2i(col, latest_row))
 			tail_anim.restart()
+			add_child(tail_anim)
+			
+			tail_anim.position = map_to_local(Vector2i(col, latest_row))
 		
 
 

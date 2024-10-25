@@ -1,0 +1,33 @@
+[gd_scene load_steps=4 format=3 uid="uid://34vdtaqn7npi"]
+
+[sub_resource type="Curve" id="Curve_5ox7j"]
+min_value = -360.0
+max_value = 360.0
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(0.229067, 274.436), 0.0, 0.0, 0, 0, Vector2(0.444999, -30.4929), 0.0, 0.0, 0, 0, Vector2(0.732228, 217.262), 0.0, 0.0, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
+point_count = 5
+
+[sub_resource type="Curve" id="Curve_2vqox"]
+_data = [Vector2(0.0110986, 0.605878), 0.0, 0.0, 0, 0, Vector2(0.165917, 0.388828), 0.0, 0.0, 0, 0, Vector2(0.400183, 0.685287), 0.0, 0.0, 0, 0, Vector2(0.903344, 0.166484), 0.0, 0.0, 0, 0]
+point_count = 4
+
+[sub_resource type="Gradient" id="Gradient_3f3r5"]
+colors = PackedColorArray(0.883505, 0.19739, 0.0955558, 1, 1, 1, 0.0431373, 1)
+
+[node name="Flame" type="CPUParticles2D"]
+amount = 100
+lifetime = 0.2
+speed_scale = 0.4
+randomness = 1.0
+emission_shape = 3
+emission_rect_extents = Vector2(32, 16)
+direction = Vector2(2.08165e-12, -1)
+spread = 0.0
+gravity = Vector2(2.08165e-12, -500)
+initial_velocity_max = 250.0
+angular_velocity_min = -45.0
+angular_velocity_max = 45.0
+angular_velocity_curve = SubResource("Curve_5ox7j")
+scale_amount_min = 0.0
+scale_amount_max = 20.0
+scale_amount_curve = SubResource("Curve_2vqox")
+color_ramp = SubResource("Gradient_3f3r5")
