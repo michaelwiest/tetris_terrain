@@ -15,6 +15,10 @@ run/main_scene="res://scenes/tile_map.tscn"
 config/features=PackedStringArray("4.1", "Forward Plus")
 config/icon="res://icon.svg"
 
+[autoload]
+
+ShapesAutoload="*res://scripts/shapes_autoload.gd"
+
 [display]
 
 window/size/viewport_width=1800

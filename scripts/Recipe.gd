@@ -1,9 +1,11 @@
 extends Node2D
 class_name Recipe
 
+@export var shape_type: ShapeAutoload.Shape
+@export var color_index: int
 @export var display_name: String
 @export var display_color: Color
-@export var piece: Piece
+#@export var piece: Piece
 @export var check_from_bottom: bool = true
 var animation = preload("res://scenes/flash.tscn")
 var particle = preload("res://scenes/explosion.tscn")
@@ -13,10 +15,16 @@ var particle_objects: Array = []
 @export var has_match: bool = false
 
 @onready var clear_sound = $SfxrStreamPlayer
+@onready var piece: Piece = $Piece
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	pass
+	var temp_shape = ShapeAutoload.get_shapes(shape_type)
+	var colors_temp = []
+	for ts in temp_shape:
+		colors_temp.append(Vector2i(color_index, 0))
+	piece.instance(ShapeAutoload.get_shapes(shape_type), colors_temp)
+	
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
 	pass

@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3 uid="uid://v07im6ckn0y5"]
+[gd_scene load_steps=11 format=3 uid="uid://v07im6ckn0y5"]
 
 [ext_resource type="Texture2D" uid="uid://22c2gue343i1" path="res://assets/tetrominoes2.png" id="1_q48xm"]
 [ext_resource type="Script" path="res://TileMap.gd" id="2_y6mwb"]
@@ -6,6 +6,7 @@
 [ext_resource type="PackedScene" uid="uid://psjnbhu2tahx" path="res://scenes/hud.tscn" id="3_vxlsc"]
 [ext_resource type="PackedScene" uid="uid://bm63pn6lopyqj" path="res://scenes/Recipe.tscn" id="4_1dfvb"]
 [ext_resource type="PackedScene" uid="uid://dh7atsdolj1wo" path="res://scenes/tail_effect.tscn" id="6_1rcvc"]
+[ext_resource type="PackedScene" uid="uid://cf42i3gxn1oqb" path="res://scenes/PieceSpawner.tscn" id="7_18ycd"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_wgf51"]
 texture = ExtResource("1_q48xm")
@@ -96,13 +97,21 @@ position = Vector2(2.08165e-12, -32)
 [node name="HUD" parent="." instance=ExtResource("3_vxlsc")]
 
 [node name="Line" parent="." instance=ExtResource("4_1dfvb")]
+color_index = 2
 display_name = "Red Line"
 display_color = Color(0.913725, 0.270588, 0.25098, 1)
 
 [node name="Tee" parent="." instance=ExtResource("4_1dfvb")]
+shape_type = 1
 display_name = "Green Tee"
 display_color = Color(0.286275, 0.74902, 0.364706, 1)
 
 [node name="Square" parent="." instance=ExtResource("4_1dfvb")]
+shape_type = 2
+color_index = 1
 display_name = "Blue Square"
 display_color = Color(0.14902, 0.388235, 0.866667, 1)
+
+[node name="PieceSpawner" parent="." instance=ExtResource("7_18ycd")]
+valid_shapes = Array[int]([4])
+valid_color_indices = Array[int]([0, 1])

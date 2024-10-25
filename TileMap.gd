@@ -1,51 +1,4 @@
 extends TileMap
-
-#tetrominoes
-var i_0 := [Vector2i(0, 1), Vector2i(1, 1), Vector2i(2, 1), Vector2i(3, 1)]
-var i_90 := [Vector2i(2, 0), Vector2i(2, 1), Vector2i(2, 2), Vector2i(2, 3)]
-var i_180 := [ Vector2i(3, 2), Vector2i(2, 2), Vector2i(1, 2), Vector2i(0, 2), ]
-var i_270 := [ Vector2i(1, 3), Vector2i(1, 2), Vector2i(1, 1), Vector2i(1, 0), ]
-var i := [i_0, i_90, i_180, i_270]
-
-var t_0 := [Vector2i(1, 0), Vector2i(0, 1), Vector2i(1, 1), Vector2i(2, 1)]
-var t_90 := [Vector2i(2, 1),Vector2i(1, 0), Vector2i(1, 1),  Vector2i(1, 2)]
-var t_180 := [Vector2i(1, 2), Vector2i(2, 1), Vector2i(1, 1), Vector2i(0, 1), ]
-var t_270 := [Vector2i(0, 1),Vector2i(1, 2), Vector2i(1, 1), Vector2i(1, 0),  ]
-var t := [t_0, t_90, t_180, t_270]
-
-var o_0 := [Vector2i(0, 0), Vector2i(1, 0), Vector2i(0, 1), Vector2i(1, 1)]
-var o_90 := [Vector2i(1, 0),  Vector2i(1, 1), Vector2i(0, 0), Vector2i(0, 1)]
-var o_180 := [Vector2i(1, 1),   Vector2i(0, 1),Vector2i(1, 0), Vector2i(0, 0)]
-var o_270 := [Vector2i(0, 1), Vector2i(0, 0), Vector2i(1, 1), Vector2i(1, 0)]
-var o := [o_0, o_90, o_180, o_270]
-
-var z_0 := [Vector2i(0, 0), Vector2i(1, 0), Vector2i(1, 1), Vector2i(2, 1)]
-var z_90 := [Vector2i(2, 0), Vector2i(2, 1),Vector2i(1, 1),  Vector2i(1, 2)]
-var z_180 := [Vector2i(2, 2), Vector2i(1, 2), Vector2i(1, 1), Vector2i(0, 1)]
-var z_270 := [ Vector2i(0, 2), Vector2i(0, 1), Vector2i(1, 1), Vector2i(1, 0),]
-var z := [z_0, z_90, z_180, z_270]
-
-var s_0 := [Vector2i(2, 0), Vector2i(1, 0), Vector2i(0, 1), Vector2i(1, 1)]
-var s_90 := [Vector2i(2, 2), Vector2i(2, 1), Vector2i(1, 0), Vector2i(1, 1), ]
-var s_180 := [Vector2i(0, 2), Vector2i(1, 2), Vector2i(2, 1), Vector2i(1, 1),  ]
-var s_270 := [Vector2i(0, 0), Vector2i(0, 1), Vector2i(1, 2), Vector2i(1, 1), ]
-var s := [s_0, s_90, s_180, s_270]
-
-var l_0 := [Vector2i(1, 1), Vector2i(0, 1),  Vector2i(2, 1), Vector2i(2, 0), ]
-var l_90 := [Vector2i(1, 1), Vector2i(1, 0), Vector2i(1, 2), Vector2i(2, 2)]
-var l_180 := [Vector2i(1, 1), Vector2i(2, 1), Vector2i(0, 1), Vector2i(0, 2), ]
-var l_270 := [Vector2i(1, 1), Vector2i(1, 2), Vector2i(1, 0),  Vector2i(0, 0),]
-var l := [l_0, l_90, l_180, l_270]
-
-var j_0 := [Vector2i(0, 1), Vector2i(0, 0), Vector2i(1, 1), Vector2i(2, 1)]
-var j_90 := [Vector2i(1, 0), Vector2i(2, 0), Vector2i(1, 1), Vector2i(1, 2)]
-var j_180 := [ Vector2i(2, 1), Vector2i(2, 2), Vector2i(1, 1), Vector2i(0, 1), ]
-var j_270 := [Vector2i(1, 2), Vector2i(0, 2), Vector2i(1, 1), Vector2i(1, 0), ]
-var j := [j_0, j_90, j_180, j_270]
-
-var shapes := [i, t, o, z, s, l, j]
-var shapes_full := shapes.duplicate()
-
 #grid variables
 const COLS : int = 10
 const ROWS : int = 20
@@ -91,7 +44,8 @@ var streak_mult: float = 1.0
 @onready var active_piece: Piece
 @onready var next_piece: Piece
 @onready var move_sound = $SfxrStreamPlayer
-var recipes: Array = []
+@onready var piece_spawner = $PieceSpawner
+var recipes: Array[Recipe] = []
 var pattern_to_clear: Array = []
 var unmatched_pieces_to_sink: Array = []
 var tail_animation = preload("res://scenes/tail_effect.tscn")
@@ -102,13 +56,13 @@ var effect = preload("res://scenes/effects/ScoreEffect.tscn")
 @onready var piece_display = $HUD/Panel/MarginContainer/PieceDisplay
 
 # TODO: 
-# - need to preferentially check for matches with upgrades in them in the case of multiple pattern matches.
-# - implement recipe upgrades.
-# - add upgrades!!! start with an exploding piece... Then try to expand to a recipe.
-# Likely some sort of enum of alteration types. eg, change matched pattern. alter board, alter game meta state.
-# - move from checking atlas coords to having custom data layer in the tileset.
 # Store the base shapes (eg o, t, i) as an autoload.
 # - Can then make a piece spawner node which has the base shapes as enum options.
+# - implement recipe upgrades.
+# Likely some sort of enum of alteration types. eg, change matched pattern. alter board, alter game meta state.
+# - move from checking atlas coords to having custom data layer in the tileset.
+# Display effects in the preview.
+
 # Bugs:
 
 
@@ -131,20 +85,7 @@ func get_active_piece_not_in_pattern(matched_pattern: Array) -> Array:
 		
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	# Set our patterns to check for
 	piece_display.set_tileset(self.tile_set)
-	var square_piece = piece_resource.instantiate()
-	square_piece.instance(o, [Vector2i(1, 0), Vector2i(1, 0),Vector2i(1, 0),Vector2i(1, 0)])
-	square.piece = square_piece
-	
-	var tee_piece = piece_resource.instantiate()
-	tee_piece.instance(t, [Vector2i(0, 0), Vector2i(0, 0),Vector2i(0, 0),Vector2i(0, 0),])
-	tee.piece = tee_piece
-	
-	var i_piece = piece_resource.instantiate()
-	i_piece.instance(i, [Vector2i(2, 0), Vector2i(2, 0),Vector2i(2, 0),Vector2i(2, 0),])
-	line.piece = i_piece
-#
 	recipes.append(square)
 	recipes.append(line)
 	recipes.append(tee)
@@ -168,8 +109,8 @@ func new_game():
 	$HUD.get_node("ScoreLabel/ScoreValue").text = str(score)
 	#clear everything
 #	clear_board()
-	active_piece = pick_piece()
-	next_piece = pick_piece()
+	active_piece = piece_spawner.pick_piece(recipes)
+	next_piece = piece_spawner.pick_piece(recipes)
 	
 	piece_display.set_piece(next_piece)
 	
@@ -209,29 +150,6 @@ func _process(delta):
 				prep()
 				
 
-
-func pick_piece(disable_auto_match: bool = true) -> Piece:
-	var piece_positions
-	if not shapes.is_empty():
-		shapes.shuffle()
-		piece_positions = shapes.pop_front()
-	else:
-		shapes = shapes_full.duplicate()
-		shapes.shuffle()
-		piece_positions = shapes.pop_front()
-	
-	var atlas_arr = pick_piece_atlas()
-	var new_piece = piece_resource.instantiate()
-	
-	new_piece.instance(piece_positions, atlas_arr)
-	add_child(new_piece)
-	if disable_auto_match:
-		for r in recipes:
-			if r.has_piece(new_piece):
-				new_piece.queue_free()
-				return pick_piece(disable_auto_match)
-	return new_piece
-
 func create_piece():
 	#reset variables
 	steps = [0, 0, 0] #0:left, 1:right, 2:down
@@ -270,15 +188,6 @@ func rotate_piece():
 			active_piece.rotate_piece()
 			draw_piece(active_piece, cur_pos)
 
-
-func pick_piece_atlas(n_entries: int = 4):
-	var choice_0 = Vector2i(randi_range(0, 2), 0)
-	var choice_1 = choice_0
-	if randf_range(0, 1.0) < split_color_chance:
-		choice_1 = Vector2i(randi_range(0, 2), 0)
-	return [choice_0, choice_0, choice_1, choice_1]
-
-
 func prep():
 	temp_reward = REWARD
 	
@@ -300,7 +209,7 @@ func prep():
 		active_piece.set_effects([temp_effect], [0])
 	
 	
-	next_piece = pick_piece()
+	next_piece = piece_spawner.pick_piece(recipes)
 
 	piece_display.set_piece(next_piece)
 	create_piece()
