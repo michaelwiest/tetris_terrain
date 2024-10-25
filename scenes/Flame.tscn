@@ -14,12 +14,12 @@ point_count = 4
 colors = PackedColorArray(0.883505, 0.19739, 0.0955558, 1, 1, 1, 0.0431373, 1)
 
 [node name="Flame" type="CPUParticles2D"]
-amount = 200
+amount = 100
 lifetime = 0.2
 speed_scale = 0.4
 randomness = 1.0
 emission_shape = 3
-emission_rect_extents = Vector2(32, 32)
+emission_rect_extents = Vector2(32, 16)
 direction = Vector2(2.08165e-12, -1)
 spread = 0.0
 gravity = Vector2(2.08165e-12, -500)
@@ -28,6 +28,6 @@ angular_velocity_min = -45.0
 angular_velocity_max = 45.0
 angular_velocity_curve = SubResource("Curve_5ox7j")
 scale_amount_min = 0.0
-scale_amount_max = 16.0
+scale_amount_max = 20.0
 scale_amount_curve = SubResource("Curve_2vqox")
 color_ramp = SubResource("Gradient_3f3r5")

@@ -66,10 +66,13 @@ func clear(tilemap: TileMap, active_layer: int, pos: Vector2i):
 
 func check_effects_matched(matched_pattern: Array, cur_loc: Vector2i):
 	for index in effect_indices:
-		var found_loc: Vector2i = active_piece[index] + cur_loc
-		if found_loc in matched_pattern:
+		if effects[index].location in matched_pattern:
 			effects[index].active = true
-			effects[index].location = found_loc
+
+func land(cur_pos: Vector2i):
+	# Set the final location for the piece's potential effects for downstream operations
+	for index in effect_indices:
+		effects[index].location = active_piece[index] + cur_pos
 
 func set_effects(effects_temp: Array, locs: PackedInt32Array):
 	assert(len(effects_temp) == len(locs), "Effects and locations must match.")
@@ -80,3 +83,13 @@ func set_effects(effects_temp: Array, locs: PackedInt32Array):
 		anims.append(flame_anim)
 	for loci in locs:	
 		effect_indices.append(loci)
+
+func has_effect():
+	return len(effects) > 0
+
+func effect_locations():
+	var all_locations: Array[Vector2i] = []
+	for e in effects:
+		all_locations.append(e.location)
+	return all_locations
+		

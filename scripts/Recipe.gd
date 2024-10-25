@@ -10,6 +10,8 @@ var particle = preload("res://scenes/explosion.tscn")
 var _is_animating: bool = false
 var animation_objects: Array = []
 var particle_objects: Array = []
+@export var has_match: bool = false
+
 @onready var clear_sound = $SfxrStreamPlayer
 
 # Called when the node enters the scene tree for the first time.
@@ -76,14 +78,23 @@ func find_patterns_in_tilemap(
 	board_layer: int, 
 	row_max: int, 
 	col_max: int, 
+	active_piece: Piece,
 	row_min: int = 0, 
 	col_min: int = 0
 	):
-	var has_match
-	var matching_locations = []
+	"""Find a version of this recipe's pattern within the supplied tilemap. 
+	
+	This will also take an active_piece to find any effects on it such that the code will 
+	try and preferentially match the tile with an effect on it.
+	"""
+	var has_match_temp: bool
+	has_match = false
+	var matching_locations: Array[Vector2i] = []
+	# In the case where we have an active_piece with effects on it we want to preferentially
+	# trigger those. In which case we have to track all matches. 
+	var all_matching_locations: Array = []
 	
 	var row_to_check = range(row_min, row_max)
-	# Need to shift indices if going from bottom
 	if check_from_bottom:
 		row_to_check = range(row_max -1 , row_min -1, -1)
 	
@@ -94,7 +105,11 @@ func find_patterns_in_tilemap(
 		for col in cols_to_check:
 			for j in len(piece.all_pieces):
 				var piece_to_check = piece.all_pieces[j]
-				has_match = true
+				# Reset the match
+				matching_locations = []
+				for p in piece.tilemap_ids:
+					matching_locations.append(Vector2i(-1, -1))
+				has_match_temp = true
 				for i in len(piece_to_check):
 					var p: Vector2i = piece_to_check[i]
 					var atlas_to_match = piece.tilemap_ids[i]
@@ -102,17 +117,37 @@ func find_patterns_in_tilemap(
 					var rc = row + p[0]
 					var cc = col + p[1]
 					if (rc > row_max):
-						has_match = false
+						has_match_temp = false
 						continue
 					if (cc > col_max):
-						has_match = false
+						has_match_temp = false
 						continue
 					if (tilemap.get_cell_atlas_coords(board_layer, Vector2i(cc, rc)) != atlas_to_match):
-						has_match = false
+						has_match_temp = false
 					else:
 						matching_locations[i] = Vector2i(cc, rc)
 
-				if has_match:
-					return [true, matching_locations]
-			#		
-	return [has_match, matching_locations]
+				if has_match_temp:
+					all_matching_locations.append(matching_locations)
+	
+	if len(all_matching_locations) == 0:
+		has_match = false
+		return matching_locations
+	has_match = true	
+	print("Has effect ", active_piece.has_effect())
+	print(all_matching_locations)
+	if not active_piece.has_effect():
+		return all_matching_locations[0]
+	else:
+		var max_count: int = 0
+		var to_return_index: int = 0
+		for i in range(len(all_matching_locations)):
+			var temp_count: int = 0
+			for e in active_piece.effect_locations():
+				if e in all_matching_locations[i]:
+					temp_count += 1
+			if temp_count > max_count:
+				to_return_index = i
+		
+		return all_matching_locations[to_return_index]
+	

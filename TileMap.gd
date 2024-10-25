@@ -108,6 +108,7 @@ var effect = preload("res://scenes/Effect.tscn")
 # Likely some sort of enum of alteration types. eg, change matched pattern. alter board, alter game meta state.
 # - move from checking atlas coords to having custom data layer in the tileset.
 # Store the base shapes (eg o, t, i) as an autoload.
+# - Can then make a piece spawner node which has the base shapes as enum options.
 # Bugs:
 
 
@@ -166,7 +167,7 @@ func new_game():
 	$HUD.get_node("GameOverLabel").hide()
 	$HUD.get_node("ScoreLabel/ScoreValue").text = str(score)
 	#clear everything
-	clear_board()
+#	clear_board()
 	active_piece = pick_piece()
 	next_piece = pick_piece()
 	
@@ -294,7 +295,7 @@ func prep():
 	active_piece = next_piece
 	
 	# Randomly set an upgrade on the piece.
-	if randf_range(0, 1.0) < split_color_chance:
+	if randf_range(0, 1.0) < 1:
 		var temp_effect: Effect = effect.instantiate()
 		active_piece.set_effects([temp_effect], [0])
 	
@@ -309,11 +310,10 @@ func prep():
 
 func check_board():
 	for r in recipes:
-		var maybe_matched_recipe = r.find_patterns_in_tilemap(self, board_layer, ROWS, COLS, 0, 0)
-		var has_match = maybe_matched_recipe[0]
-		if has_match:
-			var matched_pattern = maybe_matched_recipe[1]
+		var matched_pattern = r.find_patterns_in_tilemap(self, board_layer, ROWS, COLS, active_piece, 0, 0)
+		if r.has_match:
 			var unique_matched := {}
+			# Clean this up.
 			for mp in matched_pattern:
 				unique_matched[mp] = null
 			active_piece.check_effects_matched(matched_pattern, cur_pos)
@@ -381,6 +381,7 @@ func land_piece():
 		var tm = active_piece.tilemap_ids[i]
 		erase_cell(active_layer, cur_pos + ap)
 		set_cell(board_layer, cur_pos + ap, tile_id, tm)
+	active_piece.land(cur_pos)
 
 
 func shift_rows_from_pattern(matching_location):
