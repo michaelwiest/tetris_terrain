@@ -51,7 +51,7 @@ var unmatched_pieces_to_sink: Array = []
 var tail_animation = preload("res://scenes/tail_effect.tscn")
 var piece_resource = preload("res://scenes/Piece.tscn")
 var recipe_display = preload("res://scenes/RecipeDisplay.tscn")
-var effect = preload("res://scenes/effects/ScoreEffect.tscn")
+var effect = preload("res://scenes/effects/ExplosionEffect.tscn")
 
 @onready var piece_display = $HUD/Panel/MarginContainer/PieceDisplay
 
@@ -64,7 +64,7 @@ var effect = preload("res://scenes/effects/ScoreEffect.tscn")
 # Display effects in the preview.
 
 # Bugs:
-
+# - game over checker
 
 enum State {MOVING, CHECKING, ANIMATING, PREP, CLEANUP}
 
@@ -205,8 +205,7 @@ func prep():
 	
 	# Randomly set an upgrade on the piece.
 	if randf_range(0, 1.0) < 1:
-		var temp_effect: Effect = effect.instantiate()
-		active_piece.set_effects([temp_effect], [0])
+		active_piece.add_effects([effect], [0])
 	
 	
 	next_piece = piece_spawner.pick_piece(recipes)

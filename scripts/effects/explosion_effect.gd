@@ -1,16 +1,23 @@
 extends Effect
 
 class_name ExplosionEffect
-
+@export var flame_scene: PackedScene
+var flame
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	pass # Replace with function body.
-
-
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta):
 	pass
+	flame = flame_scene.instantiate()
+	flame.z_index = 2
+	flame.restart()
+	add_child(flame)
+#	print("adding flame")
+
+
+# Gross hack to draw flame animation.
+func _process(delta):
+	if flame:
+		flame.position = global_location
 
 
 func trigger_internal(tilemap: TileMap):
@@ -33,7 +40,9 @@ func find_neighboring_cells(tilemap: TileMap) -> Array[Vector2i]:
 	neighbors.append(neighbors[3] + Vector2i.LEFT)
 	for n in neighbors:
 		var temp_coord = tilemap.get_cell_atlas_coords(0, n)
-		# TODO change this to some flexible set of locs.
-		if temp_coord in [Vector2i(0, 0), Vector2i(1, 0), Vector2i(2, 0), Vector2i(3, 0), ]:
+		var valid_tile_ids = []
+		for i in tilemap.piece_spawner.valid_color_indices:
+			valid_tile_ids.append(Vector2i(i, 0))
+		if temp_coord in valid_tile_ids:
 			filtered_neighbors.append(n)
 	return filtered_neighbors

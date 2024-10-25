@@ -1,8 +1,7 @@
-[gd_scene load_steps=6 format=3 uid="uid://bm63pn6lopyqj"]
+[gd_scene load_steps=5 format=3 uid="uid://bm63pn6lopyqj"]
 
 [ext_resource type="Script" path="res://scripts/Recipe.gd" id="1_in1c5"]
 [ext_resource type="Script" path="res://addons/godot_sfxr/SfxrStreamPlayer.gd" id="2_h0x0v"]
-[ext_resource type="PackedScene" uid="uid://d1q454py4rolp" path="res://scenes/explosion.tscn" id="3_irlv7"]
 [ext_resource type="PackedScene" uid="uid://0ullwvmt2wmn" path="res://scenes/Piece.tscn" id="4_d5u47"]
 
 [sub_resource type="AudioStreamWAV" id="AudioStreamWAV_q38xk"]
@@ -40,7 +39,5 @@ low_pass_filter/cutoff_sweep = 0.0
 low_pass_filter/resonance = 0.0
 high_pass_filter/cutoff_frequency = 0.0
 high_pass_filter/cutoff_sweep = 0.0
-
-[node name="CPUParticles2D" parent="." instance=ExtResource("3_irlv7")]
 
 [node name="Piece" parent="." instance=ExtResource("4_d5u47")]
