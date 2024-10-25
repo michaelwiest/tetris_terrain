@@ -134,8 +134,6 @@ func find_patterns_in_tilemap(
 		has_match = false
 		return matching_locations
 	has_match = true	
-	print("Has effect ", active_piece.has_effect())
-	print(all_matching_locations)
 	if not active_piece.has_effect():
 		return all_matching_locations[0]
 	else:

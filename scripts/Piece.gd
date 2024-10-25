@@ -64,7 +64,7 @@ func clear(tilemap: TileMap, active_layer: int, pos: Vector2i):
 		# Gross hack to draw an effect.
 		tilemap.erase_cell(2, pos + i)
 
-func check_effects_matched(matched_pattern: Array, cur_loc: Vector2i):
+func set_matched_effects(matched_pattern: Array):
 	for index in effect_indices:
 		if effects[index].location in matched_pattern:
 			effects[index].active = true
