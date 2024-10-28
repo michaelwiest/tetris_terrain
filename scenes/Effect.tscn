@@ -47,3 +47,5 @@ z_index = 2
 sprite_frames = SubResource("SpriteFrames_0bwju")
 autoplay = "default"
 frame_progress = 0.271648
+
+[node name="Icon" type="Sprite2D" parent="."]

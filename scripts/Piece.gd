@@ -50,12 +50,12 @@ func draw(tilemap: TileMap, tilemap_layer: int, pos: Vector2i, tile_id: int):
 	for i in range(len(active_piece)):
 		var piece_i = active_piece[i]
 		tilemap.set_cell(tilemap_layer, pos + piece_i, tile_id, tilemap_ids[i])
-		# Gross hack to draw an effect.
 		if i in effect_indices:
 			effects[i].move(pos + active_piece[i], tilemap.map_to_local(pos + active_piece[i]))
-#			effects[i].global_location = tilemap.map_to_local(effects[i].location)
 			
-
+func trigger_effects(tilemap: TileMap):
+	for e in effects:
+		e.trigger(tilemap)
 
 func clear(tilemap: TileMap, active_layer: int, pos: Vector2i):
 	for i in active_piece:
@@ -81,6 +81,13 @@ func add_effects(effects_temp: Array[PackedScene], locs: PackedInt32Array):
 	for loci in locs:	
 		effect_indices.append(loci)
 
+func add_effect_where_possible(effect_temp: PackedScene):
+# Implement a random placement here.
+	if len(effect_indices) < 4:
+		for i in range(4):
+			if i not in effect_indices:
+				add_effects([effect_temp], [i])
+				
 
 func has_effect():
 	return len(effects) > 0

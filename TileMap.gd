@@ -91,6 +91,9 @@ func _ready():
 	recipes.append(square)
 	recipes.append(line)
 	recipes.append(tee)
+	for r in recipes:
+		r.set_upgrades()
+		print(r.upgrades)
 	
 	for i in range(len(recipes)):
 		var new_container = recipe_display.instantiate()
@@ -110,7 +113,7 @@ func new_game():
 	$HUD.get_node("GameOverLabel").hide()
 	$HUD.get_node("ScoreLabel/ScoreValue").text = str(score)
 	#clear everything
-	clear_board()
+#	clear_board()
 	active_piece = piece_spawner.pick_piece(recipes)
 	next_piece = piece_spawner.pick_piece(recipes)
 	
@@ -223,9 +226,10 @@ func check_board():
 		var matched_pattern = r.find_patterns_in_tilemap(self, board_layer, ROWS, COLS, active_piece, 0, 0)
 		if r.has_match:
 			pattern_to_clear = matched_pattern
+			r.trigger_upgrades(self)
 			active_piece.set_matched_effects(pattern_to_clear)
-			for e in active_piece.effects:
-				e.trigger(self)
+			active_piece.trigger_effects(self)
+
 			unmatched_pieces_to_sink = get_active_piece_not_in_pattern(matched_pattern)
 			r.animate(convert_positions_to_local(pattern_to_clear))
 			current_state = State.ANIMATING

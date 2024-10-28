@@ -5,7 +5,6 @@ class_name Recipe
 @export var color_index: int
 @export var display_name: String
 @export var display_color: Color
-#@export var piece: Piece
 @export var check_from_bottom: bool = true
 var animation = preload("res://scenes/flash.tscn")
 var particle = preload("res://scenes/explosion.tscn")
@@ -16,6 +15,8 @@ var particle_objects: Array = []
 
 @onready var clear_sound = $SfxrStreamPlayer
 @onready var piece: Piece = $Piece
+
+@onready var upgrades: Array[Upgrade] = []
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -29,6 +30,19 @@ func _ready():
 func _process(delta):
 	pass
 
+func trigger_upgrades(tilemap: TileMap):
+	for u in upgrades:
+		u.trigger(tilemap, self)
+
+func find_upgrades_in_tree() -> Array[Upgrade]:
+	var to_return: Array[Upgrade] = []
+	for child in get_children():
+		if child is Upgrade:
+			to_return.append(child)
+	return to_return
+
+func set_upgrades():
+	upgrades = find_upgrades_in_tree()
 	
 func instantiate(temp_piece: Piece):
 	piece = temp_piece
@@ -66,7 +80,7 @@ func animate(locs):
 		if i == 0:
 			_is_animating = true
 			anim.animation_finished.connect(set_animation_finished)
-
+			
 # This code is pretty brittle and needs some checking	
 func has_piece(query_piece: Piece):
 	for pi in piece.all_pieces:

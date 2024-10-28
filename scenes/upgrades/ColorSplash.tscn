@@ -1,0 +1,8 @@
+[gd_scene load_steps=3 format=3 uid="uid://vnhejdkq8s4g"]
+
+[ext_resource type="PackedScene" uid="uid://byowk1a6d10p5" path="res://scenes/Upgrade.tscn" id="1_ettiy"]
+[ext_resource type="Script" path="res://scripts/upgrades/ColorSplash.gd" id="2_45gj1"]
+
+[node name="ColorSplash" instance=ExtResource("1_ettiy")]
+script = ExtResource("2_45gj1")
+splash_frac = 1.0
