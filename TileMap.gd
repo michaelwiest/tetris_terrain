@@ -51,7 +51,8 @@ var unmatched_pieces_to_sink: Array = []
 var tail_animation = preload("res://scenes/tail_effect.tscn")
 var piece_resource = preload("res://scenes/Piece.tscn")
 var recipe_display = preload("res://scenes/RecipeDisplay.tscn")
-var effect = preload("res://scenes/effects/ExplosionEffect.tscn")
+#var effect = preload("res://scenes/effects/ExplosionEffect.tscn")
+var effect = preload("res://scenes/effects/ScoreEffect.tscn")
 
 @onready var piece_display = $HUD/Panel/MarginContainer/PieceDisplay
 
@@ -205,7 +206,7 @@ func prep():
 	active_piece = next_piece
 	
 	# Randomly set an upgrade on the piece.
-	if randf_range(0, 1.0) < effect_chance:
+	if randf_range(0, 1.0) < 1:
 		active_piece.add_effects([effect], [0])
 	
 	

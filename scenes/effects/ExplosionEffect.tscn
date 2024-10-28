@@ -8,3 +8,5 @@
 script = ExtResource("2_ye3gk")
 flame_scene = ExtResource("3_tx2hb")
 color = Color(1, 0, 0.364706, 1)
+display_name = "Bomb"
+description = "Destroys tiles in a 3x3 grid surrounding itself."

@@ -9,6 +9,8 @@ var global_location: Vector2i = Vector2i(-1, -1)
 @export var type: Type = Type.MATCH_ALTER
 @onready var border_animation = $BorderAnimation
 @export var color: Color = Color(1, 1, 1)
+@export var display_name: String
+@export_multiline var description: String
 
 # Called when the node enters the scene tree for the first time.
 func _ready():

@@ -10,8 +10,7 @@ func _ready():
 	flame = flame_scene.instantiate()
 	flame.z_index = 2
 	flame.restart()
-#	add_child(flame)
-#	print("adding flame")
+	add_child(flame)
 
 
 # Gross hack to draw flame animation.
