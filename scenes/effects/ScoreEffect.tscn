@@ -6,3 +6,4 @@
 [node name="ScoreEffect" instance=ExtResource("1_n8eoy")]
 script = ExtResource("2_otlov")
 score_amount = 500
+color = Color(1, 0.815686, 0, 1)

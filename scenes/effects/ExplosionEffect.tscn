@@ -7,3 +7,4 @@
 [node name="ExplosionEffect" instance=ExtResource("1_6xuf7")]
 script = ExtResource("2_ye3gk")
 flame_scene = ExtResource("3_tx2hb")
+color = Color(1, 0, 0.364706, 1)

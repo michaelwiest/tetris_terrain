@@ -1,6 +1,49 @@
-[gd_scene load_steps=2 format=3 uid="uid://ksqfkcny74l8"]
+[gd_scene load_steps=8 format=3 uid="uid://ksqfkcny74l8"]
 
 [ext_resource type="Script" path="res://scripts/Effect.gd" id="1_3lfiv"]
+[ext_resource type="Texture2D" uid="uid://cw0gw3o0my8mr" path="res://assets/border_animation-Sheet.png" id="2_pgblt"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_7gdab"]
+atlas = ExtResource("2_pgblt")
+region = Rect2(0, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_75a5b"]
+atlas = ExtResource("2_pgblt")
+region = Rect2(64, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_hy021"]
+atlas = ExtResource("2_pgblt")
+region = Rect2(128, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_a57r1"]
+atlas = ExtResource("2_pgblt")
+region = Rect2(192, 0, 64, 64)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_0bwju"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_7gdab")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_75a5b")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_hy021")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_a57r1")
+}],
+"loop": true,
+"name": &"default",
+"speed": 8.0
+}]
 
 [node name="Effect" type="Node2D"]
 script = ExtResource("1_3lfiv")
+
+[node name="BorderAnimation" type="AnimatedSprite2D" parent="."]
+z_index = 2
+sprite_frames = SubResource("SpriteFrames_0bwju")
+autoplay = "default"
+frame_progress = 0.271648
