@@ -78,7 +78,7 @@ static func get_shapes(desired_shape: Shape):
 	
 	
 
-func determine_shape(query_shape) -> Shape:
+static func determine_shape(query_shape) -> Shape:
 	query_shape.sort()
 	for maybe_i in i:
 		maybe_i.sort()

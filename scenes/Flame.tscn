@@ -14,12 +14,12 @@ point_count = 4
 colors = PackedColorArray(0.883505, 0.19739, 0.0955558, 1, 1, 1, 0.0431373, 1)
 
 [node name="Flame" type="CPUParticles2D"]
-amount = 100
-lifetime = 0.2
+amount = 200
+lifetime = 0.1
 speed_scale = 0.4
 randomness = 1.0
 emission_shape = 3
-emission_rect_extents = Vector2(32, 16)
+emission_rect_extents = Vector2(32, 32)
 direction = Vector2(2.08165e-12, -1)
 spread = 0.0
 gravity = Vector2(2.08165e-12, -500)

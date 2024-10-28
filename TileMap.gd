@@ -13,10 +13,10 @@ var cur_pos : Vector2i
 @onready var speed : float = initial_speed
 @export var ACCEL : float = 0.09
 
-@export_range(0, 1.0) var split_color_chance = 0.2
+@export_range(0, 1.0) var effect_chance = 0.4
 
 @onready var recipe_display_container: GridContainer = $HUD/RecipeContainer
-
+@onready var sountrack = $Soundtrack
 
 #game variables
 var score : int
@@ -55,12 +55,13 @@ var effect = preload("res://scenes/effects/ExplosionEffect.tscn")
 
 @onready var piece_display = $HUD/Panel/MarginContainer/PieceDisplay
 
-# TODO: 
-# Store the base shapes (eg o, t, i) as an autoload.
-# - Can then make a piece spawner node which has the base shapes as enum options.
-# - implement recipe upgrades.
-# Likely some sort of enum of alteration types. eg, change matched pattern. alter board, alter game meta state.
-# - move from checking atlas coords to having custom data layer in the tileset.
+#
+ # TODO: 
+# - implement recipes like i did for effects.
+# - fix effect display and add: shared border anim, icon, and descriptor.
+# - store score value on piece spawner
+
+# - move from checking atlas coords to checking the column value like it is set for each recipe.
 # Display effects in the preview.
 
 # Bugs:
@@ -108,7 +109,7 @@ func new_game():
 	$HUD.get_node("GameOverLabel").hide()
 	$HUD.get_node("ScoreLabel/ScoreValue").text = str(score)
 	#clear everything
-#	clear_board()
+	clear_board()
 	active_piece = piece_spawner.pick_piece(recipes)
 	next_piece = piece_spawner.pick_piece(recipes)
 	
@@ -204,7 +205,7 @@ func prep():
 	active_piece = next_piece
 	
 	# Randomly set an upgrade on the piece.
-	if randf_range(0, 1.0) < 1:
+	if randf_range(0, 1.0) < effect_chance:
 		active_piece.add_effects([effect], [0])
 	
 	
@@ -250,6 +251,7 @@ func move_piece(dir):
 		cur_pos += dir
 		draw_piece(active_piece, cur_pos)
 		if dir == Vector2i.DOWN:
+			pass
 			move_sound.play()
 	else:
 		if dir == Vector2i.DOWN:

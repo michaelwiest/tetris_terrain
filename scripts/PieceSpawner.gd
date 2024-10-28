@@ -7,6 +7,8 @@ class_name PieceSpawner
 var shapes_full: Array = []
 @export_range(0, 1) var split_color_chance: float = 0.0
 
+var piece_count: int = 0
+
 var piece_resource = preload("res://scenes/Piece.tscn")
 var shapes: Array
 # Called when the node enters the scene tree for the first time.
@@ -21,7 +23,8 @@ func _ready():
 func _process(delta):
 	pass
 
-
+func handle_new_game():
+	piece_count = 0
 
 func pick_piece(recipes: Array[Recipe], disable_auto_match: bool = true, ) -> Piece:
 	var piece_positions
@@ -43,6 +46,9 @@ func pick_piece(recipes: Array[Recipe], disable_auto_match: bool = true, ) -> Pi
 			if r.has_piece(new_piece):
 				new_piece.queue_free()
 				return pick_piece(recipes, disable_auto_match)
+	
+	piece_count += 1
+	
 	return new_piece
 
 
