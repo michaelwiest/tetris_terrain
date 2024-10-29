@@ -27,7 +27,12 @@ func draw_piece():
 	piece.draw(tilemap, 0, offset, 0, Vector2(global_position[0] - 100, global_position[1] ) )
 	
 func set_piece(new_piece: Piece):
+	# Need to do something here around copying the effects, adding them to this scene
+	# and then drawing appropriately.
+#	new_piece.get_parent().call_deferred("remove_child", new_piece)
+#	call_deferred("add_child", new_piece)
 	if piece:
 		clear_piece()
+#	add_child(new_piece)
 	piece = new_piece
 	draw_piece()

@@ -10,6 +10,7 @@ var effect_indices: PackedInt32Array = []
 var effects: Array[Effect] = []
 var rotation_mod: int
 var active_piece: Array
+var has_upgrade: bool = false
 
 @onready var is_ready: bool = false
 @onready var rotation_index: int = 0
@@ -58,6 +59,7 @@ func draw(
 			effects[i].move(
 				pos + active_piece[index], 
 				tilemap.map_to_local(pos + active_piece[index]) + additional_offset)
+
 			
 func trigger_effects(tilemap: TileMap):
 	for e in effects:
@@ -82,7 +84,10 @@ func land(cur_pos: Vector2i):
 
 func add_effects_at_locations(effects_temp: Array[Effect], locs: PackedInt32Array):
 	assert(len(effects_temp) == len(locs), "Effects and locations must match.")
+	
 	for effect in effects_temp:
+		if effect.type == Effect.Type.UPGRADE:
+			has_upgrade = true
 		effects.append(effect)
 		add_child(effect)
 	for loci in locs:	

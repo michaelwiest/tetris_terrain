@@ -31,6 +31,7 @@ func trigger_internal(tilemap: TileMap):
 	
 
 func find_neighboring_cells(tilemap: TileMap) -> Array[Vector2i]:
+	# Find a 3x3 grid around the effect center.
 	var filtered_neighbors: Array[Vector2i] = []
 	var neighbors = tilemap.get_surrounding_cells(location)
 	neighbors.append(neighbors[0] + Vector2i.UP)

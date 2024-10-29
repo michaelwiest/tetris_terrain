@@ -54,8 +54,8 @@ func set_animation_finished():
 	_is_animating = false
 	for anim in animation_objects:
 		anim.queue_free()
-#	for parti in particle_objects:
-#		parti.queue_free()
+	for parti in particle_objects:
+		parti.queue_free()
 	animation_objects = []
 	particle_objects = []
 

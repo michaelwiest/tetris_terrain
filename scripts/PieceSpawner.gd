@@ -9,6 +9,13 @@ var shapes_full: Array = []
 @export_group("Effects")
 @export var effect_spawners: Array[EffectSpawner]
 
+@export_group("Upgrades")
+@export var upgrade_spawners: Array[UpgradeSpawner]
+var active_upgrade_spawners: Array[UpgradeSpawner]
+var upgrade_effect_preload = preload("res://scenes/effects/UpgradeEffect.tscn")
+
+# Use this ultimately to manually add effects when specified via an upgrade.
+var effects_to_add: Array[Effect] = []
 
 var piece_count: int = 0
 
@@ -20,6 +27,8 @@ func _ready():
 	for vs in valid_shapes:
 		shapes_full.append(ShapeAutoload.get_shapes(vs))
 	shapes = shapes_full.duplicate()
+	
+	active_upgrade_spawners = upgrade_spawners
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -55,6 +64,16 @@ func pick_piece(recipes: Array[Recipe], disable_auto_match: bool = true, ) -> Pi
 	return new_piece
 
 func add_effects(piece: Piece):
+	for i in range(len(active_upgrade_spawners)):
+		var us: UpgradeSpawner = active_upgrade_spawners[i]
+		if randf_range(0, 1) < us.chance:
+			var upgrade_node: Upgrade = load(us.upgrade_path).instantiate()
+			var upgrade_effect: UpgradeEffect = upgrade_effect_preload.instantiate()
+			upgrade_effect.upgrade = upgrade_node
+			upgrade_effect.upgrade_added.connect(on_piece_matched)
+			upgrade_effect.piece_spawner_upgrade_index = i
+			piece.add_effect(upgrade_effect)
+	
 	for es in effect_spawners:
 		if randf_range(0, 1) < es.chance:
 			var new_effect: Effect = load(es.effect_path).instantiate()
@@ -69,3 +88,9 @@ func pick_piece_atlas(n_entries: int = 4):
 		var chosen_index_1: int = valid_color_indices[randi() % valid_color_indices.size()]
 		choice_1 = Vector2i(chosen_index_1, 0)
 	return [choice_0, choice_0, choice_1, choice_1]
+
+
+func on_piece_matched(index_to_remove: int):
+	if index_to_remove < len(active_upgrade_spawners):
+		active_upgrade_spawners.remove_at(index_to_remove)
+		

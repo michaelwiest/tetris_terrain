@@ -37,6 +37,7 @@ var active_layer : int = 1
 var streak_count: int = 0
 var previous_streak_count: int = 0
 var streak_mult: float = 1.0
+var matched_recipe: Recipe
 
 @onready var line: Recipe = $Line
 @onready var square: Recipe = $Square
@@ -60,6 +61,8 @@ var effect = preload("res://scenes/effects/ScoreEffect.tscn")
 # - implement recipes like i did for effects.
 # - fix effect display and add: shared border anim, icon, and descriptor.
 # - store score value on piece spawner
+# - fix display effects on next piece.
+# - upgrade effects.
 
 # - move from checking atlas coords to checking the column value like it is set for each recipe.
 # Display effects in the preview.
@@ -90,8 +93,8 @@ func _ready():
 	recipes.append(square)
 	recipes.append(line)
 	recipes.append(tee)
-	for r in recipes:
-		r.set_upgrades()
+#	for r in recipes:
+#		r.set_upgrades()
 	
 	for i in range(len(recipes)):
 		var new_container = recipe_display.instantiate()
@@ -223,11 +226,11 @@ func check_board():
 	for r in recipes:
 		var matched_pattern = r.find_patterns_in_tilemap(self, board_layer, ROWS, COLS, active_piece, 0, 0)
 		if r.has_match:
+			matched_recipe = r
 			pattern_to_clear = matched_pattern
-			r.trigger_upgrades(self)
 			active_piece.set_matched_effects(pattern_to_clear)
 			active_piece.trigger_effects(self)
-
+			r.trigger_upgrades(self)
 			unmatched_pieces_to_sink = get_active_piece_not_in_pattern(matched_pattern)
 			r.animate(convert_positions_to_local(pattern_to_clear))
 			current_state = State.ANIMATING

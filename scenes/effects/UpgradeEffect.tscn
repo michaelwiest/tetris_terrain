@@ -1,0 +1,10 @@
+[gd_scene load_steps=3 format=3 uid="uid://dwtmy2nrbmrnx"]
+
+[ext_resource type="PackedScene" uid="uid://ksqfkcny74l8" path="res://scenes/Effect.tscn" id="1_435xp"]
+[ext_resource type="Script" path="res://scripts/effects/UpgradeEffect.gd" id="2_1v7lc"]
+
+[node name="Effect" instance=ExtResource("1_435xp")]
+script = ExtResource("2_1v7lc")
+piece_spawner_upgrade_index = 0
+type = 2
+display_name = "Upgrade"
