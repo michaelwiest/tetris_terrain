@@ -382,4 +382,5 @@ func check_game_over():
 
 
 func _on_soundtrack_finished():
-	soundtrack.play()
+	if game_running:
+		soundtrack.play()
