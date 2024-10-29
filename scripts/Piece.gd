@@ -46,12 +46,18 @@ func rotate_piece():
 	active_piece = all_pieces[rotation_index]
 
 
-func draw(tilemap: TileMap, tilemap_layer: int, pos: Vector2i, tile_id: int):
+func draw(
+	tilemap: TileMap, tilemap_layer: int, pos: Vector2i, tile_id: int,
+	additional_offset: Vector2 = Vector2(0, 0)):
 	for i in range(len(active_piece)):
 		var piece_i = active_piece[i]
 		tilemap.set_cell(tilemap_layer, pos + piece_i, tile_id, tilemap_ids[i])
-		if i in effect_indices:
-			effects[i].move(pos + active_piece[i], tilemap.map_to_local(pos + active_piece[i]))
+		
+		if i in range(len(effect_indices)):
+			var index = effect_indices[i]
+			effects[i].move(
+				pos + active_piece[index], 
+				tilemap.map_to_local(pos + active_piece[index]) + additional_offset)
 			
 func trigger_effects(tilemap: TileMap):
 	for e in effects:
@@ -62,31 +68,34 @@ func clear(tilemap: TileMap, active_layer: int, pos: Vector2i):
 		tilemap.erase_cell(active_layer, pos + i)
 
 func set_matched_effects(matched_pattern: Array):
-	for index in effect_indices:
+	for index in range(len(effect_indices)):
+		var effect_index = effect_indices[index]
 		if effects[index].location in matched_pattern:
 			effects[index].active = true
 
 func land(cur_pos: Vector2i):
 	# Set the final location for the piece's potential effects for downstream operations
-	for index in effect_indices:
-		effects[index].location = active_piece[index] + cur_pos
+	for index in range(len(effect_indices)):
+		var effect_index = effect_indices[index]
+		effects[index].location = active_piece[effect_index] + cur_pos
 
 
-func add_effects(effects_temp: Array[PackedScene], locs: PackedInt32Array):
+func add_effects_at_locations(effects_temp: Array[Effect], locs: PackedInt32Array):
 	assert(len(effects_temp) == len(locs), "Effects and locations must match.")
 	for effect in effects_temp:
-		var temp_effect: Effect = effect.instantiate()
-		effects.append(temp_effect)
-		add_child(temp_effect)
+		effects.append(effect)
+		add_child(effect)
 	for loci in locs:	
 		effect_indices.append(loci)
 
-func add_effect_where_possible(effect_temp: PackedScene):
-# Implement a random placement here.
+func add_effect(effect_temp: Effect):
+	var piece_arr = [0, 1, 2, 3]
+	piece_arr.shuffle()
 	if len(effect_indices) < 4:
-		for i in range(4):
+		for i in piece_arr:
 			if i not in effect_indices:
-				add_effects([effect_temp], [i])
+				add_effects_at_locations([effect_temp], [i])
+				break
 				
 
 func has_effect():

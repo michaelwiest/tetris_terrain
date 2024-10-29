@@ -11,6 +11,7 @@ var global_location: Vector2i = Vector2i(-1, -1)
 @export var color: Color = Color(1, 1, 1)
 @export var display_name: String
 @export_multiline var description: String
+@onready var sfx = $SFX
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -24,6 +25,8 @@ func _process(delta):
 func trigger(tilemap: TileMap):
 	if active:
 		trigger_internal(tilemap)
+		sfx.play()
+		active = false
 	
 func trigger_internal(tilemap: TileMap):
 	pass

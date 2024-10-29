@@ -3,9 +3,12 @@ class_name PieceSpawner
 
 @export var valid_shapes: Array[ShapeAutoload.Shape]
 @export var valid_color_indices: Array[int]
-#@onready var shapes_full = ShapeAutoload.shapes
 var shapes_full: Array = []
 @export_range(0, 1) var split_color_chance: float = 0.0
+
+@export_group("Effects")
+@export var effect_spawners: Array[EffectSpawner]
+
 
 var piece_count: int = 0
 
@@ -48,9 +51,14 @@ func pick_piece(recipes: Array[Recipe], disable_auto_match: bool = true, ) -> Pi
 				return pick_piece(recipes, disable_auto_match)
 	
 	piece_count += 1
-	
+	add_effects(new_piece)
 	return new_piece
 
+func add_effects(piece: Piece):
+	for es in effect_spawners:
+		if randf_range(0, 1) < es.chance:
+			var new_effect: Effect = load(es.effect_path).instantiate()
+			piece.add_effect(new_effect)
 
 
 func pick_piece_atlas(n_entries: int = 4):

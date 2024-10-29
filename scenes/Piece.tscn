@@ -3,4 +3,6 @@
 [ext_resource type="Script" path="res://scripts/Piece.gd" id="1_dkkh8"]
 
 [node name="Piece" type="Node2D"]
+z_index = 2
+z_as_relative = false
 script = ExtResource("1_dkkh8")

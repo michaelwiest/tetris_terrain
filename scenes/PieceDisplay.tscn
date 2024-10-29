@@ -3,6 +3,7 @@
 [ext_resource type="Script" path="res://scripts/PieceDisplay.gd" id="1_tf020"]
 
 [node name="PieceDisplay" type="Control"]
+z_as_relative = false
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -12,4 +13,6 @@ grow_vertical = 2
 script = ExtResource("1_tf020")
 
 [node name="TileMap" type="TileMap" parent="."]
+z_index = -1
+z_as_relative = false
 format = 2

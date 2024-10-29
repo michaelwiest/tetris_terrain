@@ -16,7 +16,7 @@ var cur_pos : Vector2i
 @export_range(0, 1.0) var effect_chance = 0.4
 
 @onready var recipe_display_container: GridContainer = $HUD/RecipeContainer
-@onready var sountrack = $Soundtrack
+@onready var soundtrack = $Soundtrack
 
 #game variables
 var score : int
@@ -49,7 +49,6 @@ var recipes: Array[Recipe] = []
 var pattern_to_clear: Array = []
 var unmatched_pieces_to_sink: Array = []
 var tail_animation = preload("res://scenes/tail_effect.tscn")
-var piece_resource = preload("res://scenes/Piece.tscn")
 var recipe_display = preload("res://scenes/RecipeDisplay.tscn")
 #var effect = preload("res://scenes/effects/ExplosionEffect.tscn")
 var effect = preload("res://scenes/effects/ScoreEffect.tscn")
@@ -93,18 +92,18 @@ func _ready():
 	recipes.append(tee)
 	for r in recipes:
 		r.set_upgrades()
-		print(r.upgrades)
 	
 	for i in range(len(recipes)):
 		var new_container = recipe_display.instantiate()
 		new_container.recipe = recipes[i]
-		
+
 		recipe_display_container.add_child(new_container)
 		new_container.set_tileset(self.tile_set)
 	new_game()
 	$HUD.get_node("StartButton").pressed.connect(new_game)
 
 func new_game():
+	soundtrack.play()
 	score = 0
 	speed = initial_speed
 	
@@ -116,14 +115,16 @@ func new_game():
 #	clear_board()
 	active_piece = piece_spawner.pick_piece(recipes)
 	next_piece = piece_spawner.pick_piece(recipes)
-	
 	piece_display.set_piece(next_piece)
 	
 	create_piece()
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
+	
 	if game_running:
+		# Super hack to scale the music tempo.
+		soundtrack.pitch_scale = 1.0 + ((speed - initial_speed) / initial_speed) * 0.05
 		if Input.is_action_pressed("ui_left"):
 			steps[0] += 10
 		elif Input.is_action_pressed("ui_right"):
@@ -208,13 +209,10 @@ func prep():
 	active_piece.queue_free()
 	active_piece = next_piece
 	
-	# Randomly set an upgrade on the piece.
-	if randf_range(0, 1.0) < 1:
-		active_piece.add_effects([effect], [0])
 	
 	
 	next_piece = piece_spawner.pick_piece(recipes)
-
+	
 	piece_display.set_piece(next_piece)
 	create_piece()
 	check_game_over()
@@ -257,7 +255,7 @@ func move_piece(dir):
 		draw_piece(active_piece, cur_pos)
 		if dir == Vector2i.DOWN:
 			pass
-			move_sound.play()
+#			move_sound.play()
 	else:
 		if dir == Vector2i.DOWN:
 			land_piece()
@@ -381,3 +379,7 @@ func check_game_over():
 			land_piece()
 			$HUD.get_node("GameOverLabel").show()
 			game_running = false
+
+
+func _on_soundtrack_finished():
+	soundtrack.play()

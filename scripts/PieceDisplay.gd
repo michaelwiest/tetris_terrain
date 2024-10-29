@@ -19,9 +19,12 @@ func set_tileset(tile_set: TileSet):
 
 func clear_piece():
 	piece.clear(tilemap, 0, offset)
+
 func draw_piece():
-	# Hack need to have these zeros be set.
-	piece.draw(tilemap, 0, offset, 0)
+	# Something is messed up in here where the animations are getting drawn below the tilemap.
+	# This is because the WHOLE tilemap is also offset by 100.....
+	# If i make both of these parent to a main node then this shouldn't be an issue?
+	piece.draw(tilemap, 0, offset, 0, Vector2(global_position[0] - 100, global_position[1] ) )
 	
 func set_piece(new_piece: Piece):
 	if piece:
