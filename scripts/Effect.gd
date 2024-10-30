@@ -22,11 +22,16 @@ func _ready():
 func _process(delta):
 	pass
 
+func _after_trigger():
+	pass
+
 func trigger(tilemap: TileMap):
 	if active:
 		trigger_internal(tilemap)
 		sfx.play()
 		active = false
+	border_animation.visible = false
+	_after_trigger()
 	
 func trigger_internal(tilemap: TileMap):
 	pass

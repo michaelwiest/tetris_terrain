@@ -16,6 +16,7 @@ description = "Destroys tiles in a 3x3 grid surrounding itself."
 
 [node name="SFX" parent="." index="2"]
 stream = SubResource("AudioStreamWAV_fn8fi")
+bus = &"SFX"
 wave/type = 0
 sample_params/sound_vol = 0.188931
 envelope/sustain_time = 0.274387

@@ -29,6 +29,8 @@ func trigger_internal(tilemap: TileMap):
 		unique_matched[fn] = null
 	tilemap.pattern_to_clear = unique_matched.keys()
 	
+func _after_trigger():
+	flame.visible = false
 
 func find_neighboring_cells(tilemap: TileMap) -> Array[Vector2i]:
 	# Find a 3x3 grid around the effect center.

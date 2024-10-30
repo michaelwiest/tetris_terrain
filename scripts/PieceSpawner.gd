@@ -11,7 +11,12 @@ var shapes_full: Array = []
 
 @export_group("Upgrades")
 @export var upgrade_spawners: Array[UpgradeSpawner]
+# Used to track which upgrades can be spawned once assigned.
 var active_upgrade_spawners: Array[UpgradeSpawner]
+# We don't want to supply the same upgrade on subsequent pieces (eg for next piece).
+# in case it gets matched on the first piece.
+# Kind of a hack. Ideally we would prune this from the next piece as inplace.
+var upgrades_just_pushed: Array[int] = []
 var upgrade_effect_preload = preload("res://scenes/effects/UpgradeEffect.tscn")
 
 # Use this ultimately to manually add effects when specified via an upgrade.
@@ -21,7 +26,7 @@ var piece_count: int = 0
 
 var piece_resource = preload("res://scenes/Piece.tscn")
 var shapes: Array
-# Called when the node enters the scene tree for the first time.
+
 func _ready():
 	shapes_full = []
 	for vs in valid_shapes:
@@ -60,11 +65,16 @@ func pick_piece(recipes: Array[Recipe], disable_auto_match: bool = true, ) -> Pi
 				return pick_piece(recipes, disable_auto_match)
 	
 	piece_count += 1
+	add_upgrades(new_piece)
 	add_effects(new_piece)
+	
 	return new_piece
 
-func add_effects(piece: Piece):
+func add_upgrades(piece: Piece):
+	var temp_upgrades: Array[int] = []
 	for i in range(len(active_upgrade_spawners)):
+		if i in upgrades_just_pushed:
+			continue
 		var us: UpgradeSpawner = active_upgrade_spawners[i]
 		if randf_range(0, 1) < us.chance:
 			var upgrade_node: Upgrade = load(us.upgrade_path).instantiate()
@@ -73,7 +83,12 @@ func add_effects(piece: Piece):
 			upgrade_effect.upgrade_added.connect(on_piece_matched)
 			upgrade_effect.piece_spawner_upgrade_index = i
 			piece.add_effect(upgrade_effect)
-	
+			temp_upgrades.append(i)
+	upgrades_just_pushed = temp_upgrades
+			
+
+
+func add_effects(piece: Piece):
 	for es in effect_spawners:
 		if randf_range(0, 1) < es.chance:
 			var new_effect: Effect = load(es.effect_path).instantiate()

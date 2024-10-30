@@ -36,7 +36,7 @@ data = PackedByteArray(1, 2, 3, 5, 6, 8, 10, 11, 13, 14, 15, 15, 14, 12, 9, 6, 3
 [sub_resource type="Resource" id="Resource_l8lby"]
 script = ExtResource("10_dsr74")
 effect_path = "res://scenes/effects/ScoreEffect.tscn"
-chance = 0.0
+chance = 0.209
 repeatable = true
 
 [sub_resource type="Resource" id="Resource_rexdh"]
@@ -81,6 +81,7 @@ ACCEL = 0.08
 stream = SubResource("AudioStreamWAV_kb2eu")
 volume_db = -17.24
 pitch_scale = 0.29
+bus = &"SFX"
 script = ExtResource("3_tj5sr")
 wave/type = 0
 sample_params/sound_vol = 0.25
@@ -140,5 +141,6 @@ display_color = Color(0.14902, 0.388235, 0.866667, 1)
 [node name="Soundtrack" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("11_cbol4")
 autoplay = true
+bus = &"Music"
 
 [connection signal="finished" from="Soundtrack" to="." method="_on_soundtrack_finished"]

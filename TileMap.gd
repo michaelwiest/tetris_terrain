@@ -58,11 +58,13 @@ var effect = preload("res://scenes/effects/ScoreEffect.tscn")
 
 #
  # TODO: 
-# - implement recipes like i did for effects.
+# - Animation bus.
+# - effects can trigger each other (eg bomb).
 # - fix effect display and add: shared border anim, icon, and descriptor.
 # - store score value on piece spawner
 # - fix display effects on next piece.
 # - upgrade effects.
+# -
 
 # - move from checking atlas coords to checking the column value like it is set for each recipe.
 # Display effects in the preview.
@@ -93,13 +95,10 @@ func _ready():
 	recipes.append(square)
 	recipes.append(line)
 	recipes.append(tee)
-#	for r in recipes:
-#		r.set_upgrades()
 	
 	for i in range(len(recipes)):
 		var new_container = recipe_display.instantiate()
 		new_container.recipe = recipes[i]
-
 		recipe_display_container.add_child(new_container)
 		new_container.set_tileset(self.tile_set)
 	new_game()

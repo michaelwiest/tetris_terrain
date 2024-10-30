@@ -84,7 +84,6 @@ func land(cur_pos: Vector2i):
 
 func add_effects_at_locations(effects_temp: Array[Effect], locs: PackedInt32Array):
 	assert(len(effects_temp) == len(locs), "Effects and locations must match.")
-	
 	for effect in effects_temp:
 		if effect.type == Effect.Type.UPGRADE:
 			has_upgrade = true

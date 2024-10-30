@@ -13,6 +13,6 @@ grow_vertical = 2
 script = ExtResource("1_tf020")
 
 [node name="TileMap" type="TileMap" parent="."]
-z_index = -1
+z_index = 1
 z_as_relative = false
 format = 2
