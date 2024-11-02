@@ -14,7 +14,8 @@ point_count = 4
 colors = PackedColorArray(0.883505, 0.19739, 0.0955558, 1, 1, 1, 0.0431373, 1)
 
 [node name="Flame" type="CPUParticles2D"]
-amount = 100
+position = Vector2(2.08165e-12, -32)
+amount = 60
 lifetime = 0.1
 speed_scale = 0.4
 randomness = 1.0

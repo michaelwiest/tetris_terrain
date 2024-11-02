@@ -10,6 +10,8 @@ data = PackedByteArray(223, 173, 169, 186, 207, 225, 243, 4, 19, 34, 47, 60, 72,
 script = ExtResource("2_6oxqx")
 score_amount = 500
 color = Color(1, 1, 0, 1)
+display_name = "Gold Tile"
+description = "Adds 500 points when scored."
 
 [node name="SFX" parent="." index="2"]
 stream = SubResource("AudioStreamWAV_q68qx")

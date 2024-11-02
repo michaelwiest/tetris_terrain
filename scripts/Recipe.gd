@@ -9,8 +9,8 @@ class_name Recipe
 var animation = preload("res://scenes/flash.tscn")
 var particle = preload("res://scenes/explosion.tscn")
 var _is_animating: bool = false
-var animation_objects: Array = []
-var particle_objects: Array = []
+var animation_objects: Array[AnimatedSprite2D] = []
+var particle_objects: Array[CPUParticles2D] = []
 @export var has_match: bool = false
 
 @onready var clear_sound = $SfxrStreamPlayer
@@ -41,7 +41,8 @@ func find_upgrades_in_tree() -> Array[Upgrade]:
 			to_return.append(child)
 	return to_return
 
-func set_upgrades():
+func set_upgrades(upgrade: Upgrade):
+	add_child(upgrade)
 	upgrades = find_upgrades_in_tree()
 	
 func instantiate(temp_piece: Piece):
@@ -50,20 +51,14 @@ func instantiate(temp_piece: Piece):
 func print_patterns():
 	print(piece.active_piece)
 
-func set_animation_finished():
-	_is_animating = false
-	for anim in animation_objects:
-		anim.queue_free()
-	for parti in particle_objects:
-		parti.queue_free()
-	animation_objects = []
-	particle_objects = []
 
 func is_animating():
 	return _is_animating
 
-func animate(locs):
-	clear_sound.play()
+func set_animations(tilemap: TileMap, locs):
+#	clear_sound.play()
+	animation_objects = []
+	particle_objects = []
 	for i in range(len(locs)):
 		var loc = locs[i]
 		var anim = animation.instantiate()
@@ -74,13 +69,12 @@ func animate(locs):
 		add_child(anim)
 		add_child(parti)
 		anim.position = loc
+		anim.visible = false
 		parti.position = loc
-		anim.play()
-		parti.restart()
-		if i == 0:
-			_is_animating = true
-			anim.animation_finished.connect(set_animation_finished)
+
+	tilemap.animation_queue.add_animations_and_sound(animation_objects, [clear_sound] as Array[AudioStreamPlayer], particle_objects as Array[CPUParticles2D])
 			
+
 # This code is pretty brittle and needs some checking	
 func has_piece(query_piece: Piece):
 	for pi in piece.all_pieces:

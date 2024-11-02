@@ -1,7 +1,8 @@
-[gd_scene load_steps=9 format=3 uid="uid://ksqfkcny74l8"]
+[gd_scene load_steps=10 format=3 uid="uid://ksqfkcny74l8"]
 
 [ext_resource type="Script" path="res://scripts/Effect.gd" id="1_3lfiv"]
 [ext_resource type="Texture2D" uid="uid://cw0gw3o0my8mr" path="res://assets/border_animation-Sheet.png" id="2_pgblt"]
+[ext_resource type="Texture2D" uid="uid://dmkm23qa2tdmb" path="res://icon.svg" id="3_864fb"]
 [ext_resource type="Script" path="res://addons/godot_sfxr/SfxrStreamPlayer.gd" id="3_daj0b"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_7gdab"]
@@ -53,6 +54,9 @@ autoplay = "default"
 frame_progress = 0.271648
 
 [node name="Icon" type="Sprite2D" parent="."]
+visible = false
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("3_864fb")
 
 [node name="SFX" type="AudioStreamPlayer" parent="."]
 script = ExtResource("3_daj0b")

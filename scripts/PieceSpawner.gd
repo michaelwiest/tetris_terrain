@@ -22,6 +22,8 @@ var upgrade_effect_preload = preload("res://scenes/effects/UpgradeEffect.tscn")
 # Use this ultimately to manually add effects when specified via an upgrade.
 var effects_to_add: Array[Effect] = []
 
+# Track what the latest effects added are.
+var latest_effects: Array[Effect] = []
 var piece_count: int = 0
 
 var piece_resource = preload("res://scenes/Piece.tscn")
@@ -44,6 +46,8 @@ func handle_new_game():
 	piece_count = 0
 
 func pick_piece(recipes: Array[Recipe], disable_auto_match: bool = true, ) -> Piece:
+	# Reset the effects we're tracking.
+	latest_effects = []
 	var piece_positions
 	if not shapes.is_empty():
 		shapes.shuffle()
@@ -79,10 +83,17 @@ func add_upgrades(piece: Piece):
 		if randf_range(0, 1) < us.chance:
 			var upgrade_node: Upgrade = load(us.upgrade_path).instantiate()
 			var upgrade_effect: UpgradeEffect = upgrade_effect_preload.instantiate()
+			
 			upgrade_effect.upgrade = upgrade_node
 			upgrade_effect.upgrade_added.connect(on_piece_matched)
 			upgrade_effect.piece_spawner_upgrade_index = i
 			piece.add_effect(upgrade_effect)
+			
+			# Purely for display
+			var new_effect_for_display: UpgradeEffect = upgrade_effect_preload.instantiate()
+			new_effect_for_display.upgrade = upgrade_node
+			
+			latest_effects.append(set_effect_data(upgrade_effect, new_effect_for_display))
 			temp_upgrades.append(i)
 	upgrades_just_pushed = temp_upgrades
 			
@@ -92,6 +103,9 @@ func add_effects(piece: Piece):
 	for es in effect_spawners:
 		if randf_range(0, 1) < es.chance:
 			var new_effect: Effect = load(es.effect_path).instantiate()
+			var new_effect_for_display: Effect = load(es.effect_path).instantiate()
+
+			latest_effects.append(set_effect_data(new_effect, new_effect_for_display))
 			piece.add_effect(new_effect)
 
 
@@ -109,3 +123,9 @@ func on_piece_matched(index_to_remove: int):
 	if index_to_remove < len(active_upgrade_spawners):
 		active_upgrade_spawners.remove_at(index_to_remove)
 		
+func set_effect_data(old_effect: Effect, new_effect: Effect):
+	new_effect.display_name = old_effect.display_name
+	new_effect.description = old_effect.description
+	new_effect.modulate = old_effect.modulate
+	new_effect.is_upgrade = old_effect.is_upgrade
+	return new_effect

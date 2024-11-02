@@ -8,6 +8,7 @@ enum Timing {BEFORE_MATCH, AFTER_MATCH}
 @export_multiline var description: String
 @export var is_permanent: bool = false
 @export var timing: Timing
+@onready var icon = $Icon
 
 
 # Called when the node enters the scene tree for the first time.

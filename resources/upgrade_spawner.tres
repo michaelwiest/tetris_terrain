@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="UpgradeSpawner" load_steps=2 format=3 uid="uid://fssga4rplm85"]
+
+[ext_resource type="Script" path="res://resources/upgrade_spawner.gd" id="1_yvca0"]
+
+[resource]
+script = ExtResource("1_yvca0")
+upgrade_path = ""
+chance = null
+repeatable = true

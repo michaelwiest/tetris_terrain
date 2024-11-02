@@ -3,20 +3,27 @@ extends Effect
 class_name ExplosionEffect
 @export var flame_scene: PackedScene
 var flame
+@onready var explosion_animation = $AnimatedSprite2D
+@onready var explosion_sound = $SFX
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	pass
+	border_animation.modulate = color
+	icon.visible = false
 	flame = flame_scene.instantiate()
 	flame.z_index = 2
 	flame.restart()
 	add_child(flame)
+	explosion_animation.visible = false
+	icon.visible = false
 
 
-# Gross hack to draw flame animation.
+# Gross hack to set animation position.
 func _process(delta):
 	if flame:
 		flame.position = global_location
+		
+		explosion_animation.position = global_location
 
 
 func trigger_internal(tilemap: TileMap):
@@ -28,6 +35,7 @@ func trigger_internal(tilemap: TileMap):
 	for fn in filtered_neighbors:
 		unique_matched[fn] = null
 	tilemap.pattern_to_clear = unique_matched.keys()
+	tilemap.animation_queue.add_animations_and_sound([explosion_animation] as Array[AnimatedSprite2D], [explosion_sound] as Array[AudioStreamPlayer], [] as Array[CPUParticles2D])
 	
 func _after_trigger():
 	flame.visible = false

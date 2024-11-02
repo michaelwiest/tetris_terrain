@@ -1,0 +1,8 @@
+[gd_scene load_steps=2 format=3 uid="uid://va0tddxan3tt"]
+
+[ext_resource type="Script" path="res://scripts/Recipe.gd" id="1_hmqkb"]
+
+[node name="Tee" type="Node2D"]
+script = ExtResource("1_hmqkb")
+display_name = "Grassy Tee"
+display_color = Color(0, 0.729412, 0, 1)

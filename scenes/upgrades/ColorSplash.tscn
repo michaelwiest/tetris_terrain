@@ -6,3 +6,6 @@
 [node name="ColorSplash" instance=ExtResource("1_ettiy")]
 script = ExtResource("2_45gj1")
 splash_frac = 1.0
+color = Color(0.776471, 1, 1, 1)
+display_name = "Splash Upgrade"
+description = "Colors all tiles around itself when scored."

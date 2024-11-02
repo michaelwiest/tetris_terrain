@@ -1,6 +1,6 @@
 [gd_scene load_steps=4 format=3 uid="uid://bx42k4llsn43r"]
 
-[ext_resource type="Script" path="res://scenes/RecipeDisplay.gd" id="1_igvcu"]
+[ext_resource type="Script" path="res://scripts/RecipeDisplay.gd" id="1_c0afd"]
 [ext_resource type="PackedScene" uid="uid://ciw2mhu08gs3k" path="res://scenes/PieceDisplay.tscn" id="2_x522k"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_pihue"]
@@ -15,7 +15,7 @@ anchor_bottom = 0.164
 offset_top = -4.224
 offset_right = -7.20002
 offset_bottom = 6.08799
-script = ExtResource("1_igvcu")
+script = ExtResource("1_c0afd")
 
 [node name="ColorRect" type="ColorRect" parent="."]
 layout_mode = 0

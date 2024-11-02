@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="EffectSpawner" load_steps=2 format=3 uid="uid://ckuphc7ya8pjg"]
+
+[ext_resource type="Script" path="res://resources/effect_spawner.gd" id="1_3p8nx"]
+
+[resource]
+resource_name = "Effect Spawner"
+script = ExtResource("1_3p8nx")
+effect_path = "res://scenes/effects/ExplosionEffect.tscn"
+chance = 1.0
+repeatable = true

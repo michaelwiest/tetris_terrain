@@ -12,10 +12,14 @@ var global_location: Vector2i = Vector2i(-1, -1)
 @export var display_name: String
 @export_multiline var description: String
 @onready var sfx = $SFX
+@onready var icon = $Icon
+
+var is_upgrade = false
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	border_animation.modulate = color
+	icon.visible = false
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.

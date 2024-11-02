@@ -46,16 +46,15 @@ var matched_recipe: Recipe
 @onready var next_piece: Piece
 @onready var move_sound = $SfxrStreamPlayer
 @onready var piece_spawner = $PieceSpawner
+@onready var animation_queue = $AnimationQueueHandler
 var recipes: Array[Recipe] = []
 var pattern_to_clear: Array = []
 var unmatched_pieces_to_sink: Array = []
 var tail_animation = preload("res://scenes/tail_effect.tscn")
 var recipe_display = preload("res://scenes/RecipeDisplay.tscn")
-#var effect = preload("res://scenes/effects/ExplosionEffect.tscn")
-var effect = preload("res://scenes/effects/ScoreEffect.tscn")
 
 @onready var piece_display = $HUD/Panel/MarginContainer/PieceDisplay
-
+@onready var effect_display = $EffectDisplayContainer
 #
  # TODO: 
 # - Animation bus.
@@ -63,14 +62,12 @@ var effect = preload("res://scenes/effects/ScoreEffect.tscn")
 # - fix effect display and add: shared border anim, icon, and descriptor.
 # - store score value on piece spawner
 # - fix display effects on next piece.
-# - upgrade effects.
+# - need to switch it so that the effect icons are a path that gets manually loaded rather than being
+# an onready var.
 # -
 
 # - move from checking atlas coords to checking the column value like it is set for each recipe.
 # Display effects in the preview.
-
-# Bugs:
-# - game over checker
 
 enum State {MOVING, CHECKING, ANIMATING, PREP, CLEANUP}
 
@@ -105,7 +102,8 @@ func _ready():
 	$HUD.get_node("StartButton").pressed.connect(new_game)
 
 func new_game():
-	soundtrack.play()
+	if not soundtrack.playing:
+		soundtrack.play()
 	score = 0
 	speed = initial_speed
 	
@@ -116,6 +114,7 @@ func new_game():
 	#clear everything
 #	clear_board()
 	active_piece = piece_spawner.pick_piece(recipes)
+	effect_display.display(piece_spawner)
 	next_piece = piece_spawner.pick_piece(recipes)
 	piece_display.set_piece(next_piece)
 	
@@ -123,7 +122,6 @@ func new_game():
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
-	
 	if game_running:
 		# Super hack to scale the music tempo.
 		soundtrack.pitch_scale = 1.0 + ((speed - initial_speed) / initial_speed) * 0.05
@@ -145,10 +143,9 @@ func _process(delta):
 						move_piece(directions[i])
 						steps[i] = 0
 			State.ANIMATING:
-				var any_animating: bool = false
-				for r in recipes:
-					any_animating = r.is_animating() or any_animating
-				if not any_animating:
+				if animation_queue.should_animate():
+					animation_queue.animate()
+				else:
 					current_state = State.CLEANUP
 			State.CHECKING:
 				check_board()
@@ -210,14 +207,13 @@ func prep():
 		streak_mult = 1.0 + (streak_count / 10.0)
 	active_piece.queue_free()
 	active_piece = next_piece
-	
-	
-	
+	effect_display.display(piece_spawner)
 	next_piece = piece_spawner.pick_piece(recipes)
 	
 	piece_display.set_piece(next_piece)
 	create_piece()
 	check_game_over()
+	
 	
 	current_state = State.MOVING
 
@@ -231,13 +227,15 @@ func check_board():
 			active_piece.trigger_effects(self)
 			r.trigger_upgrades(self)
 			unmatched_pieces_to_sink = get_active_piece_not_in_pattern(matched_pattern)
-			r.animate(convert_positions_to_local(pattern_to_clear))
+			r.set_animations(self, convert_positions_to_local(pattern_to_clear))
+			
 			current_state = State.ANIMATING
 			break
 		else:
 			current_state = State.PREP
 
 func cleanup():
+	check_game_over(start_pos)
 	shift_rows_from_pattern(pattern_to_clear)
 	sink_unmatched_pieces(unmatched_pieces_to_sink)
 	current_state = State.CHECKING
@@ -374,10 +372,10 @@ func clear_board():
 			erase_cell(board_layer, Vector2i(j + 1, i + 1))
 			erase_cell(active_layer, Vector2i(j + 1, i + 1))
 
-func check_game_over():
+func check_game_over(pos: Vector2i = cur_pos):
 	# Something is broken in here.
 	for i in active_piece.active_piece:
-		if not is_free(i + cur_pos):
+		if not is_free(i + pos):
 			land_piece()
 			$HUD.get_node("GameOverLabel").show()
 			game_running = false
