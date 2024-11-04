@@ -20,10 +20,7 @@ func _ready():
 
 # Gross hack to set animation position.
 func _process(delta):
-	if flame:
-		flame.position = global_location
-		
-		explosion_animation.position = global_location
+	pass
 
 
 func trigger_internal(tilemap: TileMap):

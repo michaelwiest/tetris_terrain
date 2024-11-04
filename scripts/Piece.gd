@@ -8,6 +8,7 @@ var tilemap_ids: Array
 
 var effect_indices: PackedInt32Array = []
 var effects: Array[Effect] = []
+var effect_paths: Array[String] = []
 var rotation_mod: int
 var active_piece: Array
 var has_upgrade: bool = false
@@ -49,16 +50,20 @@ func rotate_piece():
 
 func draw(
 	tilemap: TileMap, tilemap_layer: int, pos: Vector2i, tile_id: int,
-	additional_offset: Vector2 = Vector2(0, 0)):
+	dummy_effects: Array[Effect] = []):
+	var effects_to_draw = effects
+	if len(dummy_effects) > 0:
+		assert(len(dummy_effects) == len(effect_indices), "Bad dummy draw.")
+		effects_to_draw = dummy_effects
 	for i in range(len(active_piece)):
 		var piece_i = active_piece[i]
 		tilemap.set_cell(tilemap_layer, pos + piece_i, tile_id, tilemap_ids[i])
 		
 		if i in range(len(effect_indices)):
 			var index = effect_indices[i]
-			effects[i].move(
+			effects_to_draw[i].move(
 				pos + active_piece[index], 
-				tilemap.map_to_local(pos + active_piece[index]) + additional_offset)
+				tilemap.map_to_local(pos + active_piece[index]))
 
 			
 func trigger_effects(tilemap: TileMap):
@@ -88,6 +93,7 @@ func add_effects_at_locations(effects_temp: Array[Effect], locs: PackedInt32Arra
 		if effect.type == Effect.Type.UPGRADE:
 			has_upgrade = true
 		effects.append(effect)
+		effect_paths.append(effect.scene_file_path)
 		add_child(effect)
 	for loci in locs:	
 		effect_indices.append(loci)
@@ -111,3 +117,20 @@ func effect_locations():
 		all_locations.append(e.location)
 	return all_locations
 		
+
+func duplicate_piece():
+	var new_piece: Piece = self.duplicate()
+	new_piece.active_piece = active_piece
+	var duplicated_effects: Array[Effect] = []
+	for e in effects:
+		var new_e: Effect = e.duplicate()
+		duplicated_effects.append(new_e)
+	new_piece.effects = duplicated_effects
+	new_piece.effect_indices = effect_indices
+	new_piece.tilemap_ids = tilemap_ids
+	new_piece.all_pieces = all_pieces
+	return new_piece
+
+func toggle_effect_visibility():
+	for e in effects:
+		e.visible = !e.visible

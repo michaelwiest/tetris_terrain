@@ -89,11 +89,7 @@ func add_upgrades(piece: Piece):
 			upgrade_effect.piece_spawner_upgrade_index = i
 			piece.add_effect(upgrade_effect)
 			
-			# Purely for display
-			var new_effect_for_display: UpgradeEffect = upgrade_effect_preload.instantiate()
-			new_effect_for_display.upgrade = upgrade_node
-			
-			latest_effects.append(set_effect_data(upgrade_effect, new_effect_for_display))
+			latest_effects.append(set_effect_data(upgrade_effect, upgrade_effect.duplicate()))
 			temp_upgrades.append(i)
 	upgrades_just_pushed = temp_upgrades
 			
@@ -104,8 +100,7 @@ func add_effects(piece: Piece):
 		if randf_range(0, 1) < es.chance:
 			var new_effect: Effect = load(es.effect_path).instantiate()
 			var new_effect_for_display: Effect = load(es.effect_path).instantiate()
-
-			latest_effects.append(set_effect_data(new_effect, new_effect_for_display))
+			latest_effects.append(new_effect.duplicate())
 			piece.add_effect(new_effect)
 
 

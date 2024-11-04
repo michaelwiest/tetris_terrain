@@ -1,13 +1,14 @@
-[gd_scene load_steps=4 format=3 uid="uid://bx42k4llsn43r"]
+[gd_scene load_steps=5 format=3 uid="uid://bx42k4llsn43r"]
 
 [ext_resource type="Script" path="res://scripts/RecipeDisplay.gd" id="1_c0afd"]
+[ext_resource type="Theme" uid="uid://cmw6g5pt5rmve" path="res://resources/main_theme.tres" id="1_dpk7y"]
 [ext_resource type="PackedScene" uid="uid://ciw2mhu08gs3k" path="res://scenes/PieceDisplay.tscn" id="2_x522k"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_pihue"]
-font_size = 24
+font_size = 32
 
-[node name="Panel" type="Panel"]
-custom_minimum_size = Vector2(350, 250)
+[node name="RecipeDisplay" type="Panel"]
+custom_minimum_size = Vector2(384, 224)
 anchors_preset = -1
 anchor_top = 0.003
 anchor_right = 0.204
@@ -15,40 +16,51 @@ anchor_bottom = 0.164
 offset_top = -4.224
 offset_right = -7.20002
 offset_bottom = 6.08799
+theme = ExtResource("1_dpk7y")
 script = ExtResource("1_c0afd")
 
 [node name="ColorRect" type="ColorRect" parent="."]
-layout_mode = 0
-offset_right = 359.0
-offset_bottom = 234.0
-color = Color(0.301961, 0.698039, 0.576471, 1)
-
-[node name="DisplayName" type="Label" parent="."]
+custom_minimum_size = Vector2(2.08165e-12, 32)
 layout_mode = 2
-offset_left = 22.0
-offset_top = -3.0
-offset_right = 298.0
-offset_bottom = 34.0
+offset_left = 12.0
+offset_top = 14.0
+offset_right = 370.0
+offset_bottom = 49.0
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 16
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer"]
+layout_mode = 2
+
+[node name="DisplayName" type="Label" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
 text = "My Node"
 label_settings = SubResource("LabelSettings_pihue")
 
-[node name="MarginContainer" type="MarginContainer" parent="."]
-layout_mode = 0
-offset_right = 357.0
-offset_bottom = 226.0
-theme_override_constants/margin_left = 20
-theme_override_constants/margin_top = 30
-theme_override_constants/margin_right = 20
-theme_override_constants/margin_bottom = 20
-
-[node name="ColorRect" type="ColorRect" parent="MarginContainer"]
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/VBoxContainer"]
 layout_mode = 2
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 16
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 12
 
-[node name="MarginContainer" type="MarginContainer" parent="MarginContainer"]
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/VBoxContainer/MarginContainer"]
 layout_mode = 2
 theme_override_constants/margin_left = 20
 theme_override_constants/margin_top = 20
+theme_override_constants/margin_bottom = 16
 
-[node name="PieceDisplay" parent="MarginContainer/MarginContainer" instance=ExtResource("2_x522k")]
+[node name="PieceDisplay" parent="MarginContainer/VBoxContainer/MarginContainer" instance=ExtResource("2_x522k")]
 layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 0
 offset = Vector2i(0, 0)
+tilemap_scale = Vector2(0.5, 0.5)

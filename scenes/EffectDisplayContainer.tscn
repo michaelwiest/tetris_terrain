@@ -1,25 +1,19 @@
-[gd_scene load_steps=2 format=3 uid="uid://sep4033v3f6v"]
+[gd_scene load_steps=3 format=3 uid="uid://sep4033v3f6v"]
 
 [ext_resource type="Script" path="res://scripts/EffectDisplayContainer.gd" id="1_okcif"]
+[ext_resource type="Theme" uid="uid://cmw6g5pt5rmve" path="res://resources/main_theme.tres" id="2_680f0"]
 
 [node name="EffectDisplayContainer" type="CanvasLayer"]
 script = ExtResource("1_okcif")
 
 [node name="Panel" type="Panel" parent="."]
-custom_minimum_size = Vector2(768, 224)
-offset_right = 768.0
-offset_bottom = 192.0
+custom_minimum_size = Vector2(704, 224)
+offset_right = 704.0
+offset_bottom = 224.0
+size_flags_horizontal = 2
+theme = ExtResource("2_680f0")
 
-[node name="ColorRect" type="ColorRect" parent="Panel"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-color = Color(0, 0, 0, 0.470588)
-
-[node name="MarginContainer" type="MarginContainer" parent="Panel/ColorRect"]
+[node name="MarginContainer" type="MarginContainer" parent="Panel"]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -31,7 +25,7 @@ theme_override_constants/margin_top = 32
 theme_override_constants/margin_right = 32
 theme_override_constants/margin_bottom = 32
 
-[node name="GridContainer" type="GridContainer" parent="Panel/ColorRect/MarginContainer"]
+[node name="GridContainer" type="GridContainer" parent="Panel/MarginContainer"]
 layout_mode = 2
 theme_override_constants/h_separation = 16
 columns = 2

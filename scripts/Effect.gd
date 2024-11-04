@@ -20,6 +20,7 @@ var is_upgrade = false
 func _ready():
 	border_animation.modulate = color
 	icon.visible = false
+	
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -32,7 +33,7 @@ func _after_trigger():
 func trigger(tilemap: TileMap):
 	if active:
 		trigger_internal(tilemap)
-		sfx.play()
+#		sfx.play()
 		active = false
 	border_animation.visible = false
 	_after_trigger()
@@ -42,6 +43,5 @@ func trigger_internal(tilemap: TileMap):
 
 func move(new_location: Vector2i, new_global_location: Vector2i):
 	location = new_location
-	global_location = new_global_location
-	border_animation.position = new_global_location
-	border_animation.modulate = color
+	position = new_global_location
+
