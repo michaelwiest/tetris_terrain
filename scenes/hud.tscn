@@ -1,17 +1,8 @@
-[gd_scene load_steps=14 format=3 uid="uid://psjnbhu2tahx"]
+[gd_scene load_steps=11 format=3 uid="uid://psjnbhu2tahx"]
 
 [ext_resource type="PackedScene" uid="uid://ciw2mhu08gs3k" path="res://scenes/PieceDisplay.tscn" id="1_x83pp"]
 [ext_resource type="FontFile" uid="uid://ci3m341hjntcb" path="res://assets/fonts/Minecraft.ttf" id="2_prylp"]
 [ext_resource type="Theme" uid="uid://cmw6g5pt5rmve" path="res://resources/main_theme.tres" id="2_tp23x"]
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_42puf"]
-bg_color = Color(0.443137, 0.643137, 0.643137, 1)
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_adx1n"]
-bg_color = Color(0.709804, 0.541176, 0.654902, 1)
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ngyvp"]
-bg_color = Color(0.470588, 0.654902, 0.490196, 1)
 
 [sub_resource type="LabelSettings" id="LabelSettings_eiym4"]
 font_size = 48
@@ -44,17 +35,6 @@ font_color = Color(0.576471, 0.262745, 0.172549, 1)
 
 [node name="HUD" type="CanvasLayer"]
 layer = 0
-
-[node name="StartButton" type="Button" parent="."]
-offset_left = 75.0
-offset_top = 1306.0
-offset_right = 251.0
-offset_bottom = 1345.0
-theme_override_font_sizes/font_size = 28
-theme_override_styles/normal = SubResource("StyleBoxFlat_42puf")
-theme_override_styles/hover = SubResource("StyleBoxFlat_adx1n")
-theme_override_styles/pressed = SubResource("StyleBoxFlat_ngyvp")
-text = "NEW GAME"
 
 [node name="VBoxContainer" type="VBoxContainer" parent="."]
 offset_right = 40.0

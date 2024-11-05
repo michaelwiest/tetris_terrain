@@ -10,9 +10,12 @@ enum Timing {BEFORE_MATCH, AFTER_MATCH}
 @export var timing: Timing
 @onready var icon = $Icon
 
+func hide_icon():
+	icon.hide()
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
+#	icon.visible = false
 	pass
 
 

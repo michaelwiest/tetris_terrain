@@ -30,13 +30,20 @@ var piece_resource = preload("res://scenes/Piece.tscn")
 var shapes: Array
 
 func _ready():
+	reset()
+
+func reset():
+	for maybe_piece in get_children():
+		if maybe_piece is Piece:
+			maybe_piece.queue_free()
 	shapes_full = []
+	upgrades_just_pushed = []
+	latest_effects = []
 	for vs in valid_shapes:
 		shapes_full.append(ShapeAutoload.get_shapes(vs))
 	shapes = shapes_full.duplicate()
 	
 	active_upgrade_spawners = upgrade_spawners
-
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):

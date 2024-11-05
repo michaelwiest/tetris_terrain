@@ -29,3 +29,4 @@ func trigger_internal(tilemap: TileMap):
 #	tilemap.matched_recipe.add_child(upgrade)
 	tilemap.matched_recipe.set_upgrades(upgrade)
 	upgrade_added.emit(piece_spawner_upgrade_index)
+	tilemap.animation_queue.add_animations_and_sound([] as Array[AnimatedSprite2D], [sfx] as Array[AudioStreamPlayer], [] as Array[CPUParticles2D])

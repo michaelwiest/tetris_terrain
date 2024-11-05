@@ -20,10 +20,11 @@ var cur_pos : Vector2i
 @onready var recipe_display_container: GridContainer = $HUD/VBoxContainer/RecipeContainer
 @onready var soundtrack = $Soundtrack
 @onready var hud = $HUD
-
+@onready var pause_menu = $PauseMenu
 
 
 #game variables
+var paused: bool = false
 var score : int
 const REWARD : int = 100
 var temp_reward: int = REWARD
@@ -52,19 +53,16 @@ var matched_recipe: Recipe
 @export var recipes: Array[Recipe]
 var pattern_to_clear: Array = []
 var unmatched_pieces_to_sink: Array = []
-var tail_animation = preload("res://scenes/tail_effect.tscn")
+var tail_animation = preload("res://scenes/animations/tail_effect.tscn")
 var recipe_display = preload("res://scenes/RecipeDisplay.tscn")
 
 @onready var piece_display = $HUD/VBoxContainer/NextPieceContainer/MarginContainer/VBoxContainer/PieceDisplay
 @onready var effect_display = $EffectDisplayContainer
 #
  # TODO: 
-# - Pause menu
 # - Display upgrades on recipe display
-# - main splash screen into level
 # - Need to add upgrade effects to animation bus. slash do stuff after animation finish.
 # - effects can trigger each other (eg bomb).
-# - negative effects.
 # - Held piece enabling effect?
 
 # - move from checking atlas coords to checking the column value like it is set for each recipe.
@@ -97,9 +95,9 @@ func _ready():
 		recipe_display_container.add_child(new_container)
 		new_container.set_tileset(self.tile_set)
 	new_game()
-	$HUD.get_node("StartButton").pressed.connect(new_game)
 
 func new_game():
+	# REALLY NEED TO REMOVE ALL OF THE EFFECTS REMNANTS!
 	if not soundtrack.playing:
 		soundtrack.play()
 	score = 0
@@ -107,10 +105,11 @@ func new_game():
 	
 	game_running = true
 	steps = [0, 0, 0] #0:left, 1:right, 2:down
-#	$HUD.get_node("GameOverLabel").hide()
 	$HUD.get_node("VBoxContainer/ScoreContainer/MarginContainer/VBoxContainer/VBoxContainer/ScoreValue").text = str(score)
 	#clear everything
-#	clear_board()
+	clear_board()
+	piece_spawner.reset()
+	effect_display.reset()
 	active_piece = piece_spawner.pick_piece(recipes)
 	effect_display.display(piece_spawner)
 	next_piece = piece_spawner.pick_piece(recipes)
@@ -118,8 +117,21 @@ func new_game():
 	
 	create_piece()
 
+func pause_game():
+	if paused:
+		pause_menu.hide()
+		get_tree().paused = false
+		pause_menu.is_paused = false
+	else:
+		pause_menu.show()
+		get_tree().paused = true
+		pause_menu.is_paused = true
+	paused = !paused
+
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
+	if Input.is_action_just_pressed("ui_cancel"):
+		pause_game()
 	if game_running:
 		# Super hack to scale the music tempo.
 		soundtrack.pitch_scale = 1.0 + ((speed - initial_speed) / initial_speed) * 0.05
@@ -148,7 +160,7 @@ func _process(delta):
 			State.CHECKING:
 				check_board()
 			State.CLEANUP:
-				cleanup()
+				move_pieces_and_score()
 			State.PREP:
 				prep()
 				
@@ -192,8 +204,8 @@ func rotate_piece():
 			draw_piece(active_piece, cur_pos)
 
 func prep():
-	temp_reward = REWARD
 	
+	temp_reward = REWARD
 	if (streak_count <= previous_streak_count):
 		streak_count = 0
 		$HUD.get_node("VBoxContainer/ScoreContainer/MarginContainer/VBoxContainer/HBoxContainer/StreakValue").text = str(streak_count)
@@ -232,7 +244,7 @@ func check_board():
 		else:
 			current_state = State.PREP
 
-func cleanup():
+func move_pieces_and_score():
 	check_game_over(start_pos)
 	shift_rows_from_pattern(pattern_to_clear)
 	sink_unmatched_pieces(unmatched_pieces_to_sink)
@@ -376,6 +388,7 @@ func check_game_over(pos: Vector2i = cur_pos):
 			land_piece()
 #			$HUD.get_node("GameOverLabel").show()
 			game_running = false
+			pause_game()
 
 
 func _on_soundtrack_finished():

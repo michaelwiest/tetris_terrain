@@ -16,7 +16,7 @@ func set_values(effect: Effect):
 	tr.get_parent().add_child(effect)
 	effect._ready()
 	# Magic numbers
-	effect.position += Vector2(42, 28)
+	effect.position += Vector2(48, 32)
 	get_node("Panel/MarginContainer/HBoxContainer/VBoxContainer/Name").text = effect.display_name
 	get_node("Panel/MarginContainer/HBoxContainer/VBoxContainer/Description").text = effect.description
 	if effect.icon:

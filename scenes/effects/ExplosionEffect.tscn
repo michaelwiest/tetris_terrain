@@ -2,7 +2,7 @@
 
 [ext_resource type="PackedScene" uid="uid://ksqfkcny74l8" path="res://scenes/Effect.tscn" id="1_6xuf7"]
 [ext_resource type="Script" path="res://scripts/effects/explosion_effect.gd" id="2_ye3gk"]
-[ext_resource type="PackedScene" uid="uid://34vdtaqn7npi" path="res://scenes/Flame.tscn" id="3_tx2hb"]
+[ext_resource type="PackedScene" uid="uid://34vdtaqn7npi" path="res://scenes/animations/Flame.tscn" id="3_tx2hb"]
 [ext_resource type="Texture2D" uid="uid://x28takj7j7ti" path="res://assets/flame.png" id="4_k4hut"]
 [ext_resource type="Texture2D" uid="uid://d336b8wcgpgla" path="res://assets/explosion_animation-Sheet.png" id="4_uayss"]
 

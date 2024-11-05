@@ -18,6 +18,9 @@ func _ready():
 func _process(delta):
 	pass
 
+func reset():
+	seen_effects = []
+
 func clear_entries():
 	for child in grid.get_children():
 		child.queue_free()
