@@ -139,7 +139,7 @@ position = Vector2(2.08165e-12, -32)
 
 [node name="PieceSpawner" parent="." instance=ExtResource("5_ms4v8")]
 z_index = 2
-valid_shapes = Array[int]([4, 0, 2, 1, 6, 5, 1, 3])
+valid_shapes = Array[int]([4, 0, 2, 1, 6, 5, 3])
 valid_color_indices = Array[int]([1, 0, 2])
 split_color_chance = 0.099
 effect_spawners = Array[ExtResource("7_rs0lm")]([ExtResource("6_1e5h6"), SubResource("Resource_l8lby"), SubResource("Resource_5buy7")])

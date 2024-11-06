@@ -50,7 +50,25 @@ func cleanup_temp_effects(piece: Piece):
 		add_child(new_effect)
 		effects.append(new_effect)
 	
-
+func get_offset_for_piece(piece: Piece) -> Vector2:
+	var tmsize = tilemap.cell_quadrant_size
+	match piece.piece_type:
+		ShapeAutoload.Shape.O:
+			return scale * Vector2(tmsize, 0)
+		ShapeAutoload.Shape.T:
+			return scale * Vector2(int(tmsize / 2), 0)
+		ShapeAutoload.Shape.I:
+			return scale * Vector2(0, -int(tmsize / 2))
+		ShapeAutoload.Shape.Z:
+			return scale * Vector2(int(tmsize / 2), 0)
+		ShapeAutoload.Shape.S:
+			return scale * Vector2(int(tmsize / 2), 0)
+		ShapeAutoload.Shape.L:
+			return scale * Vector2(int(tmsize / 2), 0)
+		ShapeAutoload.Shape.J:
+			return scale * Vector2(int(tmsize / 2), 0)
+		_:
+			return scale * Vector2(0, 0)
 
 #func release_piece():
 #		if existing_parent:

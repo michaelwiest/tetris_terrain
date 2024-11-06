@@ -12,7 +12,7 @@ var effect_paths: Array[String] = []
 var rotation_mod: int
 var active_piece: Array
 var has_upgrade: bool = false
-
+var piece_type: ShapeAutoload.Shape
 @onready var is_ready: bool = false
 @onready var rotation_index: int = 0
 # TODO: implement a way to figure out the shape type of the current piece. 
@@ -36,7 +36,9 @@ func instance(new_positions: Array, new_tmap_ids: Array):
 		assert(typeof(nti) == 6, "All positions must be vector2i")
 	all_pieces = new_positions
 	tilemap_ids = new_tmap_ids
+	
 	active_piece = all_pieces[rotation_index]
+	piece_type = ShapeAutoload.determine_shape(active_piece)
 	is_ready = true
 
 func rotated_positions():
