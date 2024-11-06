@@ -6,32 +6,32 @@
 
 [sub_resource type="LabelSettings" id="LabelSettings_eiym4"]
 font_size = 48
-font_color = Color(0.576471, 0.262745, 0.172549, 1)
+font_color = Color(0.12549, 0.168627, 0.313726, 1)
 
 [sub_resource type="LabelSettings" id="LabelSettings_4tub3"]
 font = ExtResource("2_prylp")
 font_size = 32
-font_color = Color(0.576471, 0.262745, 0.172549, 1)
+font_color = Color(0.12549, 0.168627, 0.313726, 1)
 
 [sub_resource type="StyleBoxLine" id="StyleBoxLine_ppdp3"]
-color = Color(0.576471, 0.262745, 0.172549, 1)
+color = Color(0.12549, 0.168627, 0.313726, 1)
 thickness = 4
 
 [sub_resource type="LabelSettings" id="LabelSettings_s2fnp"]
 font_size = 24
-font_color = Color(0.576471, 0.262745, 0.172549, 1)
+font_color = Color(0.12549, 0.168627, 0.313726, 1)
 
 [sub_resource type="LabelSettings" id="LabelSettings_qjkd3"]
 font_size = 24
-font_color = Color(0.576471, 0.262745, 0.172549, 1)
+font_color = Color(0.12549, 0.168627, 0.313726, 1)
 
 [sub_resource type="LabelSettings" id="LabelSettings_falbf"]
 font_size = 32
-font_color = Color(0.576471, 0.262745, 0.172549, 1)
+font_color = Color(0.12549, 0.168627, 0.313726, 1)
 
 [sub_resource type="LabelSettings" id="LabelSettings_21nxf"]
 font_size = 24
-font_color = Color(0.576471, 0.262745, 0.172549, 1)
+font_color = Color(0.12549, 0.168627, 0.313726, 1)
 
 [node name="HUD" type="CanvasLayer"]
 layer = 0
@@ -122,7 +122,7 @@ layout_mode = 2
 
 [node name="Label" type="Label" parent="VBoxContainer/NextPieceContainer/MarginContainer/VBoxContainer"]
 layout_mode = 2
-text = "Next PIece"
+text = "Next Piece"
 label_settings = SubResource("LabelSettings_falbf")
 
 [node name="PieceDisplay" parent="VBoxContainer/NextPieceContainer/MarginContainer/VBoxContainer" instance=ExtResource("1_x83pp")]

@@ -4,7 +4,7 @@ extends Panel
 
 @onready var panel: Panel = $Panel
 
-@onready var piece_display: PieceDisplay = $MarginContainer/VBoxContainer/MarginContainer/PieceDisplay
+@onready var piece_display: PieceDisplay = $MarginContainer/VBoxContainer/MarginContainer/HBoxContainer/Container/PieceDisplay
 @onready var display_name: Label = $MarginContainer/VBoxContainer/DisplayName
 @onready var color_bar: ColorRect = $ColorRect
 # Called when the node enters the scene tree for the first time.
