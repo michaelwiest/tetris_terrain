@@ -6,12 +6,12 @@
 
 [sub_resource type="LabelSettings" id="LabelSettings_jx80w"]
 font_size = 26
-font_color = Color(0.576471, 0.262745, 0.172549, 1)
+font_color = Color(0.12549, 0.168627, 0.313726, 1)
 
 [sub_resource type="LabelSettings" id="LabelSettings_selbd"]
 line_spacing = 2.0
 font_size = 20
-font_color = Color(0.576471, 0.262745, 0.172549, 1)
+font_color = Color(0.12549, 0.168627, 0.313726, 1)
 outline_color = Color(0.576471, 0.262745, 0.172549, 1)
 
 [node name="EffectDisplay" type="Control"]

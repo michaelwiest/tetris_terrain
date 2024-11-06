@@ -146,8 +146,8 @@ effect_spawners = Array[ExtResource("7_rs0lm")]([ExtResource("6_1e5h6"), SubReso
 upgrade_spawners = Array[ExtResource("8_5gtl8")]([SubResource("Resource_rexdh")])
 
 [node name="HUD" parent="." instance=ExtResource("9_lht3n")]
-offset = Vector2(896, 128)
-transform = Transform2D(1, 0, 0, 1, 896, 128)
+offset = Vector2(896, 64)
+transform = Transform2D(1, 0, 0, 1, 896, 64)
 
 [node name="Line" parent="." instance=ExtResource("10_k0jc2")]
 color_index = 2
@@ -155,7 +155,7 @@ display_name = "Red Line"
 display_color = Color(0.913725, 0.270588, 0.25098, 1)
 
 [node name="Tee" parent="." instance=ExtResource("10_k0jc2")]
-shape_type = 1
+shape_type = 4
 display_name = "Green Tee"
 display_color = Color(0.286275, 0.74902, 0.364706, 1)
 
@@ -173,8 +173,8 @@ bus = &"Music"
 [node name="AnimationQueueHandler" parent="." instance=ExtResource("12_ofe83")]
 
 [node name="EffectDisplayContainer" parent="." instance=ExtResource("13_5flhd")]
-offset = Vector2(832, 2.08165e-12)
-transform = Transform2D(1, 0, 0, 1, 832, 2.08165e-12)
+offset = Vector2(832, 64)
+transform = Transform2D(1, 0, 0, 1, 832, 64)
 display_time = 5
 
 [node name="PauseMenu" parent="." instance=ExtResource("14_ve5t1")]

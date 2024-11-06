@@ -7,6 +7,8 @@ class_name PieceDisplay
 @export var tilemap_scale: Vector2 = Vector2(1.0, 1.0)
 var existing_parent: Node2D 
 var effects: Array[Effect]
+var visual_offset: Vector2
+
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	tilemap.scale = tilemap_scale
@@ -26,7 +28,7 @@ func draw_piece():
 	# Something is messed up in here where the animations are getting drawn below the tilemap.
 	# This is because the WHOLE tilemap is also offset by 100.....
 	# If i make both of these parent to a main node then this shouldn't be an issue?
-	piece.draw(tilemap, 0, offset, 0, effects)
+	piece.draw(tilemap, 0, offset, 0, effects, visual_offset)
 	
 func set_piece(new_piece: Piece):
 	# Need to do something here around copying the effects, adding them to this scene
@@ -36,6 +38,9 @@ func set_piece(new_piece: Piece):
 		piece.toggle_effect_visibility()
 	piece = new_piece
 	piece.toggle_effect_visibility()
+	
+	visual_offset = get_offset_for_piece(piece)
+	tilemap.position = visual_offset
 	cleanup_temp_effects(piece)
 	draw_piece()
 
@@ -49,9 +54,10 @@ func cleanup_temp_effects(piece: Piece):
 		var new_effect = load(ep).instantiate()
 		add_child(new_effect)
 		effects.append(new_effect)
-	
+
+
 func get_offset_for_piece(piece: Piece) -> Vector2:
-	var tmsize = tilemap.cell_quadrant_size
+	var tmsize = 64
 	match piece.piece_type:
 		ShapeAutoload.Shape.O:
 			return scale * Vector2(tmsize, 0)

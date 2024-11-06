@@ -14,6 +14,7 @@ var cur_pos : Vector2i
 @export var initial_speed: float = 0.7
 @onready var speed : float = initial_speed
 @export var ACCEL : float = 0.09
+@export var goal_score: int = 5000
 
 @export_range(0, 1.0) var effect_chance = 0.4
 
@@ -88,7 +89,7 @@ func get_active_piece_not_in_pattern(matched_pattern: Array) -> Array:
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	piece_display.set_tileset(self.tile_set)
-	
+	$HUD.get_node("VBoxContainer/ScoreContainer/MarginContainer/VBoxContainer/HBoxContainer/Control/GoalValue").text = str(goal_score)
 	for i in range(len(recipes)):
 		var new_container = recipe_display.instantiate()
 		new_container.recipe = recipes[i]

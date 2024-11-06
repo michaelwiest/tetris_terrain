@@ -51,8 +51,13 @@ func rotate_piece():
 
 
 func draw(
-	tilemap: TileMap, tilemap_layer: int, pos: Vector2i, tile_id: int,
-	dummy_effects: Array[Effect] = []):
+	tilemap: TileMap, 
+	tilemap_layer: int, 
+	pos: Vector2i, 
+	tile_id: int,
+	dummy_effects: Array[Effect] = [],
+	additional_offset: Vector2 = Vector2.ZERO
+	):
 	var effects_to_draw = effects
 	if len(dummy_effects) > 0:
 		assert(len(dummy_effects) == len(effect_indices), "Bad dummy draw.")
@@ -65,7 +70,7 @@ func draw(
 			var index = effect_indices[i]
 			effects_to_draw[i].move(
 				pos + active_piece[index], 
-				tilemap.map_to_local(pos + active_piece[index]))
+				tilemap.map_to_local(pos + active_piece[index]) + additional_offset)
 
 			
 func trigger_effects(tilemap: TileMap):

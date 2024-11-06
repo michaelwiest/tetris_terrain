@@ -12,6 +12,8 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_tf020")
+offset = null
+tilemap_scale = null
 
 [node name="TileMap" type="TileMap" parent="."]
 z_index = 1
