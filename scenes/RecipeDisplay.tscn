@@ -3,7 +3,7 @@
 [ext_resource type="Script" path="res://scripts/RecipeDisplay.gd" id="1_c0afd"]
 [ext_resource type="Theme" uid="uid://cmw6g5pt5rmve" path="res://resources/main_theme.tres" id="1_dpk7y"]
 [ext_resource type="PackedScene" uid="uid://ciw2mhu08gs3k" path="res://scenes/PieceDisplay.tscn" id="2_x522k"]
-[ext_resource type="Texture2D" uid="uid://bfndwtwomrr7o" path="res://assets/dashed_border.png" id="4_or2x7"]
+[ext_resource type="Texture2D" path="res://assets/dashed_border.png" id="4_or2x7"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_pihue"]
 font_size = 32
