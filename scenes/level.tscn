@@ -1,4 +1,4 @@
-[gd_scene load_steps=22 format=3 uid="uid://v07im6ckn0y5"]
+[gd_scene load_steps=23 format=3 uid="uid://v07im6ckn0y5"]
 
 [ext_resource type="Texture2D" uid="uid://22c2gue343i1" path="res://assets/tetrominoes2.png" id="1_4y7r6"]
 [ext_resource type="Script" path="res://scripts/Level.gd" id="2_0w3fc"]
@@ -15,6 +15,7 @@
 [ext_resource type="PackedScene" uid="uid://b0csnvxghinkt" path="res://scenes/AnimationQueueHandler.tscn" id="12_ofe83"]
 [ext_resource type="PackedScene" uid="uid://sep4033v3f6v" path="res://scenes/EffectDisplayContainer.tscn" id="13_5flhd"]
 [ext_resource type="PackedScene" uid="uid://ckqhwpcc6eohh" path="res://scenes/navigation/PauseMenu.tscn" id="14_ve5t1"]
+[ext_resource type="PackedScene" uid="uid://cgsh755rhqc8" path="res://scenes/navigation/GameOverMenu.tscn" id="16_vl4g1"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_wgf51"]
 texture = ExtResource("1_4y7r6")
@@ -177,7 +178,9 @@ offset = Vector2(832, 64)
 transform = Transform2D(1, 0, 0, 1, 832, 64)
 display_time = 5
 
-[node name="PauseMenu" parent="." instance=ExtResource("14_ve5t1")]
+[node name="GameOverMenu" parent="." instance=ExtResource("16_vl4g1")]
 visible = false
+
+[node name="PauseMenu" parent="." instance=ExtResource("14_ve5t1")]
 
 [connection signal="finished" from="Soundtrack" to="." method="_on_soundtrack_finished"]

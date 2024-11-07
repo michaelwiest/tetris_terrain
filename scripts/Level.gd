@@ -22,6 +22,7 @@ var cur_pos : Vector2i
 @onready var soundtrack = $Soundtrack
 @onready var hud = $HUD
 @onready var pause_menu = $PauseMenu
+#@onready var game_over_menu = $GameOverMenu
 
 
 #game variables
@@ -118,14 +119,14 @@ func new_game():
 	
 	create_piece()
 
-func pause_game():
+func pause_game(is_game_over: bool = false):
 	if paused:
-		pause_menu.hide()
 		get_tree().paused = false
+		pause_menu.hide()
 		pause_menu.is_paused = false
 	else:
-		pause_menu.show()
 		get_tree().paused = true
+		pause_menu.show()
 		pause_menu.is_paused = true
 	paused = !paused
 
@@ -389,7 +390,7 @@ func check_game_over(pos: Vector2i = cur_pos):
 			land_piece()
 #			$HUD.get_node("GameOverLabel").show()
 			game_running = false
-			pause_game()
+			pause_game(true)
 
 
 func _on_soundtrack_finished():

@@ -68,7 +68,6 @@ anchors_preset = 0
 size_flags_horizontal = 0
 size_flags_vertical = 0
 offset = Vector2i(0, 0)
-tilemap_scale = null
 
 [node name="VSeparator2" type="VSeparator" parent="MarginContainer/VBoxContainer/MarginContainer/HBoxContainer"]
 layout_mode = 2

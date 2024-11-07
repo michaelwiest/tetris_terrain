@@ -18,6 +18,7 @@ color = Color(0, 0, 0, 0.411765)
 custom_minimum_size = Vector2(704, 352)
 offset_right = 704.0
 offset_bottom = 224.0
+scale = Vector2(1, 0.995265)
 size_flags_horizontal = 2
 theme = ExtResource("2_680f0")
 

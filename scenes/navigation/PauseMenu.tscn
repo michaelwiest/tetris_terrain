@@ -30,7 +30,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-color = Color(1, 1, 1, 0.827451)
+color = Color(0.180392, 0.180392, 0.180392, 0.827451)
 
 [node name="ColorRect2" type="ColorRect" parent="Control"]
 layout_mode = 1
@@ -39,7 +39,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-color = Color(0.258824, 0.258824, 0.258824, 0.615686)
+color = Color(0.478431, 0.478431, 0.478431, 0.615686)
 
 [node name="MarginContainer" type="MarginContainer" parent="Control"]
 layout_mode = 1
@@ -76,6 +76,7 @@ text = "New Game"
 [node name="MainMenu" type="Button" parent="Control/MarginContainer/VBoxContainer"]
 custom_minimum_size = Vector2(0, 128)
 layout_mode = 2
+theme = ExtResource("2_ghtpl")
 theme_override_fonts/font = ExtResource("3_1o1xa")
 theme_override_font_sizes/font_size = 64
 text = "Main Menu"

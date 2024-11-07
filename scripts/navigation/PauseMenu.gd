@@ -4,6 +4,7 @@ var button_index: int = 0
 var buttons: Array[Button] = []
 @onready var button_box = $Control/MarginContainer/VBoxContainer
 @onready var level: Level = $".."
+#@onready var level = $Control
 var is_paused: bool = true
 var selected_button: Button
 var can_listen_for_cancel = false
@@ -22,7 +23,6 @@ func set_paused():
 	can_listen_for_cancel = false
 
 func _process(delta):
-#	print(is_paused)
 	if is_paused:
 		if Input.is_action_just_pressed("ui_down"):
 			button_index += 1
@@ -37,9 +37,9 @@ func _process(delta):
 		
 		button_index = button_index % len(buttons)
 		selected_button = buttons[button_index]
+		# Why on earth is this not highlighting it properly.
 		selected_button.grab_focus()
-#	can_listen_for_cancel = true
-	
+
 
 func _on_resume_pressed():
 	level.pause_game()

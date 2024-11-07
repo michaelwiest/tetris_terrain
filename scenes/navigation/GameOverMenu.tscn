@@ -1,0 +1,96 @@
+[gd_scene load_steps=3 format=3 uid="uid://cgsh755rhqc8"]
+
+[ext_resource type="Script" path="res://scripts/navigation/GameOverMenu.gd" id="1_78d8o"]
+[ext_resource type="Theme" uid="uid://cmw6g5pt5rmve" path="res://resources/main_theme.tres" id="2_6xp4l"]
+
+[node name="GameOverMenu" type="CanvasLayer"]
+process_mode = 3
+script = ExtResource("1_78d8o")
+success_message = "Woohoo! You Won!"
+failure_message = "Oh no you lost! Try again!"
+
+[node name="TextureRect" type="ColorRect" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(1, 1, 1, 0.701961)
+
+[node name="Control" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="Control"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 256
+theme_override_constants/margin_top = 256
+theme_override_constants/margin_right = 256
+theme_override_constants/margin_bottom = 256
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Control/MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 64
+
+[node name="Control" type="Panel" parent="Control/MarginContainer/VBoxContainer"]
+custom_minimum_size = Vector2(2.08165e-12, 128)
+layout_mode = 2
+theme = ExtResource("2_6xp4l")
+
+[node name="MarginContainer" type="MarginContainer" parent="Control/MarginContainer/VBoxContainer/Control"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(1.00279, 1.00958)
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 16
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 16
+
+[node name="message" type="Label" parent="Control/MarginContainer/VBoxContainer/Control/MarginContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+theme = ExtResource("2_6xp4l")
+theme_override_font_sizes/font_size = 64
+text = "Test"
+
+[node name="NextLevel" type="Button" parent="Control/MarginContainer/VBoxContainer"]
+custom_minimum_size = Vector2(2.08165e-12, 128)
+layout_mode = 2
+theme = ExtResource("2_6xp4l")
+theme_override_font_sizes/font_size = 64
+text = "Next Level"
+
+[node name="NewGame" type="Button" parent="Control/MarginContainer/VBoxContainer"]
+custom_minimum_size = Vector2(2.08165e-12, 128)
+layout_mode = 2
+theme = ExtResource("2_6xp4l")
+theme_override_font_sizes/font_size = 64
+text = "New Game"
+
+[node name="MainMenu" type="Button" parent="Control/MarginContainer/VBoxContainer"]
+custom_minimum_size = Vector2(2.08165e-12, 128)
+layout_mode = 2
+theme = ExtResource("2_6xp4l")
+theme_override_font_sizes/font_size = 64
+text = "Main Menu"
+
+[node name="Timer" type="Timer" parent="."]
+wait_time = 0.1
+
+[connection signal="pressed" from="Control/MarginContainer/VBoxContainer/NextLevel" to="." method="_on_next_level_pressed"]
+[connection signal="pressed" from="Control/MarginContainer/VBoxContainer/NewGame" to="." method="_on_new_game_pressed"]
+[connection signal="pressed" from="Control/MarginContainer/VBoxContainer/MainMenu" to="." method="_on_main_menu_pressed"]
+[connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]
