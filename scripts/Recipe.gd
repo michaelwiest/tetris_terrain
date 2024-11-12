@@ -6,12 +6,14 @@ class_name Recipe
 @export var display_name: String
 @export var display_color: Color
 @export var check_from_bottom: bool = true
-var animation = preload("res://scenes/flash.tscn")
-var particle = preload("res://scenes/explosion.tscn")
+var animation = preload("res://scenes/animations/flash.tscn")
+var particle = preload("res://scenes/animations/explosion.tscn")
 var _is_animating: bool = false
 var animation_objects: Array[AnimatedSprite2D] = []
 var particle_objects: Array[CPUParticles2D] = []
 @export var has_match: bool = false
+
+@export var score_per_tile: int = 25
 
 @onready var clear_sound = $SfxrStreamPlayer
 @onready var piece: Piece = $Piece
@@ -43,8 +45,14 @@ func find_upgrades_in_tree() -> Array[Upgrade]:
 
 func set_upgrades(upgrade: Upgrade):
 	add_child(upgrade)
+	upgrade.hide_icon()
 	upgrades = find_upgrades_in_tree()
-	
+
+func reset():
+	for upgrade in upgrades:
+		upgrade.queue_free()
+	upgrades = []
+
 func instantiate(temp_piece: Piece):
 	piece = temp_piece
 	

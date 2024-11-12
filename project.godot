@@ -11,15 +11,19 @@ config_version=5
 [application]
 
 config/name="Tetris Terrain"
-run/main_scene="res://scenes/level.tscn"
+run/main_scene="res://scenes/navigation/MainMenu.tscn"
 config/features=PackedStringArray("4.1", "Forward Plus")
 config/icon="res://icon.svg"
 
 [display]
 
-window/size/viewport_width=1408
-window/size/viewport_height=1408
+window/size/viewport_width=1536
+window/size/viewport_height=1536
 
 [editor_plugins]
 
 enabled=PackedStringArray("res://addons/godot_sfxr/plugin.cfg")
+
+[rendering]
+
+anti_aliasing/screen_space_roughness_limiter/amount=1.0

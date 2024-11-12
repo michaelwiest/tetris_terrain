@@ -35,11 +35,9 @@ func add_animations_and_sound(new_animations: Array[AnimatedSprite2D], new_sound
 	particles.append(new_particles)
 	
 func play():
-	ready_for_next_animation = false
-	
-	
 	is_animating = true
 	for i in range(len(temp_animations)):
+		ready_for_next_animation = false
 		temp_animations[i].visible = true
 		temp_animations[i].play()
 		# Assumes all the animations have the same length in time.

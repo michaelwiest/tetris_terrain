@@ -12,7 +12,7 @@ var effect_paths: Array[String] = []
 var rotation_mod: int
 var active_piece: Array
 var has_upgrade: bool = false
-
+var piece_type: ShapeAutoload.Shape
 @onready var is_ready: bool = false
 @onready var rotation_index: int = 0
 # TODO: implement a way to figure out the shape type of the current piece. 
@@ -36,7 +36,9 @@ func instance(new_positions: Array, new_tmap_ids: Array):
 		assert(typeof(nti) == 6, "All positions must be vector2i")
 	all_pieces = new_positions
 	tilemap_ids = new_tmap_ids
+	
 	active_piece = all_pieces[rotation_index]
+	piece_type = ShapeAutoload.determine_shape(active_piece)
 	is_ready = true
 
 func rotated_positions():
@@ -49,8 +51,13 @@ func rotate_piece():
 
 
 func draw(
-	tilemap: TileMap, tilemap_layer: int, pos: Vector2i, tile_id: int,
-	dummy_effects: Array[Effect] = []):
+	tilemap: TileMap, 
+	tilemap_layer: int, 
+	pos: Vector2i, 
+	tile_id: int,
+	dummy_effects: Array[Effect] = [],
+	additional_offset: Vector2 = Vector2.ZERO
+	):
 	var effects_to_draw = effects
 	if len(dummy_effects) > 0:
 		assert(len(dummy_effects) == len(effect_indices), "Bad dummy draw.")
@@ -63,7 +70,7 @@ func draw(
 			var index = effect_indices[i]
 			effects_to_draw[i].move(
 				pos + active_piece[index], 
-				tilemap.map_to_local(pos + active_piece[index]))
+				tilemap.map_to_local(pos + active_piece[index]) + additional_offset)
 
 			
 func trigger_effects(tilemap: TileMap):

@@ -39,7 +39,7 @@ func trigger(tilemap: TileMap):
 	_after_trigger()
 	
 func trigger_internal(tilemap: TileMap):
-	pass
+	tilemap.animation_queue.add_animations_and_sound([] as Array[AnimatedSprite2D], [sfx] as Array[AudioStreamPlayer], [] as Array[CPUParticles2D])
 
 func move(new_location: Vector2i, new_global_location: Vector2i):
 	location = new_location

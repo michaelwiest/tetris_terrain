@@ -18,6 +18,9 @@ func _ready():
 func _process(delta):
 	pass
 
+func reset():
+	seen_effects = []
+
 func clear_entries():
 	for child in grid.get_children():
 		child.queue_free()
@@ -31,8 +34,9 @@ func display(spawner: PieceSpawner):
 		if le.name in seen_effects and not le.is_upgrade:
 			continue
 		var new_display = display_preload.instantiate()
-		new_display.set_values(le)
 		grid.add_child(new_display)
+		new_display.set_values(le)
+		
 		seen_effects.append(le.name)
 		temp_added_count += 1
 	# Check if we actually added any.

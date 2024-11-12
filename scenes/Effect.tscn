@@ -37,7 +37,7 @@ animations = [{
 "texture": SubResource("AtlasTexture_a57r1")
 }],
 "loop": true,
-"name": &"default",
+"name": &"new_animation",
 "speed": 8.0
 }]
 
@@ -50,8 +50,9 @@ script = ExtResource("1_3lfiv")
 z_index = 3
 z_as_relative = false
 sprite_frames = SubResource("SpriteFrames_0bwju")
-autoplay = "default"
-frame_progress = 0.271648
+animation = &"new_animation"
+autoplay = "new_animation"
+frame_progress = 0.408486
 
 [node name="Icon" type="Sprite2D" parent="."]
 visible = false

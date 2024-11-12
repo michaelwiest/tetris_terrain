@@ -1,21 +1,22 @@
-[gd_scene load_steps=5 format=3 uid="uid://bx42k4llsn43r"]
+[gd_scene load_steps=7 format=3 uid="uid://bx42k4llsn43r"]
 
 [ext_resource type="Script" path="res://scripts/RecipeDisplay.gd" id="1_c0afd"]
 [ext_resource type="Theme" uid="uid://cmw6g5pt5rmve" path="res://resources/main_theme.tres" id="1_dpk7y"]
 [ext_resource type="PackedScene" uid="uid://ciw2mhu08gs3k" path="res://scenes/PieceDisplay.tscn" id="2_x522k"]
+[ext_resource type="Texture2D" uid="uid://bfndwtwomrr7o" path="res://assets/dashed_border.png" id="4_or2x7"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_pihue"]
 font_size = 32
 
+[sub_resource type="StyleBoxLine" id="StyleBoxLine_awxnp"]
+color = Color(0.12549, 0.168627, 0.313726, 1)
+thickness = 6
+vertical = true
+
 [node name="RecipeDisplay" type="Panel"]
-custom_minimum_size = Vector2(384, 224)
-anchors_preset = -1
-anchor_top = 0.003
-anchor_right = 0.204
-anchor_bottom = 0.164
-offset_top = -4.224
-offset_right = -7.20002
-offset_bottom = 6.08799
+custom_minimum_size = Vector2(544, 224)
+offset_right = 384.0
+offset_bottom = 192.0
 theme = ExtResource("1_dpk7y")
 script = ExtResource("1_c0afd")
 
@@ -24,8 +25,8 @@ custom_minimum_size = Vector2(2.08165e-12, 32)
 layout_mode = 2
 offset_left = 12.0
 offset_top = 14.0
-offset_right = 370.0
-offset_bottom = 49.0
+offset_right = 533.0
+offset_bottom = 46.0
 
 [node name="MarginContainer" type="MarginContainer" parent="."]
 layout_mode = 1
@@ -35,7 +36,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_constants/margin_left = 16
-theme_override_constants/margin_top = 16
+theme_override_constants/margin_top = 20
 
 [node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer"]
 layout_mode = 2
@@ -48,19 +49,64 @@ label_settings = SubResource("LabelSettings_pihue")
 [node name="MarginContainer" type="MarginContainer" parent="MarginContainer/VBoxContainer"]
 layout_mode = 2
 theme_override_constants/margin_left = 16
-theme_override_constants/margin_top = 16
+theme_override_constants/margin_top = 7
 theme_override_constants/margin_right = 20
-theme_override_constants/margin_bottom = 12
+theme_override_constants/margin_bottom = 32
 
-[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/VBoxContainer/MarginContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer/MarginContainer"]
 layout_mode = 2
-theme_override_constants/margin_left = 20
-theme_override_constants/margin_top = 20
-theme_override_constants/margin_bottom = 16
+theme_override_constants/separation = 6
 
-[node name="PieceDisplay" parent="MarginContainer/VBoxContainer/MarginContainer" instance=ExtResource("2_x522k")]
+[node name="Container" type="Control" parent="MarginContainer/VBoxContainer/MarginContainer/HBoxContainer"]
+custom_minimum_size = Vector2(256, 128)
 layout_mode = 2
+
+[node name="PieceDisplay" parent="MarginContainer/VBoxContainer/MarginContainer/HBoxContainer/Container" instance=ExtResource("2_x522k")]
+custom_minimum_size = Vector2(128, 64)
+layout_mode = 2
+anchors_preset = 0
 size_flags_horizontal = 0
 size_flags_vertical = 0
 offset = Vector2i(0, 0)
-tilemap_scale = Vector2(0.5, 0.5)
+
+[node name="VSeparator2" type="VSeparator" parent="MarginContainer/VBoxContainer/MarginContainer/HBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 16
+theme_override_styles/separator = SubResource("StyleBoxLine_awxnp")
+
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/VBoxContainer/MarginContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+theme_override_constants/margin_right = 32
+
+[node name="GridContainer" type="GridContainer" parent="MarginContainer/VBoxContainer/MarginContainer/HBoxContainer/MarginContainer"]
+layout_mode = 2
+size_flags_horizontal = 8
+theme_override_constants/h_separation = 8
+theme_override_constants/v_separation = 8
+columns = 2
+
+[node name="TextureRect" type="TextureRect" parent="MarginContainer/VBoxContainer/MarginContainer/HBoxContainer/MarginContainer/GridContainer"]
+custom_minimum_size = Vector2(64, 64)
+layout_mode = 2
+texture = ExtResource("4_or2x7")
+expand_mode = 3
+
+[node name="TextureRect2" type="TextureRect" parent="MarginContainer/VBoxContainer/MarginContainer/HBoxContainer/MarginContainer/GridContainer"]
+clip_contents = true
+layout_mode = 2
+texture = ExtResource("4_or2x7")
+expand_mode = 3
+
+[node name="TextureRect3" type="TextureRect" parent="MarginContainer/VBoxContainer/MarginContainer/HBoxContainer/MarginContainer/GridContainer"]
+clip_contents = true
+layout_mode = 2
+texture = ExtResource("4_or2x7")
+expand_mode = 5
+
+[node name="TextureRect4" type="TextureRect" parent="MarginContainer/VBoxContainer/MarginContainer/HBoxContainer/MarginContainer/GridContainer"]
+clip_contents = true
+layout_mode = 2
+texture = ExtResource("4_or2x7")
+expand_mode = 5
