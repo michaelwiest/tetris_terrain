@@ -22,11 +22,11 @@ var cur_pos : Vector2i
 @onready var soundtrack = $Soundtrack
 @onready var hud = $HUD
 @onready var pause_menu = $PauseMenu
-#@onready var game_over_menu = $GameOverMenu
 
 
 #game variables
 var paused: bool = false
+var has_seen_gameover: bool = false
 var score : int
 const REWARD : int = 100
 var temp_reward: int = REWARD
@@ -111,10 +111,11 @@ func new_game():
 	speed = initial_speed
 	
 	game_running = true
+	has_seen_gameover = false
 	steps = [0, 0, 0] #0:left, 1:right, 2:down
 	$HUD.get_node("VBoxContainer/ScoreContainer/MarginContainer/VBoxContainer/VBoxContainer/ScoreValue").text = str(score)
 	#clear everything
-	clear_board()
+#	clear_board()
 	piece_spawner.reset()
 	effect_display.reset()
 	for r in recipes:
@@ -173,6 +174,9 @@ func _process(delta):
 				move_pieces_and_score()
 			State.PREP:
 				prep()
+	elif not has_seen_gameover:
+		pause_game()
+		
 				
 
 func create_piece():
@@ -254,7 +258,7 @@ func check_board():
 			current_state = State.PREP
 
 func move_pieces_and_score():
-	check_game_over(start_pos)
+	
 	shift_rows_from_pattern(pattern_to_clear)
 	sink_unmatched_pieces(unmatched_pieces_to_sink)
 	current_state = State.CHECKING
@@ -265,6 +269,7 @@ func move_pieces_and_score():
 	$HUD.get_node("VBoxContainer/ScoreContainer/MarginContainer/VBoxContainer/VBoxContainer/ScoreValue").text = str(score)
 	$HUD.get_node("VBoxContainer/ScoreContainer/MarginContainer/VBoxContainer/HBoxContainer/StreakValue").text = str(streak_count)
 	speed += ACCEL
+	check_game_over(start_pos)
 
 func sink_piece():
 	clear_piece(active_piece)
@@ -399,9 +404,8 @@ func check_game_over(pos: Vector2i = cur_pos):
 	for i in active_piece.active_piece:
 		if not is_free(i + pos):
 			land_piece()
-#			$HUD.get_node("GameOverLabel").show()
 			game_running = false
-			pause_game(true)
+			pause_game()
 
 
 func _on_soundtrack_finished():
