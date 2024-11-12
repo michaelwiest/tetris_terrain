@@ -11,7 +11,7 @@ data = PackedByteArray(23, 57, 83, 98, 100, 90, 70, 44, 15, 242, 218, 200, 191, 
 script = ExtResource("2_6oxqx")
 score_amount = 500
 color = Color(1, 1, 0, 1)
-display_name = "Gold Tile"
+display_name = "Gold"
 description = "Adds 500 points when scored."
 
 [node name="SFX" parent="." index="2"]

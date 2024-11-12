@@ -81,5 +81,10 @@ theme_override_fonts/font = ExtResource("3_1o1xa")
 theme_override_font_sizes/font_size = 64
 text = "Main Menu"
 
+[node name="Timer" type="Timer" parent="."]
+wait_time = 0.1
+one_shot = true
+
 [connection signal="pressed" from="Control/MarginContainer/VBoxContainer/Resume" to="." method="_on_resume_pressed"]
 [connection signal="pressed" from="Control/MarginContainer/VBoxContainer/NewGame" to="." method="_on_new_game_pressed"]
+[connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]

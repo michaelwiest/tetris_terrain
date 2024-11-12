@@ -1,5 +1,7 @@
 extends Panel
 
+class_name RecipeDisplay
+
 @export var recipe: Recipe
 
 @onready var panel: Panel = $Panel
@@ -16,7 +18,7 @@ func _ready():
 			piece_display.set_piece(recipe.piece)
 		display_name.text = recipe.display_name
 		color_bar.modulate = recipe.display_color
-#		display_name.text.color = Color(1, 1, 1)
+#		display_name.tex	t.color = Color(1, 1, 1)
 	for tr in get_node("MarginContainer/VBoxContainer/MarginContainer/HBoxContainer/MarginContainer/GridContainer").get_children():
 		texture_rects.append(tr)
 

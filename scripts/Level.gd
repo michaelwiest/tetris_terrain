@@ -62,7 +62,6 @@ var recipe_display = preload("res://scenes/RecipeDisplay.tscn")
 @onready var effect_display = $EffectDisplayContainer
 #
  # TODO: 
-# - Display upgrades on recipe display
 # - Need to add upgrade effects to animation bus. slash do stuff after animation finish.
 # - effects can trigger each other (eg bomb).
 # - Held piece enabling effect?
@@ -91,15 +90,21 @@ func get_active_piece_not_in_pattern(matched_pattern: Array) -> Array:
 func _ready():
 	piece_display.set_tileset(self.tile_set)
 	$HUD.get_node("VBoxContainer/ScoreContainer/MarginContainer/VBoxContainer/HBoxContainer/Control/GoalValue").text = str(goal_score)
+	new_game()
+
+func _remove_recipe_displays():
+	for r in recipe_display_container.get_children():
+		if r is RecipeDisplay:
+			r.queue_free()
+	
+func set_recipe_displays():
 	for i in range(len(recipes)):
 		var new_container = recipe_display.instantiate()
 		new_container.recipe = recipes[i]
 		recipe_display_container.add_child(new_container)
 		new_container.set_tileset(self.tile_set)
-	new_game()
 
 func new_game():
-	# REALLY NEED TO REMOVE ALL OF THE EFFECTS REMNANTS!
 	if not soundtrack.playing:
 		soundtrack.play()
 	score = 0
@@ -112,25 +117,26 @@ func new_game():
 	clear_board()
 	piece_spawner.reset()
 	effect_display.reset()
+	for r in recipes:
+		r.reset()
 	active_piece = piece_spawner.pick_piece(recipes)
 	effect_display.display(piece_spawner)
 	next_piece = piece_spawner.pick_piece(recipes)
 	piece_display.set_piece(next_piece)
+	_remove_recipe_displays()
+	set_recipe_displays()
 	
 	create_piece()
 
 func pause_game(is_game_over: bool = false):
 	if paused:
 		get_tree().paused = false
-		pause_menu.hide()
-		pause_menu.is_paused = false
+		pause_menu.toggle_pause()
 	else:
 		get_tree().paused = true
-		pause_menu.show()
-		pause_menu.is_paused = true
+		pause_menu.toggle_pause()
 	paused = !paused
 
-# Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
 	if Input.is_action_just_pressed("ui_cancel"):
 		pause_game()
@@ -144,6 +150,8 @@ func _process(delta):
 		elif Input.is_action_pressed("ui_down"):
 			steps[2] += 10
 		elif Input.is_action_just_pressed("ui_up"):
+			sink_piece()
+		elif Input.is_action_just_pressed("ui_accept"):
 			rotate_piece()
 		
 		#apply downward movement every frame
@@ -206,7 +214,6 @@ func rotate_piece():
 			draw_piece(active_piece, cur_pos)
 
 func prep():
-	
 	temp_reward = REWARD
 	if (streak_count <= previous_streak_count):
 		streak_count = 0
@@ -258,16 +265,20 @@ func move_pieces_and_score():
 	$HUD.get_node("VBoxContainer/ScoreContainer/MarginContainer/VBoxContainer/VBoxContainer/ScoreValue").text = str(score)
 	$HUD.get_node("VBoxContainer/ScoreContainer/MarginContainer/VBoxContainer/HBoxContainer/StreakValue").text = str(streak_count)
 	speed += ACCEL
-	
+
+func sink_piece():
+	clear_piece(active_piece)
+	while can_move(active_piece, Vector2i.DOWN):
+		cur_pos += Vector2i.DOWN
+	draw_piece(active_piece, cur_pos)
+	land_piece()
 
 func move_piece(dir):
 	if can_move(active_piece, dir):
 		clear_piece(active_piece)
 		cur_pos += dir
 		draw_piece(active_piece, cur_pos)
-		if dir == Vector2i.DOWN:
-			pass
-#			move_sound.play()
+		
 	else:
 		if dir == Vector2i.DOWN:
 			land_piece()

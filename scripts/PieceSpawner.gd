@@ -43,7 +43,7 @@ func reset():
 		shapes_full.append(ShapeAutoload.get_shapes(vs))
 	shapes = shapes_full.duplicate()
 	
-	active_upgrade_spawners = upgrade_spawners
+	active_upgrade_spawners = upgrade_spawners.duplicate()
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):

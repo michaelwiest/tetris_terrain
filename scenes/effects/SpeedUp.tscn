@@ -10,7 +10,7 @@ data = PackedByteArray(3, 8, 13, 17, 22, 27, 31, 35, 40, 44, 48, 51, 55, 58, 61,
 script = ExtResource("2_eyqbq")
 accel_mult = 5.0
 color = Color(0.713726, 0.458824, 0.72549, 1)
-display_name = "Speed up!"
+display_name = "Transmission Error"
 description = "Speeds up the game! Oh no!"
 
 [node name="BorderAnimation" parent="." index="0"]

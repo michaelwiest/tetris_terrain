@@ -47,7 +47,12 @@ func set_upgrades(upgrade: Upgrade):
 	add_child(upgrade)
 	upgrade.hide_icon()
 	upgrades = find_upgrades_in_tree()
-	
+
+func reset():
+	for upgrade in upgrades:
+		upgrade.queue_free()
+	upgrades = []
+
 func instantiate(temp_piece: Piece):
 	piece = temp_piece
 	

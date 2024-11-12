@@ -6,5 +6,5 @@
 resource_name = "Effect Spawner"
 script = ExtResource("1_3p8nx")
 effect_path = "res://scenes/effects/ExplosionEffect.tscn"
-chance = 0.5
+chance = 0.25
 repeatable = true
