@@ -7,7 +7,7 @@
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_el0uh"]
 shader = ExtResource("2_b0hu8")
-shader_parameter/amount = 4.337
+shader_parameter/amount = 2.596
 
 [node name="PauseMenu" type="CanvasLayer"]
 process_mode = 3
@@ -63,6 +63,7 @@ layout_mode = 2
 theme = ExtResource("2_ghtpl")
 theme_override_fonts/font = ExtResource("3_1o1xa")
 theme_override_font_sizes/font_size = 64
+button_mask = 0
 text = "Resume"
 
 [node name="NewGame" type="Button" parent="Control/MarginContainer/VBoxContainer"]
@@ -71,6 +72,7 @@ layout_mode = 2
 theme = ExtResource("2_ghtpl")
 theme_override_fonts/font = ExtResource("3_1o1xa")
 theme_override_font_sizes/font_size = 64
+button_mask = 0
 text = "New Game"
 
 [node name="MainMenu" type="Button" parent="Control/MarginContainer/VBoxContainer"]
@@ -79,6 +81,7 @@ layout_mode = 2
 theme = ExtResource("2_ghtpl")
 theme_override_fonts/font = ExtResource("3_1o1xa")
 theme_override_font_sizes/font_size = 64
+button_mask = 0
 text = "Main Menu"
 
 [node name="Timer" type="Timer" parent="."]

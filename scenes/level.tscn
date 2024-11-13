@@ -1,4 +1,4 @@
-[gd_scene load_steps=23 format=3 uid="uid://v07im6ckn0y5"]
+[gd_scene load_steps=24 format=3 uid="uid://v07im6ckn0y5"]
 
 [ext_resource type="Texture2D" uid="uid://22c2gue343i1" path="res://assets/tetrominoes2.png" id="1_4y7r6"]
 [ext_resource type="Script" path="res://scripts/Level.gd" id="2_0w3fc"]
@@ -16,6 +16,7 @@
 [ext_resource type="PackedScene" uid="uid://sep4033v3f6v" path="res://scenes/EffectDisplayContainer.tscn" id="13_5flhd"]
 [ext_resource type="PackedScene" uid="uid://ckqhwpcc6eohh" path="res://scenes/navigation/PauseMenu.tscn" id="14_ve5t1"]
 [ext_resource type="PackedScene" uid="uid://cgsh755rhqc8" path="res://scenes/navigation/GameOverMenu.tscn" id="16_vl4g1"]
+[ext_resource type="PackedScene" uid="uid://du8wjhrndt5xv" path="res://scenes/navigation/LevelIntro.tscn" id="17_y2wby"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_wgf51"]
 texture = ExtResource("1_4y7r6")
@@ -168,7 +169,6 @@ display_color = Color(0.14902, 0.388235, 0.866667, 1)
 
 [node name="Soundtrack" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("11_mjwf1")
-autoplay = true
 bus = &"Music"
 
 [node name="AnimationQueueHandler" parent="." instance=ExtResource("12_ofe83")]
@@ -181,7 +181,11 @@ display_time = 6
 [node name="GameOverMenu" parent="." instance=ExtResource("16_vl4g1")]
 visible = false
 
+[node name="LevelIntro" parent="." instance=ExtResource("17_y2wby")]
+countdown_start = 3
+
 [node name="PauseMenu" parent="." instance=ExtResource("14_ve5t1")]
 visible = false
 
 [connection signal="finished" from="Soundtrack" to="." method="_on_soundtrack_finished"]
+[connection signal="finished" from="LevelIntro" to="." method="_on_level_intro_finished"]

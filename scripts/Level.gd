@@ -26,11 +26,9 @@ var cur_pos : Vector2i
 
 #game variables
 var paused: bool = false
-var has_seen_gameover: bool = false
 var score : int
 const REWARD : int = 100
 var temp_reward: int = REWARD
-var game_running : bool
 
 #tilemap variables
 var tile_id : int = 0
@@ -60,16 +58,26 @@ var recipe_display = preload("res://scenes/RecipeDisplay.tscn")
 
 @onready var piece_display = $HUD/VBoxContainer/NextPieceContainer/MarginContainer/VBoxContainer/PieceDisplay
 @onready var effect_display = $EffectDisplayContainer
+@onready var game_over_menu = $GameOverMenu
+@onready var intro = $LevelIntro
 #
- # TODO: 
+# TODO: 
+# buggish.
 # - Need to add upgrade effects to animation bus. slash do stuff after animation finish.
+# to ship:
+# - level select.
+#     - storing scores and available levels. etc.
+# - clean up title screen.
+# - slow down upgrade.
+# - immune upgrade.
+# - Icons and animations/
+#    - icons for effects.
+#    - upgrade border effect.
+
 # - effects can trigger each other (eg bomb).
 # - Held piece enabling effect?
 
-# - move from checking atlas coords to checking the column value like it is set for each recipe.
-# Display effects in the preview.
-
-enum State {MOVING, CHECKING, ANIMATING, PREP, CLEANUP}
+enum State {MOVING, CHECKING, ANIMATING, PREP, CLEANUP, INTRO, GAME_OVER}
 
 var current_state = State.MOVING
 
@@ -88,8 +96,8 @@ func get_active_piece_not_in_pattern(matched_pattern: Array) -> Array:
 		
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	piece_display.set_tileset(self.tile_set)
-	$HUD.get_node("VBoxContainer/ScoreContainer/MarginContainer/VBoxContainer/HBoxContainer/Control/GoalValue").text = str(goal_score)
+	clear_board()
+	
 	new_game()
 
 func _remove_recipe_displays():
@@ -105,17 +113,25 @@ func set_recipe_displays():
 		new_container.set_tileset(self.tile_set)
 
 func new_game():
-	if not soundtrack.playing:
-		soundtrack.play()
+	intro.start()
+	current_state = State.INTRO
+	
+	if soundtrack.is_playing():
+		soundtrack.stop()
+	piece_display.set_tileset(self.tile_set)
+	$HUD.get_node("VBoxContainer/ScoreContainer/MarginContainer/VBoxContainer/HBoxContainer/Control/GoalValue").text = str(goal_score)
+	paused = false
+	get_tree().paused = false
+	
 	score = 0
 	speed = initial_speed
 	
-	game_running = true
-	has_seen_gameover = false
 	steps = [0, 0, 0] #0:left, 1:right, 2:down
+	
 	$HUD.get_node("VBoxContainer/ScoreContainer/MarginContainer/VBoxContainer/VBoxContainer/ScoreValue").text = str(score)
+	
 	#clear everything
-#	clear_board()
+	clear_board()
 	piece_spawner.reset()
 	effect_display.reset()
 	for r in recipes:
@@ -128,8 +144,11 @@ func new_game():
 	set_recipe_displays()
 	
 	create_piece()
+	if current_state != State.INTRO and not soundtrack.playing:
+		soundtrack.play()
+		
 
-func pause_game(is_game_over: bool = false):
+func pause_game():
 	if paused:
 		get_tree().paused = false
 		pause_menu.toggle_pause()
@@ -138,10 +157,23 @@ func pause_game(is_game_over: bool = false):
 		pause_menu.toggle_pause()
 	paused = !paused
 
+func handle_game_over():
+	paused = true
+	get_tree().paused = true
+	soundtrack.stop()
+	game_over_menu.toggle_menu()
+
 func _process(delta):
-	if Input.is_action_just_pressed("ui_cancel"):
-		pause_game()
-	if game_running:
+	if current_state == State.INTRO:
+		return
+	elif current_state == State.GAME_OVER:
+		handle_game_over()
+	
+	else:
+		# Note that this doesn't allow pausing during the intro!
+		if Input.is_action_just_pressed("ui_cancel"):
+			pause_game()
+		
 		# Super hack to scale the music tempo.
 		soundtrack.pitch_scale = 1.0 + ((speed - initial_speed) / initial_speed) * 0.05
 		if Input.is_action_pressed("ui_left"):
@@ -150,7 +182,7 @@ func _process(delta):
 			steps[1] += 10
 		elif Input.is_action_pressed("ui_down"):
 			steps[2] += 10
-		elif Input.is_action_just_pressed("ui_up"):
+		if Input.is_action_just_pressed("ui_up"):
 			sink_piece()
 		elif Input.is_action_just_pressed("ui_accept"):
 			rotate_piece()
@@ -174,8 +206,6 @@ func _process(delta):
 				move_pieces_and_score()
 			State.PREP:
 				prep()
-	elif not has_seen_gameover:
-		pause_game()
 		
 				
 
@@ -236,9 +266,8 @@ func prep():
 	piece_display.set_piece(next_piece)
 	create_piece()
 	check_game_over()
-	
-	
-	current_state = State.MOVING
+	if current_state != State.GAME_OVER:
+		current_state = State.MOVING
 
 func check_board():
 	for r in recipes:
@@ -276,6 +305,15 @@ func sink_piece():
 	while can_move(active_piece, Vector2i.DOWN):
 		cur_pos += Vector2i.DOWN
 	draw_piece(active_piece, cur_pos)
+	# This is all for animation but it's not super visible...
+	for p in active_piece.active_piece:
+		var tail_anim  = tail_animation.instantiate()
+		tail_anim.scale = Vector2i(1, 5)
+		tail_anim.restart()
+		add_child(tail_anim)
+		
+		tail_anim.position = map_to_local(Vector2i(p + cur_pos))
+		
 	land_piece()
 
 func move_piece(dir):
@@ -404,10 +442,14 @@ func check_game_over(pos: Vector2i = cur_pos):
 	for i in active_piece.active_piece:
 		if not is_free(i + pos):
 			land_piece()
-			game_running = false
-			pause_game()
+			current_state = State.GAME_OVER
 
 
 func _on_soundtrack_finished():
-	if game_running:
+	if current_state != State.GAME_OVER:
 		soundtrack.play()
+
+
+func _on_level_intro_finished():
+	current_state = State.MOVING
+	soundtrack.play()

@@ -3,10 +3,9 @@ extends CanvasLayer
 var button_index: int = 0
 var buttons: Array[Button] = []
 @onready var button_box = $Control/MarginContainer/VBoxContainer
-#@onready var level: Level = $".."
 var is_paused: bool = true
 var selected_button: Button
-var can_listen_for_cancel = false
+@onready var level: Level = $".."
 
 @export_multiline var success_message: String
 @export_multiline var failure_message: String
@@ -16,10 +15,10 @@ var particle = preload("res://scenes/animations/explosion.tscn")
 @onready var message_node: Label = $Control/MarginContainer/VBoxContainer/Control/MarginContainer/message
 @onready var next_level_button: Button = $Control/MarginContainer/VBoxContainer/NextLevel
 @onready var timer = $Timer
-var can_receive_click: bool = true
+var can_receive_input: bool = false
 
 func _ready():
-#	visible = false
+	visible = false
 	for maybe_button in button_box.get_children():
 		if maybe_button is Button:
 			buttons.append(maybe_button)
@@ -28,12 +27,11 @@ func _ready():
 	message_node.text = success_message
 	set_success_state(succeeded)
 	
-
-
-func set_paused():
+func toggle_menu():
 	visible = !visible
 	is_paused = !is_paused
-	can_listen_for_cancel = false
+	can_receive_input = false
+	timer.start()
 
 func do_animation():
 	for i in range(10):
@@ -42,7 +40,6 @@ func do_animation():
 		new_ani.restart()
 
 func _process(delta):
-#	print(is_paused)
 	if is_paused:
 		if Input.is_action_just_pressed("ui_down"):
 			button_index += 1
@@ -50,9 +47,9 @@ func _process(delta):
 			button_index -= 1
 			if button_index < 0:
 				button_index = len(buttons) - 1
-		if Input.is_action_just_pressed("ui_accept") and can_receive_click:
+		if Input.is_action_just_pressed("ui_accept") and can_receive_input:
 			selected_button.pressed
-			can_receive_click = false
+			can_receive_input = false
 			timer.start()
 			
 		button_index = button_index % len(buttons)
@@ -68,18 +65,13 @@ func set_success_state(success: bool):
 	else:
 		message_node.text = failure_message
 
-#func _on_resume_pressed():
-#	level.pause_game()
-#
-#
-#func _on_new_game_pressed():
-#	level.new_game()
-#	level.pause_game()
-
 
 func _on_new_game_pressed():
-	print("ng click")
 	do_animation()
+	button_index = 0
+	level.new_game()
+	toggle_menu()
+
 
 
 func _on_next_level_pressed():
@@ -93,4 +85,4 @@ func _on_main_menu_pressed():
 
 
 func _on_timer_timeout():
-	can_receive_click = true
+	can_receive_input = true

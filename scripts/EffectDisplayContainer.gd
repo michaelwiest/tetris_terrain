@@ -22,6 +22,7 @@ func reset():
 	seen_effects = []
 
 func clear_entries():
+	visible = false
 	for child in grid.get_children():
 		child.queue_free()
 
@@ -42,18 +43,13 @@ func display(spawner: PieceSpawner):
 	# Check if we actually added any.
 	if temp_added_count > 0:
 		self.visible = true
-#		tween_into_frame()
 		timer.start()
-	else:
-		self.visible = false
-#		tween_out_of_frame()
 	
 	
 func _on_timer_timeout():
 	for child in grid.get_children():
 		child.queue_free()
 	self.visible = false
-#	tween_out_of_frame()
 
 func tween_into_frame():
 #	var tween = get_tree().create_tween()

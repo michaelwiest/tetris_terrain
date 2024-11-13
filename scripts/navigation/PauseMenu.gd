@@ -48,8 +48,9 @@ func _on_resume_pressed():
 
 func _on_new_game_pressed():
 	button_index = 0
-	level.new_game()
 	level.pause_game()
+	level.new_game()
+	
 
 
 func _on_timer_timeout():
