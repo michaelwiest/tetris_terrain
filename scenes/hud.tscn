@@ -5,7 +5,7 @@
 [ext_resource type="Theme" uid="uid://cmw6g5pt5rmve" path="res://resources/main_theme.tres" id="2_tp23x"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_eiym4"]
-font_size = 48
+font_size = 64
 font_color = Color(0.12549, 0.168627, 0.313726, 1)
 
 [sub_resource type="LabelSettings" id="LabelSettings_4tub3"]

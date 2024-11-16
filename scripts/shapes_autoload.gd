@@ -79,33 +79,25 @@ static func get_shapes(desired_shape: Shape):
 	
 
 static func determine_shape(query_shape) -> Shape:
-#	query_shape.sort()
 	for maybe_i in i:
-#		maybe_i.sort()
 		if query_shape == maybe_i:
 			return Shape.I
 	for maybe_i in t:
-#		maybe_i.sort()
 		if query_shape == maybe_i:
 			return Shape.T
 	for maybe_i in o:
-#		maybe_i.sort()
 		if query_shape == maybe_i:
 			return Shape.O
 	for maybe_i in z:
-#		maybe_i.sort()
 		if query_shape == maybe_i:
 			return Shape.Z
 	for maybe_i in s:
-#		maybe_i.sort()
 		if query_shape == maybe_i:
 			return Shape.S	
 	for maybe_i in l:
-#		maybe_i.sort()
 		if query_shape == maybe_i:
 			return Shape.L	
 	for maybe_i in j:
-#		maybe_i.sort()
 		if query_shape == maybe_i:
 			return Shape.J
 	return Shape.NULL	

@@ -15,6 +15,7 @@ var cur_pos : Vector2i
 @onready var speed : float = initial_speed
 @export var ACCEL : float = 0.09
 @export var goal_score: int = 5000
+@export var level_id: int
 
 @export_range(0, 1.0) var effect_chance = 0.4
 
@@ -23,6 +24,7 @@ var cur_pos : Vector2i
 @onready var hud = $HUD
 @onready var pause_menu = $PauseMenu
 
+var save: SaveGame
 
 #game variables
 var paused: bool = false
@@ -60,6 +62,9 @@ var recipe_display = preload("res://scenes/RecipeDisplay.tscn")
 @onready var effect_display = $EffectDisplayContainer
 @onready var game_over_menu = $GameOverMenu
 @onready var intro = $LevelIntro
+
+var level_data: LevelData
+var _save: SaveGame
 #
 # TODO: 
 # buggish.
@@ -93,9 +98,30 @@ func get_active_piece_not_in_pattern(matched_pattern: Array) -> Array:
 		if cur_pos + p not in matched_pattern:
 			to_return.append(cur_pos + p)
 	return to_return
-		
+
+func _load_data():
+#	var _save = SaveGame.new()
+	_save.load_all_data()
+	if _save._has_level_data(level_id):
+		level_data = _save._load_level_data(level_id)
+	else:
+		level_data = LevelData.new()
+		level_data.level_id = level_id
+
+func _save_data():
+#	var _save = SaveGame.new()
+	level_data.completed = score > goal_score
+	level_data.high_score = score
+	_save.save_level(level_data)
+
 # Called when the node enters the scene tree for the first time.
 func _ready():
+	assert(level_id != null, "Must Specify level id!")
+	_save = SaveGame.new()
+	_load_data()
+	print(goal_score)
+	print("HIGH SCORE, ", level_data.high_score)
+	print(level_data.completed)
 	clear_board()
 	
 	new_game()
@@ -158,9 +184,11 @@ func pause_game():
 	paused = !paused
 
 func handle_game_over():
+	_save_data()
 	paused = true
 	get_tree().paused = true
 	soundtrack.stop()
+	game_over_menu.set_success_state(score >= goal_score)
 	game_over_menu.toggle_menu()
 
 func _process(delta):
@@ -433,6 +461,7 @@ func shift_rows(row):
 				set_cell(board_layer, Vector2i(j + 1, i), tile_id, atlas)
 
 func clear_board():
+	pass
 	for i in range(ROWS):
 		for j in range(COLS):
 			erase_cell(board_layer, Vector2i(j + 1, i + 1))

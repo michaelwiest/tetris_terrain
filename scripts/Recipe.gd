@@ -85,23 +85,12 @@ func set_animations(tilemap: TileMap, locs):
 
 # This code is pretty brittle and needs some checking	
 func has_piece(query_piece: Piece):
-	for pi in piece.all_pieces:
-#		var query_piece_type: ShapeAutoload.Shape = ShapeAutoload.determine_shape(pi)
-#		var query_atlas_id = piece.tilemap_ids[0]
-#		if shape_type == query_piece_type and query_atlas_id == Vector2i(color_index, 0):
-#			return true
-#
-#	return false
-		var has_match = true
-		for p in query_piece.active_piece:
-			if p not in pi:
-				has_match = false
-
-		if has_match and piece.tilemap_ids == query_piece.tilemap_ids:
-			return true
-
-	return false
-		
+	var query_piece_type: ShapeAutoload.Shape = ShapeAutoload.determine_shape(query_piece.active_piece)
+	var piece_type_match: bool = true
+	for i in range(len(query_piece.tilemap_ids)):
+		if query_piece.tilemap_ids[i][0] != color_index:
+			piece_type_match = false
+	return query_piece_type == piece.piece_type and piece_type_match
 
 func find_patterns_in_tilemap(
 	tilemap: TileMap, 
@@ -143,9 +132,8 @@ func find_patterns_in_tilemap(
 				for i in len(piece_to_check):
 					var p: Vector2i = piece_to_check[i]
 					var atlas_to_match = piece.tilemap_ids[i]
-
-					var rc = row + p[0]
-					var cc = col + p[1]
+					var rc = row + p[1]
+					var cc = col + p[0]
 					if (rc > row_max):
 						has_match_temp = false
 						continue

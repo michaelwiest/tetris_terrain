@@ -1,0 +1,9 @@
+[gd_resource type="Resource" load_steps=2 format=3 uid="uid://cj13q22l576n"]
+
+[ext_resource type="Script" path="res://resources/level_data.gd" id="1_5ch5f"]
+
+[resource]
+script = ExtResource("1_5ch5f")
+effect_path = ""
+chance = null
+repeatable = true

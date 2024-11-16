@@ -3,3 +3,5 @@
 [ext_resource type="PackedScene" uid="uid://v07im6ckn0y5" path="res://scenes/level.tscn" id="1_0rfqn"]
 
 [node name="Level" instance=ExtResource("1_0rfqn")]
+goal_score = 500
+level_id = 1
