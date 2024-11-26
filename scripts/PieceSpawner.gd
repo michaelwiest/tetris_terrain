@@ -39,7 +39,6 @@ func reset():
 	shapes_full = []
 	upgrades_just_pushed = []
 	latest_effects = []
-	print("valid shapes: ", valid_shapes)
 	for vs in valid_shapes:
 		shapes_full.append(ShapeAutoload.get_shapes(vs))
 	shapes = shapes_full.duplicate()

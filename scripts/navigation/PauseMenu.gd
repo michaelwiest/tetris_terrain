@@ -8,6 +8,7 @@ var is_paused: bool = false
 var selected_button: Button
 var can_listen_for_cancel = false
 @onready var timer = $Timer
+@export_file var world_map_path
 
 func _ready():
 	visible = false
@@ -55,3 +56,8 @@ func _on_new_game_pressed():
 
 func _on_timer_timeout():
 	can_listen_for_cancel = true
+
+
+func _on_main_menu_pressed():
+	get_tree().paused = false
+	get_tree().change_scene_to_file(world_map_path)

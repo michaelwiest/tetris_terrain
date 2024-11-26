@@ -7,7 +7,7 @@
 script = ExtResource("1_mkg8y")
 level_id = 1
 completed = true
-high_score = 2210
+high_score = 13870
 
 [resource]
 script = ExtResource("1_twnq1")

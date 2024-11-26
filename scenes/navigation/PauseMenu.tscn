@@ -12,6 +12,7 @@ shader_parameter/amount = 2.596
 [node name="PauseMenu" type="CanvasLayer"]
 process_mode = 3
 script = ExtResource("1_cwix8")
+world_map_path = "res://scenes/navigation/WorldMap.tscn"
 
 [node name="Control" type="Control" parent="."]
 process_mode = 3
@@ -60,6 +61,8 @@ theme_override_constants/separation = 64
 [node name="Resume" type="Button" parent="Control/MarginContainer/VBoxContainer"]
 custom_minimum_size = Vector2(0, 128)
 layout_mode = 2
+focus_neighbor_top = NodePath("../MainMenu")
+focus_neighbor_bottom = NodePath("../NewGame")
 theme = ExtResource("2_ghtpl")
 theme_override_fonts/font = ExtResource("3_1o1xa")
 theme_override_font_sizes/font_size = 64
@@ -69,6 +72,8 @@ text = "Resume"
 [node name="NewGame" type="Button" parent="Control/MarginContainer/VBoxContainer"]
 custom_minimum_size = Vector2(0, 128)
 layout_mode = 2
+focus_neighbor_top = NodePath("../Resume")
+focus_neighbor_bottom = NodePath("../MainMenu")
 theme = ExtResource("2_ghtpl")
 theme_override_fonts/font = ExtResource("3_1o1xa")
 theme_override_font_sizes/font_size = 64
@@ -78,6 +83,8 @@ text = "New Game"
 [node name="MainMenu" type="Button" parent="Control/MarginContainer/VBoxContainer"]
 custom_minimum_size = Vector2(0, 128)
 layout_mode = 2
+focus_neighbor_top = NodePath("../NewGame")
+focus_neighbor_bottom = NodePath("../Resume")
 theme = ExtResource("2_ghtpl")
 theme_override_fonts/font = ExtResource("3_1o1xa")
 theme_override_font_sizes/font_size = 64
@@ -90,4 +97,5 @@ one_shot = true
 
 [connection signal="pressed" from="Control/MarginContainer/VBoxContainer/Resume" to="." method="_on_resume_pressed"]
 [connection signal="pressed" from="Control/MarginContainer/VBoxContainer/NewGame" to="." method="_on_new_game_pressed"]
+[connection signal="pressed" from="Control/MarginContainer/VBoxContainer/MainMenu" to="." method="_on_main_menu_pressed"]
 [connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]

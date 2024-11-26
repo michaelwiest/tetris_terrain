@@ -8,6 +8,7 @@ process_mode = 3
 script = ExtResource("1_78d8o")
 success_message = "Woohoo! You Won!"
 failure_message = "Oh no you lost! Try again!"
+world_map_path = "res://scenes/navigation/WorldMap.tscn"
 
 [node name="TextureRect" type="ColorRect" parent="."]
 anchors_preset = 15

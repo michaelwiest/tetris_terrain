@@ -5,12 +5,16 @@ class_name EffectDisplayContainer
 @onready var timer = $Timer
 @onready var display_preload = preload("res://scenes/EffectDisplay.tscn")
 @onready var grid = $Panel/MarginContainer/GridContainer
+@onready var panel = $Panel
 @export var display_time: int = 3
 var seen_effects: Array[String] = []
 @onready var tween = create_tween()
+var original_panel_size: Vector2
+
 func _ready():
 	self.visible = false
 	timer.wait_time = display_time
+	original_panel_size = panel.size
 	
 
 
@@ -43,6 +47,11 @@ func display(spawner: PieceSpawner):
 	# Check if we actually added any.
 	if temp_added_count > 0:
 		self.visible = true
+		# Hack to rescale the displaying panel.
+		if temp_added_count > 2:
+			panel.size = original_panel_size * Vector2(1, 1.6)
+		else:
+			panel.size = original_panel_size * Vector2(1, 1)
 		timer.start()
 	
 	

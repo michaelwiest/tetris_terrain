@@ -11,13 +11,20 @@ var steps : Array
 const steps_req : int = 50
 const start_pos := Vector2i(5 , 1)
 var cur_pos : Vector2i
+@export_group("Game variables")
 @export var initial_speed: float = 0.7
 @onready var speed : float = initial_speed
 @export var ACCEL : float = 0.09
 @export var goal_score: int = 5000
-@export var level_id: int
 
-@export_range(0, 1.0) var effect_chance = 0.4
+@export_group("Metadata and Description")
+@export var level_id: int
+@export var level_name: String
+@export_multiline var description: String
+
+
+@export_group("Recipe info")
+@export var recipes: Array[Recipe]
 
 @onready var recipe_display_container: GridContainer = $HUD/VBoxContainer/RecipeContainer
 @onready var soundtrack = $Soundtrack
@@ -52,7 +59,7 @@ var matched_recipe: Recipe
 @onready var move_sound = $SfxrStreamPlayer
 @onready var piece_spawner = $PieceSpawner
 @onready var animation_queue = $AnimationQueueHandler
-@export var recipes: Array[Recipe]
+
 var pattern_to_clear: Array = []
 var unmatched_pieces_to_sink: Array = []
 var tail_animation = preload("res://scenes/animations/tail_effect.tscn")
@@ -119,9 +126,6 @@ func _ready():
 	assert(level_id != null, "Must Specify level id!")
 	_save = SaveGame.new()
 	_load_data()
-	print(goal_score)
-	print("HIGH SCORE, ", level_data.high_score)
-	print(level_data.completed)
 	clear_board()
 	
 	new_game()

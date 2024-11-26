@@ -9,6 +9,9 @@ var selected_button: Button
 
 @export_multiline var success_message: String
 @export_multiline var failure_message: String
+
+@export_file var world_map_path
+
 var succeeded: bool = false
 var particle = preload("res://scenes/animations/explosion.tscn")
 @onready var success_state_panel: Control = $Control/MarginContainer/VBoxContainer/Control
@@ -80,9 +83,8 @@ func _on_next_level_pressed():
 
 
 func _on_main_menu_pressed():
-	print("in button click")
-	set_success_state(!succeeded)
-
+	get_tree().paused = false
+	get_tree().change_scene_to_file(world_map_path)
 
 func _on_timer_timeout():
 	can_receive_input = true

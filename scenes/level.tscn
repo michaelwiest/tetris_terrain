@@ -43,13 +43,13 @@ data = PackedByteArray(1, 2, 3, 5, 6, 8, 10, 11, 13, 14, 15, 15, 14, 12, 9, 6, 3
 [sub_resource type="Resource" id="Resource_l8lby"]
 script = ExtResource("7_rs0lm")
 effect_path = "res://scenes/effects/ScoreEffect.tscn"
-chance = 0.25
+chance = 0.942
 repeatable = true
 
 [sub_resource type="Resource" id="Resource_5buy7"]
 script = ExtResource("7_rs0lm")
 effect_path = "res://scenes/effects/SpeedUp.tscn"
-chance = 0.05
+chance = 0.865
 repeatable = true
 
 [sub_resource type="Resource" id="Resource_rexdh"]

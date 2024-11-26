@@ -1,0 +1,11 @@
+[gd_scene load_steps=2 format=3 uid="uid://bv55nueh7anqu"]
+
+[ext_resource type="PackedScene" uid="uid://v07im6ckn0y5" path="res://scenes/level.tscn" id="1_yw6hk"]
+
+[node name="Level" instance=ExtResource("1_yw6hk")]
+level_id = 2
+level_name = "Leve Two name"
+description = "Level Two Description is incredibly long. Level Two Description is incredibly long. Level Two Description is incredibly long. Level Two Description is incredibly long. Level Two Description is incredibly long. Level Two Description is incredibly long. Level Two Description is incredibly long. Level Two Description is incredibly long. "
+
+[node name="Square" parent="." index="7"]
+shape_type = 4

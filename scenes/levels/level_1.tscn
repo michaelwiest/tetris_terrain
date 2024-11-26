@@ -5,3 +5,8 @@
 [node name="Level" instance=ExtResource("1_0rfqn")]
 goal_score = 500
 level_id = 1
+level_name = "Messages from above"
+description = "A simple level"
+
+[node name="Tee" parent="." index="6"]
+shape_type = 1
