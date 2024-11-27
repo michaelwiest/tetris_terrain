@@ -28,7 +28,7 @@ var cur_pos : Vector2i
 
 @onready var recipe_display_container: GridContainer = $HUD/VBoxContainer/RecipeContainer
 @onready var soundtrack = $Soundtrack
-@onready var hud = $HUD
+@onready var hud: LevelHud = $HUD
 @onready var pause_menu = $PauseMenu
 
 var save: SaveGame
@@ -107,16 +107,14 @@ func get_active_piece_not_in_pattern(matched_pattern: Array) -> Array:
 	return to_return
 
 func _load_data():
-#	var _save = SaveGame.new()
 	_save.load_all_data()
 	if _save._has_level_data(level_id):
 		level_data = _save._load_level_data(level_id)
 	else:
 		level_data = LevelData.new()
 		level_data.level_id = level_id
-
+	hud.set_high(level_data.high_score)
 func _save_data():
-#	var _save = SaveGame.new()
 	level_data.completed = score > goal_score
 	level_data.high_score = score
 	_save.save_level(level_data)
@@ -149,7 +147,7 @@ func new_game():
 	if soundtrack.is_playing():
 		soundtrack.stop()
 	piece_display.set_tileset(self.tile_set)
-	$HUD.get_node("VBoxContainer/ScoreContainer/MarginContainer/VBoxContainer/HBoxContainer/Control/GoalValue").text = str(goal_score)
+	hud.set_goal(goal_score)
 	paused = false
 	get_tree().paused = false
 	
@@ -158,7 +156,7 @@ func new_game():
 	
 	steps = [0, 0, 0] #0:left, 1:right, 2:down
 	
-	$HUD.get_node("VBoxContainer/ScoreContainer/MarginContainer/VBoxContainer/VBoxContainer/ScoreValue").text = str(score)
+	hud.set_score(score)
 	
 	#clear everything
 	clear_board()
@@ -283,7 +281,7 @@ func prep():
 	temp_reward = REWARD
 	if (streak_count <= previous_streak_count):
 		streak_count = 0
-		$HUD.get_node("VBoxContainer/ScoreContainer/MarginContainer/VBoxContainer/HBoxContainer/StreakValue").text = str(streak_count)
+		hud.set_streak(streak_count)
 	previous_streak_count = streak_count
 	# Nastiness for float <> int stuff.
 	if streak_count == 0:
@@ -327,8 +325,9 @@ func move_pieces_and_score():
 	temp_reward *= 2
 	streak_count += 1
 	
-	$HUD.get_node("VBoxContainer/ScoreContainer/MarginContainer/VBoxContainer/VBoxContainer/ScoreValue").text = str(score)
-	$HUD.get_node("VBoxContainer/ScoreContainer/MarginContainer/VBoxContainer/HBoxContainer/StreakValue").text = str(streak_count)
+	hud.set_score(score)
+	hud.set_streak(streak_count)
+
 	speed += ACCEL
 	check_game_over(start_pos)
 

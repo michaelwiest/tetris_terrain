@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="SaveGame" load_steps=4 format=3 uid="uid://c4jwiyjv4rwng"]
+[gd_resource type="Resource" script_class="SaveGame" load_steps=5 format=3]
 
 [ext_resource type="Script" path="res://resources/level_data.gd" id="1_mkg8y"]
 [ext_resource type="Script" path="res://resources/SaveGame.gd" id="1_twnq1"]
@@ -7,8 +7,14 @@
 script = ExtResource("1_mkg8y")
 level_id = 1
 completed = true
-high_score = 13870
+high_score = 2740
+
+[sub_resource type="Resource" id="Resource_5t2di"]
+script = ExtResource("1_mkg8y")
+level_id = 2
+completed = true
+high_score = 8760
 
 [resource]
 script = ExtResource("1_twnq1")
-level_index_save_map = Array[ExtResource("1_mkg8y")]([SubResource("Resource_sguko")])
+level_index_save_map = Array[ExtResource("1_mkg8y")]([SubResource("Resource_sguko"), SubResource("Resource_5t2di")])

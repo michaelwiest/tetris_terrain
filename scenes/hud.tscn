@@ -1,5 +1,6 @@
-[gd_scene load_steps=13 format=3 uid="uid://psjnbhu2tahx"]
+[gd_scene load_steps=14 format=3 uid="uid://psjnbhu2tahx"]
 
+[ext_resource type="Script" path="res://scripts/hud.gd" id="1_164kh"]
 [ext_resource type="PackedScene" uid="uid://ciw2mhu08gs3k" path="res://scenes/PieceDisplay.tscn" id="1_x83pp"]
 [ext_resource type="FontFile" uid="uid://ci3m341hjntcb" path="res://assets/fonts/Minecraft.ttf" id="2_prylp"]
 [ext_resource type="Theme" uid="uid://cmw6g5pt5rmve" path="res://resources/main_theme.tres" id="2_tp23x"]
@@ -12,6 +13,11 @@ font_color = Color(0.12549, 0.168627, 0.313726, 1)
 font = ExtResource("2_prylp")
 font_size = 32
 font_color = Color(0.12549, 0.168627, 0.313726, 1)
+
+[sub_resource type="StyleBoxLine" id="StyleBoxLine_qcn68"]
+color = Color(0.12549, 0.168627, 0.313726, 1)
+thickness = 4
+vertical = true
 
 [sub_resource type="StyleBoxLine" id="StyleBoxLine_ppdp3"]
 color = Color(0.12549, 0.168627, 0.313726, 1)
@@ -38,12 +44,9 @@ font_color = Color(0.12549, 0.168627, 0.313726, 1)
 font_size = 32
 font_color = Color(0.12549, 0.168627, 0.313726, 1)
 
-[sub_resource type="LabelSettings" id="LabelSettings_21nxf"]
-font_size = 24
-font_color = Color(0.12549, 0.168627, 0.313726, 1)
-
 [node name="HUD" type="CanvasLayer"]
 layer = 0
+script = ExtResource("1_164kh")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="."]
 offset_right = 40.0
@@ -74,17 +77,59 @@ layout_mode = 2
 layout_mode = 2
 
 [node name="ScoreValue" type="Label" parent="VBoxContainer/ScoreContainer/MarginContainer/VBoxContainer/VBoxContainer"]
+unique_name_in_owner = true
 layout_mode = 2
 theme_override_font_sizes/font_size = 30
 text = "0"
 label_settings = SubResource("LabelSettings_eiym4")
 vertical_alignment = 1
 
-[node name="ScoreLabel" type="Label" parent="VBoxContainer/ScoreContainer/MarginContainer/VBoxContainer/VBoxContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/ScoreContainer/MarginContainer/VBoxContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="ScoreLabel" type="Label" parent="VBoxContainer/ScoreContainer/MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 0
 text = "Score"
 label_settings = SubResource("LabelSettings_4tub3")
+
+[node name="empty padding" type="Control" parent="VBoxContainer/ScoreContainer/MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer"]
+custom_minimum_size = Vector2(7, 2.08165e-12)
+layout_mode = 2
+
+[node name="VSeparator" type="VSeparator" parent="VBoxContainer/ScoreContainer/MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+theme = ExtResource("2_tp23x")
+theme_override_styles/separator = SubResource("StyleBoxLine_qcn68")
+
+[node name="Control2" type="Control" parent="VBoxContainer/ScoreContainer/MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 8
+
+[node name="HighLabel" type="Label" parent="VBoxContainer/ScoreContainer/MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer/Control2"]
+layout_mode = 1
+anchors_preset = 4
+anchor_top = 0.5
+anchor_bottom = 0.5
+offset_top = -13.5
+offset_right = 56.0
+offset_bottom = 13.5
+grow_vertical = 2
+text = "High:"
+
+[node name="HighValue" type="Label" parent="VBoxContainer/ScoreContainer/MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer/Control2"]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 4
+anchor_top = 0.5
+anchor_bottom = 0.5
+offset_left = 78.0
+offset_top = -13.5
+offset_right = 92.0
+offset_bottom = 13.5
+grow_vertical = 2
+text = "0"
 
 [node name="HSeparator" type="HSeparator" parent="VBoxContainer/ScoreContainer/MarginContainer/VBoxContainer"]
 layout_mode = 2
@@ -101,6 +146,7 @@ text = "Streak:"
 label_settings = SubResource("LabelSettings_s2fnp")
 
 [node name="StreakValue" type="Label" parent="VBoxContainer/ScoreContainer/MarginContainer/VBoxContainer/HBoxContainer"]
+unique_name_in_owner = true
 layout_mode = 2
 theme_override_font_sizes/font_size = 30
 text = "0"
@@ -125,12 +171,11 @@ text = "Goal:
 label_settings = SubResource("LabelSettings_qtgh8")
 
 [node name="GoalValue" type="Label" parent="VBoxContainer/ScoreContainer/MarginContainer/VBoxContainer/HBoxContainer/Control"]
-layout_mode = 2
-offset_left = 94.0
-offset_right = 108.0
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 79.0
+offset_right = 93.0
 offset_bottom = 27.0
-grow_horizontal = 2
-grow_vertical = 2
 scale = Vector2(1, 1.00286)
 text = "0"
 
@@ -163,26 +208,6 @@ label_settings = SubResource("LabelSettings_falbf")
 layout_mode = 2
 size_flags_horizontal = 0
 offset = Vector2i(0, 0)
-
-[node name="Panel" type="Panel" parent="VBoxContainer"]
-custom_minimum_size = Vector2(2.08165e-12, 64)
-layout_mode = 2
-theme = ExtResource("2_tp23x")
-
-[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/Panel"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-theme_override_constants/margin_left = 32
-theme_override_constants/margin_top = 8
-
-[node name="Label" type="Label" parent="VBoxContainer/Panel/MarginContainer"]
-layout_mode = 2
-text = "Patterns to make..."
-label_settings = SubResource("LabelSettings_21nxf")
 
 [node name="RecipeContainer" type="GridContainer" parent="VBoxContainer"]
 custom_minimum_size = Vector2(100, 100)
