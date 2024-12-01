@@ -1,7 +1,7 @@
 [gd_scene load_steps=5 format=3 uid="uid://mlodov115itf"]
 
 [ext_resource type="Script" path="res://scripts/MainMenu.gd" id="1_rhpm5"]
-[ext_resource type="Texture2D" uid="uid://cj728hapydke6" path="res://assets/background.png" id="2_0v68t"]
+[ext_resource type="Texture2D" uid="uid://b3kvuwapsdy4n" path="res://assets/backgrounds/title_screen.png" id="2_u2rjg"]
 [ext_resource type="Theme" uid="uid://cmw6g5pt5rmve" path="res://resources/main_theme.tres" id="3_te1me"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_bmnkm"]
@@ -14,9 +14,9 @@ world_map_path = "res://scenes/navigation/WorldMap.tscn"
 [node name="Timer" type="Timer" parent="."]
 wait_time = 10.0
 
-[node name="Sprite2D" type="Sprite2D" parent="."]
+[node name="background" type="Sprite2D" parent="."]
 scale = Vector2(2, 2)
-texture = ExtResource("2_0v68t")
+texture = ExtResource("2_u2rjg")
 centered = false
 
 [node name="Control" type="Control" parent="."]
