@@ -143,7 +143,7 @@ position = Vector2(2.08165e-12, -32)
 [node name="PieceSpawner" parent="." instance=ExtResource("5_ms4v8")]
 z_index = 2
 valid_shapes = Array[int]([4, 0, 2, 1, 6, 5, 3])
-valid_color_indices = Array[int]([1, 3, 2])
+valid_color_indices = Array[int]([0, 0, 0])
 split_color_chance = 0.314
 effect_spawners = Array[ExtResource("7_rs0lm")]([ExtResource("6_1e5h6"), SubResource("Resource_l8lby"), SubResource("Resource_5buy7")])
 upgrade_spawners = Array[ExtResource("8_5gtl8")]([SubResource("Resource_rexdh")])
@@ -159,7 +159,6 @@ display_color = Color(0.913725, 0.270588, 0.25098, 1)
 
 [node name="Tee" parent="." instance=ExtResource("10_k0jc2")]
 shape_type = 3
-color_index = 3
 display_name = "Green Tee"
 display_color = Color(0.286275, 0.74902, 0.364706, 1)
 

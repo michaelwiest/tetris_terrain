@@ -9,6 +9,7 @@ enum Timing {BEFORE_MATCH, AFTER_MATCH}
 @export var is_permanent: bool = false
 @export var timing: Timing
 @onready var icon = $Icon
+@onready var sfx = $SFX
 
 func hide_icon():
 	icon.hide()
@@ -23,10 +24,18 @@ func _ready():
 func _process(delta):
 	pass
 
-func trigger(tilemap: TileMap, recipe: Recipe):
+func trigger(tilemap: Level, recipe: Recipe):
+	var trigger_callable = Callable(self, "trigger_internal").bind(tilemap, recipe)
 	if active:
-		trigger_internal(tilemap, recipe)
+		# need to have some sort of pre-compute step for animations and sounds.
+		# and then add them to the queue and then call the trigger_internal function.
+		# eg. set_animations_and_sounds() and then call self.animation below eg.
+		tilemap.animation_queue.add_animations_and_sound(
+			[] as Array[AnimatedSprite2D],
+			[sfx] as Array[AudioStreamPlayer],
+			[] as Array[CPUParticles2D],
+			[trigger_callable]
+			)
 	
-func trigger_internal(tilemap: TileMap, recipe: Recipe):
+func trigger_internal(tilemap: Level, recipe: Recipe):
 	pass
-

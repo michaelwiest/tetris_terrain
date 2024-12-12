@@ -32,7 +32,7 @@ func _ready():
 func _process(delta):
 	pass
 
-func trigger_upgrades(tilemap: TileMap):
+func trigger_upgrades(tilemap: Level):
 	for u in upgrades:
 		u.trigger(tilemap, self)
 
@@ -93,17 +93,17 @@ func has_piece(query_piece: Piece):
 	return query_piece_type == piece.piece_type and piece_type_match
 
 func find_patterns_in_tilemap(
-	tilemap: TileMap, 
-	board_layer: int, 
-	row_max: int, 
-	col_max: int, 
+	tilemap: TileMap,
+	board_layer: int,
+	row_max: int,
+	col_max: int,
 	active_piece: Piece,
-	row_min: int = 0, 
+	row_min: int = 0,
 	col_min: int = 0
 	):
 	"""Find a version of this recipe's pattern within the supplied tilemap. 
 	
-	This will also take an active_piece to find any effects on it such that the code will 
+	This will also take an active_piece to find any effects on it such that the code will
 	try and preferentially match the tile with an effect on it.
 	"""
 	var has_match_temp: bool
@@ -115,7 +115,7 @@ func find_patterns_in_tilemap(
 	
 	var row_to_check = range(row_min, row_max)
 	if check_from_bottom:
-		row_to_check = range(row_max -1 , row_min -1, -1)
+		row_to_check = range(row_max - 1, row_min - 1, -1)
 	
 	for p in piece.tilemap_ids:
 		matching_locations.append(Vector2i(-1, -1))
@@ -151,7 +151,7 @@ func find_patterns_in_tilemap(
 	if len(all_matching_locations) == 0:
 		has_match = false
 		return matching_locations
-	has_match = true	
+	has_match = true
 	if not active_piece.has_effect():
 		return all_matching_locations[0]
 	else:
@@ -166,4 +166,3 @@ func find_patterns_in_tilemap(
 				to_return_index = i
 		
 		return all_matching_locations[to_return_index]
-	

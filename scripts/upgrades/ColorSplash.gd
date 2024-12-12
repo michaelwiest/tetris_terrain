@@ -5,7 +5,7 @@ class_name ColorSplash
 @export_range(0, 1) var splash_frac = 1.0
 # Called when the node enters the scene tree for the first time.
 
-func trigger_internal(tilemap: TileMap, recipe: Recipe):
+func trigger_internal(tilemap: Level, recipe: Recipe):
 	var filtered_neighbors: Array[Vector2i] = []
 	var neighbors = {}
 	for n in tilemap.pattern_to_clear:

@@ -200,6 +200,7 @@ func _process(delta):
 		handle_game_over()
 	
 	else:
+#		print(current_state)
 		# Note that this doesn't allow pausing during the intro!
 		if Input.is_action_just_pressed("ui_cancel"):
 			pause_game()

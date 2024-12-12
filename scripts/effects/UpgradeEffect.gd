@@ -10,6 +10,7 @@ class_name UpgradeEffect
 		icon = new_value.icon
 		display_name = new_value.display_name
 		color = new_value.color
+		sfx = new_value.sfx
 		
 		
 @export var piece_spawner_upgrade_index: int

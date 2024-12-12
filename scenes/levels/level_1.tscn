@@ -23,7 +23,6 @@ effect_spawners = Array[ExtResource("3_uh6ew")]([ExtResource("2_pbpiw"), SubReso
 
 [node name="Tee" parent="." index="6"]
 shape_type = 1
-color_index = 0
 
 [node name="Square" parent="." index="7"]
 shape_type = 2

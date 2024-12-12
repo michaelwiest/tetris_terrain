@@ -1,8 +1,9 @@
-[gd_scene load_steps=6 format=3 uid="uid://bv55nueh7anqu"]
+[gd_scene load_steps=8 format=3 uid="uid://bv55nueh7anqu"]
 
 [ext_resource type="PackedScene" uid="uid://v07im6ckn0y5" path="res://scenes/level.tscn" id="1_yw6hk"]
 [ext_resource type="Resource" uid="uid://ckuphc7ya8pjg" path="res://resources/effect_spawner.tres" id="2_h4op3"]
 [ext_resource type="Script" path="res://resources/effect_spawner.gd" id="3_f6aiq"]
+[ext_resource type="Script" path="res://resources/upgrade_spawner.gd" id="4_nht7t"]
 
 [sub_resource type="Resource" id="Resource_rtgwq"]
 script = ExtResource("3_f6aiq")
@@ -16,14 +17,22 @@ effect_path = "res://scenes/effects/SpeedUp.tscn"
 chance = 0.1
 repeatable = true
 
+[sub_resource type="Resource" id="Resource_cgtie"]
+script = ExtResource("4_nht7t")
+upgrade_path = "res://scenes/upgrades/ColorSplash.tscn"
+chance = 0.1
+repeatable = true
+
 [node name="Level" instance=ExtResource("1_yw6hk")]
 level_id = 2
 level_name = "2: A new signal!"
 description = "There are strong readings coming from the prairie! Go investiate..."
 
 [node name="PieceSpawner" parent="." index="3"]
+valid_color_indices = Array[int]([0, 1, 2])
 split_color_chance = 0.25
 effect_spawners = Array[ExtResource("3_f6aiq")]([ExtResource("2_h4op3"), SubResource("Resource_rtgwq"), SubResource("Resource_svpta")])
+upgrade_spawners = Array[ExtResource("4_nht7t")]([SubResource("Resource_cgtie")])
 
 [node name="Tee" parent="." index="6"]
 shape_type = 5

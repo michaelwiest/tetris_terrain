@@ -5,5 +5,5 @@
 [resource]
 script = ExtResource("1_yvca0")
 upgrade_path = ""
-chance = null
+chance = 0.1
 repeatable = true

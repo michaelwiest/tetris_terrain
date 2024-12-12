@@ -1,0 +1,108 @@
+[gd_scene load_steps=8 format=3 uid="uid://cmn4ldml60ca7"]
+
+[ext_resource type="Theme" uid="uid://cmw6g5pt5rmve" path="res://resources/main_theme.tres" id="1_qha8r"]
+[ext_resource type="Script" path="res://scripts/RecipeDisplay.gd" id="2_3yp71"]
+[ext_resource type="PackedScene" uid="uid://ciw2mhu08gs3k" path="res://scenes/PieceDisplay.tscn" id="3_4fp66"]
+[ext_resource type="Texture2D" uid="uid://dmkm23qa2tdmb" path="res://icon.svg" id="4_ugilx"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_pihue"]
+font_size = 32
+
+[sub_resource type="Theme" id="Theme_juwvb"]
+
+[sub_resource type="StyleBoxLine" id="StyleBoxLine_7xa8m"]
+color = Color(0.12549, 0.168627, 0.313726, 1)
+thickness = 6
+
+[node name="RecipeDisplay" type="Panel"]
+custom_minimum_size = Vector2(320, 384)
+offset_right = 256.0
+offset_bottom = 384.0
+size_flags_horizontal = 0
+theme = ExtResource("1_qha8r")
+script = ExtResource("2_3yp71")
+
+[node name="ColorRect" type="ColorRect" parent="."]
+layout_mode = 2
+offset_left = 12.0
+offset_top = 14.0
+offset_right = 370.0
+offset_bottom = 49.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.478431, 0.478431, 0.478431, 1)
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 24
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer"]
+layout_mode = 2
+
+[node name="DisplayName" type="Label" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "My Node"
+label_settings = SubResource("LabelSettings_pihue")
+
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 32
+theme_override_constants/margin_bottom = 32
+
+[node name="HBoxContainer" type="VBoxContainer" parent="MarginContainer/VBoxContainer/MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = -1
+
+[node name="PieceDisplay" parent="MarginContainer/VBoxContainer/MarginContainer/HBoxContainer" instance=ExtResource("3_4fp66")]
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 0
+offset = Vector2i(0, 0)
+tilemap_scale = Vector2(0.75, 0.75)
+
+[node name="VSeparator" type="HSeparator" parent="MarginContainer/VBoxContainer/MarginContainer/HBoxContainer"]
+layout_mode = 2
+theme = SubResource("Theme_juwvb")
+theme_override_constants/separation = 39
+theme_override_styles/separator = SubResource("StyleBoxLine_7xa8m")
+
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/VBoxContainer/MarginContainer/HBoxContainer"]
+layout_mode = 2
+theme_override_constants/margin_bottom = 6
+
+[node name="GridContainer" type="GridContainer" parent="MarginContainer/VBoxContainer/MarginContainer/HBoxContainer/MarginContainer"]
+layout_mode = 2
+size_flags_vertical = 4
+columns = 2
+
+[node name="TextureRect" type="TextureRect" parent="MarginContainer/VBoxContainer/MarginContainer/HBoxContainer/MarginContainer/GridContainer"]
+custom_minimum_size = Vector2(64, 64)
+layout_mode = 2
+texture = ExtResource("4_ugilx")
+expand_mode = 5
+
+[node name="TextureRect2" type="TextureRect" parent="MarginContainer/VBoxContainer/MarginContainer/HBoxContainer/MarginContainer/GridContainer"]
+clip_contents = true
+layout_mode = 2
+texture = ExtResource("4_ugilx")
+expand_mode = 3
+
+[node name="TextureRect3" type="TextureRect" parent="MarginContainer/VBoxContainer/MarginContainer/HBoxContainer/MarginContainer/GridContainer"]
+clip_contents = true
+layout_mode = 2
+texture = ExtResource("4_ugilx")
+expand_mode = 3
+
+[node name="TextureRect4" type="TextureRect" parent="MarginContainer/VBoxContainer/MarginContainer/HBoxContainer/MarginContainer/GridContainer"]
+clip_contents = true
+layout_mode = 2
+texture = ExtResource("4_ugilx")
+expand_mode = 3
